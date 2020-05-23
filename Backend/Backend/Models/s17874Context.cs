@@ -15,6 +15,7 @@ namespace Backend.Models
         {
         }
 
+        public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<Meeting> Meeting { get; set; }
         public virtual DbSet<MeetingAttendence> MeetingAttendence { get; set; }
         public virtual DbSet<Message> Message { get; set; }
@@ -46,6 +47,33 @@ namespace Backend.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.IdComment)
+                    .HasName("Comment_pk");
+
+                entity.Property(e => e.IdComment).ValueGeneratedNever();
+
+                entity.Property(e => e.Comment1)
+                    .IsRequired()
+                    .HasColumnName("Comment")
+                    .HasColumnType("text");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Comment_User");
+
+                entity.HasOne(d => d.PostNavigation)
+                    .WithMany(p => p.Comment)
+                    .HasForeignKey(d => d.Post)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Comment_Post");
+            });
+
             modelBuilder.Entity<Meeting>(entity =>
             {
                 entity.HasKey(e => e.IdMeeting)
@@ -103,6 +131,8 @@ namespace Backend.Models
 
                 entity.Property(e => e.Attachment).HasMaxLength(255);
 
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
                 entity.Property(e => e.Message1)
                     .IsRequired()
                     .HasColumnName("Message")
@@ -154,6 +184,8 @@ namespace Backend.Models
 
                 entity.Property(e => e.Attachments).HasMaxLength(255);
 
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
                 entity.Property(e => e.Note1)
                     .IsRequired()
                     .HasColumnName("Note")
@@ -187,6 +219,8 @@ namespace Backend.Models
 
                 entity.Property(e => e.IdNotification).ValueGeneratedNever();
 
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+
                 entity.Property(e => e.Notification1)
                     .IsRequired()
                     .HasColumnName("Notification")
@@ -207,6 +241,8 @@ namespace Backend.Models
                 entity.ToTable("Personal_Note");
 
                 entity.Property(e => e.IdNote).ValueGeneratedNever();
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Description)
                     .IsRequired()
@@ -432,6 +468,8 @@ namespace Backend.Models
                 entity.Property(e => e.IdTask).ValueGeneratedNever();
 
                 entity.Property(e => e.ActualEndDate).HasColumnType("date");
+
+                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Description)
                     .IsRequired()

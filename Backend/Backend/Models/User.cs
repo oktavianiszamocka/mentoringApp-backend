@@ -7,6 +7,7 @@ namespace Backend.Models
     {
         public User()
         {
+            Comment = new HashSet<Comment>();
             MeetingAttendence = new HashSet<MeetingAttendence>();
             MessageReceiverNavigation = new HashSet<Message>();
             MessageSenderNavigation = new HashSet<Message>();
@@ -30,6 +31,7 @@ namespace Backend.Models
         public string LastName { get; set; }
         public string FirstName { get; set; }
 
+        public virtual ICollection<Comment> Comment { get; set; }
         public virtual ICollection<MeetingAttendence> MeetingAttendence { get; set; }
         public virtual ICollection<Message> MessageReceiverNavigation { get; set; }
         public virtual ICollection<Message> MessageSenderNavigation { get; set; }

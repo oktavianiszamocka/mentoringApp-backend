@@ -19,6 +19,7 @@ namespace Backend.Models
         public string Status { get; set; }
         public int Project { get; set; }
         public int Creator { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
         public virtual User CreatorNavigation { get; set; }
         public virtual Project ProjectNavigation { get; set; }

@@ -5,6 +5,11 @@ namespace Backend.Models
 {
     public partial class Post
     {
+        public Post()
+        {
+            Comment = new HashSet<Comment>();
+        }
+
         public int IdPost { get; set; }
         public string Content { get; set; }
         public DateTime DateOfPublication { get; set; }
@@ -14,5 +19,6 @@ namespace Backend.Models
 
         public virtual Project ProjectNavigation { get; set; }
         public virtual User WriterNavigation { get; set; }
+        public virtual ICollection<Comment> Comment { get; set; }
     }
 }
