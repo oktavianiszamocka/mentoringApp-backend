@@ -26,5 +26,14 @@ namespace Backend.Controllers
             var result = _context.Post.OrderByDescending(post => post.DateOfPublication).ToList();
             return Ok(result.ToPagedList(pageNumber, pageSize));
         }
+
+        [HttpPost]
+        public IActionResult createPost(Post post)
+        {
+            _context.Post.Add(post);
+            _context.SaveChanges();
+            return StatusCode(201, post);
+        }
+
     }
 }
