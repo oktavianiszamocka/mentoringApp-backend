@@ -12,8 +12,6 @@ namespace Backend.Models
         public string Note1 { get; set; }
         public int Meeting { get; set; }
         public string Attachments { get; set; }
-
-        public virtual User AuthorNavigation { get; set; }
-        public virtual Meeting MeetingNavigation { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }

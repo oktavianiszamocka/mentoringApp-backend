@@ -10,8 +10,6 @@ namespace Backend.Models
         public int Sender { get; set; }
         public string Message1 { get; set; }
         public string Attachment { get; set; }
-
-        public virtual User ReceiverNavigation { get; set; }
-        public virtual User SenderNavigation { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }

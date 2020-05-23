@@ -5,11 +5,6 @@ namespace Backend.Models
 {
     public partial class Task
     {
-        public Task()
-        {
-            TaskAssigning = new HashSet<TaskAssigning>();
-        }
-
         public int IdTask { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
@@ -19,9 +14,6 @@ namespace Backend.Models
         public string Status { get; set; }
         public int Project { get; set; }
         public int Creator { get; set; }
-
-        public virtual User CreatorNavigation { get; set; }
-        public virtual Project ProjectNavigation { get; set; }
-        public virtual ICollection<TaskAssigning> TaskAssigning { get; set; }
+        public DateTime? CreatedOn { get; set; }
     }
 }
