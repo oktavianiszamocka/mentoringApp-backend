@@ -35,5 +35,14 @@ namespace Backend.Controllers
             return StatusCode(201, post);
         }
 
+        [HttpGet("project/{IdProject}")]
+        public IActionResult GetPostByProject(int IdProject, int pageNumber, int pageSize)
+        {
+            var result = _context.Post.
+                            Where(post => post.Project.Equals(IdProject)).
+                            OrderByDescending(post => post.DateOfPublication).ToList();
+            return Ok(result.ToPagedList(pageNumber, pageSize));
+        }
+
     }
 }
