@@ -39,11 +39,17 @@ namespace Backend.Controllers
         [HttpGet("project/{idProject:int}")]
         public async Task<IActionResult> GetPostByProject(int idProject, int pageNumber = 1, int pageSize = DefaultPageSize)
         {
-            return Ok(await _context.Post
+            var posts = _context.Post
                             .Where(post => post.Project.Equals(idProject))
-                            .OrderByDescending(post => post.DateOfPublication)
+                            .OrderByDescending(post => post.DateOfPublication);
+
+            return Ok((await posts
                             .GetPage(pageNumber, pageSize)
-                            .ToListAsync());
+                            .ToListAsync())
+                            .ToPagedList(pageNumber,
+                                         pageSize,
+                                         await posts.CountAsync()
+                            ));
         }
 
     }
