@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Backend.Extensions;
 using Backend.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PagedList;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend.Controllers
 {
@@ -13,6 +11,7 @@ namespace Backend.Controllers
     [ApiController]
     public class PersonalNoteController : ControllerBase
     {
+        private const int DefaultPageSize = 10;
         private readonly s17874Context _context;
 
         public PersonalNoteController(s17874Context context)
@@ -21,10 +20,12 @@ namespace Backend.Controllers
         }
 
         [HttpGet]
-        public IActionResult getPersonalNoteList(int pageNumber, int pageSize)
+        public async Task<IActionResult> GetPersonalNoteList(int pageNumber = 1, int pageSize = DefaultPageSize)
         {
-            var result = _context.PersonalNote.OrderByDescending(Note => Note.CreatedOn).ToList();
-            return Ok(result.ToPagedList(pageNumber, pageSize));
+            return Ok(await _context.PersonalNote
+                         .OrderByDescending(Note => Note.CreatedOn)
+                         .GetPage(pageNumber, pageSize)
+                         .ToListAsync());
         }
     }
 }

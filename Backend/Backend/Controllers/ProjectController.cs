@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Backend.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using PagedList;
 
 namespace Backend.Controllers
 {
@@ -21,15 +17,13 @@ namespace Backend.Controllers
             _context = context;
         }
 
-
         [HttpGet]
-        public IActionResult GetUserProject(int IdUser)
+        public async Task<IActionResult> GetUserProject(int idUser)
         {
-            var result = _context.ProjectMembers.
-                                        Where(project => project.Member.Equals(IdUser))
+            return Ok(await _context.ProjectMembers
+                                        .Where(project => project.Member.Equals(idUser))
                                         .Select(project => project.Project)
-                                       .ToList();
-            return Ok(result);
+                                        .ToListAsync());
         }
 
     }
