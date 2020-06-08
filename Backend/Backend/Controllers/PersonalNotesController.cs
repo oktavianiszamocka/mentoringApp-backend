@@ -9,12 +9,12 @@ namespace MentorApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonalNoteController : ControllerBase
+    public class PersonalNotesController : ControllerBase
     {
         private const int DefaultPageSize = 10;
         private readonly s17874Context _context;
 
-        public PersonalNoteController(s17874Context context)
+        public PersonalNotesController(s17874Context context)
         {
             _context = context;
         }
