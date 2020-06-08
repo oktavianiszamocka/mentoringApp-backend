@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Backend": {
+    "MentorApp": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

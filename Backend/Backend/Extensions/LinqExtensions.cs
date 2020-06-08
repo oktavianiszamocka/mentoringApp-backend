@@ -1,9 +1,9 @@
-﻿using Backend.DTOs.Responses;
+﻿using MentorApp.DTOs.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Backend.Extensions
+namespace MentorApp.Extensions
 {
     public static class LinqExtensions
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Backend.Models
+namespace MentorApp.Models
 {
     public partial class MeetingAttendence
     {

@@ -1,11 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using Backend.Extensions;
-using Backend.Models;
+using MentorApp.Extensions;
+using MentorApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Backend.Controllers
+namespace MentorApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

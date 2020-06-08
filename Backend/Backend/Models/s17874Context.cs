@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace Backend.Models
+namespace MentorApp.Models
 {
     public partial class s17874Context : DbContext
     {

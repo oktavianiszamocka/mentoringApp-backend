@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Backend.DTOs.Responses
+namespace MentorApp.DTOs.Responses
 {
     public class PagedListItem<T>
     {
