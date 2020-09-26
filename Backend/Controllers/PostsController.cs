@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.Extensions;
+using MentorApp.Filter;
 using MentorApp.Models;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +22,31 @@ namespace MentorApp.Controllers
             _context = context;
         }
 
-        [HttpGet]
+        //mr. Gago
+/*        [HttpGet]
         public async Task<IActionResult> GetPostList(int pageNumber = 1, int pageSize = DefaultPageSize)
         {
             return Ok(await _context.Post
                          .OrderByDescending(post => post.DateOfPublication)
                          .GetPage(pageNumber, pageSize)
                          .ToListAsync());
+        }*/
+
+
+        //tami
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromQuery] Filter.PaginationFilter filter)
+        {
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var pagedData = await _context.Post
+                         .OrderByDescending(post => post.DateOfPublication)
+                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                         .Take(validFilter.PageSize)
+                         .ToListAsync();
+            var totalRecords = await _context.Post.CountAsync();
+            return Ok(new PagedResponse<List<Post>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         }
+    
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
