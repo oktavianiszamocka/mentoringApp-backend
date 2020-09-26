@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using MentorApp.Extensions;
 using MentorApp.Models;
+using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,13 @@ namespace MentorApp.Controllers
                          .OrderByDescending(post => post.DateOfPublication)
                          .GetPage(pageNumber, pageSize)
                          .ToListAsync());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var post = await _context.Post.Where(a => a.IdPost == id).FirstOrDefaultAsync();
+            return Ok(new Response<Post>(post));
         }
 
         [HttpPost]
