@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.Extensions;
 using MentorApp.Filter;
+using MentorApp.Helpers;
 using MentorApp.Models;
+using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +19,12 @@ namespace MentorApp.Controllers
         private const int DefaultPageSize = 10;
         private readonly s17874Context _context;
 
-        public PostsController(s17874Context context)
+        private readonly IUriService _uriService;
+
+        public PostsController(s17874Context context, IUriService uriService)
         {
             _context = context;
+            _uriService = uriService;
         }
 
         //mr. Gago
@@ -37,6 +42,7 @@ namespace MentorApp.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] Filter.PaginationFilter filter)
         {
+            var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _context.Post
                          .OrderByDescending(post => post.DateOfPublication)
@@ -44,7 +50,9 @@ namespace MentorApp.Controllers
                          .Take(validFilter.PageSize)
                          .ToListAsync();
             var totalRecords = await _context.Post.CountAsync();
-            return Ok(new PagedResponse<List<Post>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+            var pagedReponse = PaginationHelper.CreatePagedReponse<Post>(pagedData, validFilter, totalRecords, _uriService, route);
+            return Ok(pagedReponse);
+            //return Ok(new PagedResponse<List<Post>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         }
     
 

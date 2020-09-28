@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace MentorApp.Services
 {
-    public class URIService : IUriService
+    public class UriService : IUriService
     {
         private readonly string _baseUri;
-        public URIService(string baseUri)
+        public UriService(string baseUri)
         {
             _baseUri = baseUri;
         }
@@ -25,21 +25,6 @@ namespace MentorApp.Services
             var modifiedUri = QueryHelpers.AddQueryString(_enpointUri.ToString(), "pageNumber", filter.PageNumber.ToString());
             modifiedUri = QueryHelpers.AddQueryString(modifiedUri, "pageSize", filter.PageSize.ToString());
             return new Uri(modifiedUri);
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            //?
-            services.AddDbContext<s17874Context>(opt => opt.UseSqlServer("Data Source=db-mssql;Initial Catalog=s17874;Persist Security Info=True;User ID=inzs17874;Password=admin"));
-            services.AddHttpContextAccessor();
-            services.AddSingleton<IUriService>(o =>
-            {
-                var accessor = o.GetRequiredService<IHttpContextAccessor>();
-                var request = accessor.HttpContext.Request;
-                var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
-                return new URIService(uri);
-            });
-            services.AddControllers();
         }
 
     }
