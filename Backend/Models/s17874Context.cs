@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace MentorApp.Models
 {
@@ -15,6 +16,7 @@ namespace MentorApp.Models
         {
         }
 
+        public IConfiguration Configuration { get; }
         public virtual DbSet<Comment> Comment { get; set; }
         public virtual DbSet<Meeting> Meeting { get; set; }
         public virtual DbSet<MeetingAttendence> MeetingAttendence { get; set; }
@@ -40,7 +42,8 @@ namespace MentorApp.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=db-mssql;Initial Catalog=s17874;Integrated Security=True");
+
+                optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"));
             }
         }
 
@@ -185,6 +188,8 @@ namespace MentorApp.Models
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
+
                 entity.Property(e => e.Note1)
                     .IsRequired()
                     .HasColumnName("Note")
@@ -246,6 +251,8 @@ namespace MentorApp.Models
                 entity.Property(e => e.Description)
                     .IsRequired()
                     .HasColumnType("text");
+
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
 
                 entity.Property(e => e.Title)
                     .IsRequired()

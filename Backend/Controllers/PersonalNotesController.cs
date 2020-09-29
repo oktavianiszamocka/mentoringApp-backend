@@ -23,7 +23,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetPersonalNoteList(int pageNumber = 1, int pageSize = DefaultPageSize)
         {
             return Ok(await _context.PersonalNote
-                         .OrderByDescending(Note => Note.CreatedOn)
+                         .OrderByDescending(Note => Note.LastModified)
                          .GetPage(pageNumber, pageSize)
                          .ToListAsync());
         }
