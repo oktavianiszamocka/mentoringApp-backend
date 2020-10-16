@@ -20,7 +20,7 @@ namespace MentorApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<s17874Context>(opt => opt.UseSqlServer("Data Source=db-mssql;Initial Catalog=s17874;Persist Security Info=True;User ID=inzs17874;Password=admin"));
+            services.AddDbContext<s17874Context>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
             services.AddControllers();
         }
 

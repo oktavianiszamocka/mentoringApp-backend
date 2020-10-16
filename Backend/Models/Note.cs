@@ -13,6 +13,7 @@ namespace MentorApp.Models
         public int Meeting { get; set; }
         public string Attachments { get; set; }
         public DateTime? CreatedOn { get; set; }
+        public DateTime? LastModified { get; set; }
 
         public virtual User AuthorNavigation { get; set; }
         public virtual Meeting MeetingNavigation { get; set; }
