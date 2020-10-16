@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/personal-notes")]
     [ApiController]
     public class PersonalNotesController : ControllerBase
     {

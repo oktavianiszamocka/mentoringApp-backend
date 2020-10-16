@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/projects")]
     [ApiController]
     public class ProjectsController : ControllerBase
     {
