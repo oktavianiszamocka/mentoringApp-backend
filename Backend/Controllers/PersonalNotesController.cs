@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.Extensions;
-using MentorApp.Models;
+﻿using MentorApp.Extensions;
+using MentorApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
@@ -12,9 +12,9 @@ namespace MentorApp.Controllers
     public class PersonalNotesController : ControllerBase
     {
         private const int DefaultPageSize = 10;
-        private readonly s17874Context _context;
+        private readonly MentorAppContext _context;
 
-        public PersonalNotesController(s17874Context context)
+        public PersonalNotesController(MentorAppContext context)
         {
             _context = context;
         }

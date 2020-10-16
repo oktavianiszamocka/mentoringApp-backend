@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading.Tasks;
-using MentorApp.Models;
-using Microsoft.AspNetCore.Http;
+﻿using MentorApp.Models;
+using MentorApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/messages")]
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly s17874Context _context;
+        private readonly MentorAppContext _context;
 
-        public MessagesController(s17874Context context)
+        public MessagesController(MentorAppContext context)
         {
             _context = context;
         }
@@ -29,34 +27,34 @@ namespace MentorApp.Controllers
             return StatusCode(201, message);
         }
 
-        [HttpGet("{ReceiverId:int}/{SenderId:int}/")]
-        public async Task<IActionResult> GetMessageByReceiverAndSender(int ReceiverId, int SenderId)
+        [HttpGet("{receiverId:int}/{senderId:int}/")]
+        public async Task<IActionResult> GetMessageByReceiverAndSender(int receiverId, int senderId)
         {
-            return Ok((await _context.Message
-                            .Where(msg =>( msg.Receiver.Equals(ReceiverId) && msg.Sender.Equals(SenderId)) || 
-                            (msg.Receiver.Equals(SenderId) && msg.Sender.Equals(ReceiverId)))
+            return Ok(await _context.Message
+                            .Where(msg => (msg.Receiver.Equals(receiverId) && msg.Sender.Equals(senderId)) ||
+                            (msg.Receiver.Equals(senderId) && msg.Sender.Equals(receiverId)))
                             .OrderByDescending(msg => msg.CreatedOn)
                             .ToListAsync()
-                     )); 
+                     );
         }
 
 
-        [HttpGet("{ReceiverId:int}")]
-        public async Task<IActionResult> GetSenderUsersByReceiver(int ReceiverId)
+        [HttpGet("{receiverId:int}")]
+        public async Task<IActionResult> GetSenderUsersByReceiver(int receiverId)
         {
             var message = (from msg in _context.Message
-                           where msg.Receiver == ReceiverId
-                       join user in _context.User on msg.Sender equals user.IdUser
-                       select new
-                       {
-                           Name  = user.FirstName + ' ' + user.LastName
-                          
-                       })
+                           where msg.Receiver == receiverId
+                           join user in _context.User on msg.Sender equals user.IdUser
+                           select new
+                           {
+                               Name = user.FirstName + ' ' + user.LastName
+
+                           })
                        .ToListAsync();
 
-            return Ok((await message)); 
+            return Ok(await message);
         }
-          
+
     }
 
 }

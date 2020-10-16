@@ -1,20 +1,21 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.Extensions;
+﻿using MentorApp.Extensions;
 using MentorApp.Models;
+using MentorApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/posts")]
     [ApiController]
     public class PostsController : ControllerBase
     {
         private const int DefaultPageSize = 10;
-        private readonly s17874Context _context;
+        private readonly MentorAppContext _context;
 
-        public PostsController(s17874Context context)
+        public PostsController(MentorAppContext context)
         {
             _context = context;
         }
@@ -39,7 +40,7 @@ namespace MentorApp.Controllers
         [HttpGet("project/{idProject:int}")]
         public async Task<IActionResult> GetPostByProject(int idProject, int pageNumber = 1, int pageSize = DefaultPageSize)
         {
-            var posts = _context.Post
+            IOrderedQueryable<Post> posts = _context.Post
                             .Where(post => post.Project.Equals(idProject))
                             .OrderByDescending(post => post.DateOfPublication);
 

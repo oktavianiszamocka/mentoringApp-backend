@@ -1,17 +1,16 @@
-﻿using System;
+﻿using MentorApp.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
 
-namespace MentorApp.Models
+namespace MentorApp.Persistence
 {
-    public partial class s17874Context : DbContext
+    public partial class MentorAppContext : DbContext
     {
-        public s17874Context()
+        public MentorAppContext()
         {
         }
 
-        public s17874Context(DbContextOptions<s17874Context> options)
+        public MentorAppContext(DbContextOptions<MentorAppContext> options)
             : base(options)
         {
         }
@@ -42,7 +41,6 @@ namespace MentorApp.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-
                 optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection"));
             }
         }

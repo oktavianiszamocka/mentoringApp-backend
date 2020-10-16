@@ -1,4 +1,4 @@
-using MentorApp.Models;
+using MentorApp.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -20,7 +20,7 @@ namespace MentorApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<s17874Context>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+            services.AddDbContext<MentorAppContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
             services.AddControllers();
         }
 

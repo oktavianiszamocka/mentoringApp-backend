@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.Models;
+﻿using MentorApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
@@ -10,9 +10,9 @@ namespace MentorApp.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly s17874Context _context;
+        private readonly MentorAppContext _context;
 
-        public ProjectsController(s17874Context context)
+        public ProjectsController(MentorAppContext context)
         {
             _context = context;
         }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MentorApp.Models
+﻿namespace MentorApp.Models
 {
     public partial class Url
     {
