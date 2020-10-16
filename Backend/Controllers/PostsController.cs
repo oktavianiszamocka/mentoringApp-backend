@@ -4,14 +4,13 @@ using System.Threading.Tasks;
 using MentorApp.Extensions;
 using MentorApp.Filter;
 using MentorApp.Helpers;
-using MentorApp.Models;using MentorApp.Services;
-using MentorApp.Wrappers;
+using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
+using MentorApp.Persistence;
+
 
 namespace MentorApp.Controllers
 {
@@ -23,7 +22,7 @@ namespace MentorApp.Controllers
         private readonly MentorAppContext _context;
         private readonly IUriService _uriService;
 
-        public PostsController(s17874Context context, IUriService uriService
+        public PostsController(MentorAppContext context, IUriService uriService)
         {
             _context = context;
             _uriService = uriService;
