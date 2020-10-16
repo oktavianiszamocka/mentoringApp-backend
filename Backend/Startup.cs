@@ -1,6 +1,8 @@
-using MentorApp.Persistence;
+using MentorApp.Models;
+using MentorApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +23,14 @@ namespace MentorApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MentorAppContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IUriService>(o =>
+            {
+                var accessor = o.GetRequiredService<IHttpContextAccessor>();
+                var request = accessor.HttpContext.Request;
+                var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+                return new UriService(uri);
+            }); services.AddDbContext<s17874Context>(opt => opt.UseSqlServer("Data Source=db-mssql;Initial Catalog=s17874;Persist Security Info=True;User ID=inzs17874;Password=admin"));
             services.AddControllers();
         }
 
