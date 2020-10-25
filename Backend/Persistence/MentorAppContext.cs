@@ -254,9 +254,7 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
+            
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.PersonalNote)

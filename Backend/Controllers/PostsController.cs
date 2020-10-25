@@ -10,7 +10,7 @@ using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
-using System.Buffers;
+
 
 namespace MentorApp.Controllers
 {
@@ -45,38 +45,83 @@ namespace MentorApp.Controllers
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-            var pagedData = await _context.Post
+
+            var postList = await _context.Post
                            .Include(post => post.WriterNavigation)
+                           .Include(post => post.PostTag)
+                           .ThenInclude(postTag => postTag.TagNavigation)
+                           .Include(post => post.Comment)
+                           .ThenInclude(comment => comment.CreatedByNavigation)
                           .Select(post => new PostWrapper
                           {
                               IdPost = post.IdPost,
+                              Title = post.Title,
                               Content = post.Content,
                               DateOfPublication = post.DateOfPublication,
                               Writer = new UserWrapper
                               {
-                                  FirstName = post.WriterNavigation.FirstName,
-                                  LastName = post.WriterNavigation.LastName
+                                  firstName = post.WriterNavigation.FirstName,
+                                  lastName = post.WriterNavigation.LastName,
+                                  imageUrl = post.WriterNavigation.Avatar
 
-                              }
-                       
+                              },
+                              NewestComment = post.Comment.OrderByDescending(comment => comment.CreatedOn).Select(comment => new CommentWrapper
+                              {
+                                  IdComment = comment.IdComment,
+                                  Comment = comment.Comment1,
+                                  CreatedOn = comment.CreatedOn,
+                                  CreatedBy = new UserWrapper
+                                  {
+                                      firstName = comment.CreatedByNavigation.FirstName,
+                                      lastName = comment.CreatedByNavigation.LastName,
+                                      imageUrl = comment.CreatedByNavigation.Avatar
+                                  }
+                              }).FirstOrDefault(),
+                              //post.Comment.OrderByDescending(comment => comment.CreatedOn).ToList(),
+                              tags = post.PostTag.Select(postTag => new string
+                              ( postTag.TagNavigation.Name
 
-                          })
+                              )).ToList()
+                           
+
+                          }) 
                          .OrderByDescending(post => post.DateOfPublication)
                          .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                          .Take(validFilter.PageSize)
                          .ToListAsync();
+
             var totalRecords = await _context.Post.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(pagedData, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postList, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
-            //return Ok(new PagedResponse<List<Post>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
+          
         }
     
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{idPost:int}/comment")]
+        public async Task<IActionResult> GetAllCommentsByPostId(int idPost)
         {
-            var post = await _context.Post.Where(a => a.IdPost == id).FirstOrDefaultAsync();
-            return Ok(new Response<Post>(post));
+            var postCommentList = await _context.Post
+                .Where(post => post.IdPost.Equals(idPost))
+                .Include(post => post.Comment)
+                     .ThenInclude(comment => comment.CreatedByNavigation)
+                
+                .Select(post => post.Comment.OrderBy(comment => comment.CreatedOn).Select(comment => new CommentWrapper
+                {
+
+                    IdComment = comment.IdComment,
+                    Comment = comment.Comment1,
+                    CreatedOn = comment.CreatedOn,
+                    CreatedBy = new UserWrapper
+                    {
+                        firstName = comment.CreatedByNavigation.FirstName,
+                        lastName = comment.CreatedByNavigation.LastName,
+                        imageUrl = comment.CreatedByNavigation.Avatar
+                    }
+                })
+                .ToList()) 
+                .FirstOrDefaultAsync();
+               
+            return Ok(new Response<List<CommentWrapper>>(postCommentList));
         }
 
         [HttpPost]
