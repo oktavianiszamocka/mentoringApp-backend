@@ -8,6 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MentorApp.Persistence;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 
 namespace MentorApp
 {
@@ -24,6 +28,22 @@ namespace MentorApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MentorAppContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("DatabaseConnection")));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ClockSkew = TimeSpan.Zero,
+                            ValidIssuer = "https://localhost:5001", //should come from configuration
+                            ValidAudience = "https://localhost:5001", //should come from configuration
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
+                        };
+                    });
+
             services.AddHttpContextAccessor();
             services.AddSingleton<IUriService>(o =>
             {
