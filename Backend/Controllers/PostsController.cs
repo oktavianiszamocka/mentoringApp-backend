@@ -10,7 +10,7 @@ using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
-
+using System.Buffers;
 
 namespace MentorApp.Controllers
 {
@@ -46,12 +46,27 @@ namespace MentorApp.Controllers
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
             var pagedData = await _context.Post
+                           .Include(post => post.WriterNavigation)
+                          .Select(post => new PostWrapper
+                          {
+                              IdPost = post.IdPost,
+                              Content = post.Content,
+                              DateOfPublication = post.DateOfPublication,
+                              Writer = new UserWrapper
+                              {
+                                  FirstName = post.WriterNavigation.FirstName,
+                                  LastName = post.WriterNavigation.LastName
+
+                              }
+                       
+
+                          })
                          .OrderByDescending(post => post.DateOfPublication)
                          .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                          .Take(validFilter.PageSize)
                          .ToListAsync();
             var totalRecords = await _context.Post.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<Post>(pagedData, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(pagedData, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
             //return Ok(new PagedResponse<List<Post>>(pagedData, validFilter.PageNumber, validFilter.PageSize));
         }

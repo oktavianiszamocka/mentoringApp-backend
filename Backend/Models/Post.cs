@@ -8,6 +8,7 @@ namespace MentorApp.Models
         public Post()
         {
             Comment = new HashSet<Comment>();
+            PostTag = new HashSet<PostTag>();
         }
 
         public int IdPost { get; set; }
@@ -16,9 +17,11 @@ namespace MentorApp.Models
         public int Writer { get; set; }
         public int? Project { get; set; }
         public string Attachment { get; set; }
+        public string Title { get; set; }
 
         public virtual Project ProjectNavigation { get; set; }
         public virtual User WriterNavigation { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
+        public virtual ICollection<PostTag> PostTag { get; set; }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace MentorApp.Models
+﻿using System;
+using System.Collections.Generic;
+
+namespace MentorApp.Models
 {
     public partial class TaskAssigning
     {
