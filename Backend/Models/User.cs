@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace MentorApp.Models
 {
@@ -29,6 +30,7 @@ namespace MentorApp.Models
         public string Salt { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
+        public string Avatar { get; set; }
 
         public virtual ICollection<Comment> Comment { get; set; }
         public virtual ICollection<MeetingAttendence> MeetingAttendence { get; set; }

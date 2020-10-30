@@ -36,6 +36,8 @@ namespace MentorApp.Persistence
         public virtual DbSet<TaskAssigning> TaskAssigning { get; set; }
         public virtual DbSet<Url> Url { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<PostTag> PostTag { get; set; }
+        public virtual DbSet<Tag> Tag { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -252,9 +254,7 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
+            
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.PersonalNote)
@@ -301,6 +301,7 @@ namespace MentorApp.Persistence
                     .HasColumnType("text");
 
                 entity.Property(e => e.DateOfPublication).HasColumnType("date");
+                entity.Property(e => e.Title).HasMaxLength(255);
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Post)
@@ -313,6 +314,35 @@ namespace MentorApp.Persistence
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Post_User");
             });
+
+            modelBuilder.Entity<PostTag>(entity =>
+            {
+                entity.HasKey(e => e.IdPostTag)
+                    .HasName("Post_Tag_pk");
+               
+                entity.ToTable("Post_Tag");
+               
+                entity.Property(e => e.IdPostTag)
+                .HasColumnName("idPostTag")
+                    .ValueGeneratedNever();
+               
+                entity.HasOne(d => d.PostNavigation)
+
+                    .WithMany(p => p.PostTag)
+                    .HasForeignKey(d => d.Post)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Post_Tag_Post");
+                
+                entity.HasOne(d => d.TagNavigation)
+
+                    .WithMany(p => p.PostTag)
+                    .HasForeignKey(d => d.Tag)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Post_Tag_Tag");
+               
+            });
+
+    
 
             modelBuilder.Entity<Profile>(entity =>
             {
@@ -526,6 +556,17 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Task_Assigning_User");
             });
 
+             modelBuilder.Entity<Tag>(entity =>
+            {	
+                entity.HasKey(e => e.IdTag)
+                    .HasName("Tag_pk");
+                entity.Property(e => e.IdTag)
+                    .HasColumnName("idTag")
+                    .ValueGeneratedNever();
+                entity.Property(e => e.Name)
+                    .HasMaxLength(255);
+            });
+
             modelBuilder.Entity<Url>(entity =>
             {
                 entity.HasKey(e => e.IdUrl)
@@ -570,6 +611,9 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasMaxLength(255);
+
+                entity.Property(e => e.Avatar).HasColumnType("text");
+
 
                 entity.Property(e => e.Password)
                     .IsRequired()
