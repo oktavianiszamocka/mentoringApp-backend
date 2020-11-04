@@ -614,6 +614,8 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.Avatar).HasColumnType("text");
 
+                entity.Property(e => e.RefreshToken).HasColumnType("text");
+                entity.Property(e => e.RefreshTokenExpDate).HasColumnType("datetime");
 
                 entity.Property(e => e.Password)
                     .IsRequired()
@@ -621,7 +623,7 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.Salt)
                     .IsRequired()
-                    .HasColumnName("SALT");
+                    .HasColumnType("text");
             });
 
             OnModelCreatingPartial(modelBuilder);
