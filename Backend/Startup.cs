@@ -38,8 +38,8 @@ namespace MentorApp
                             ValidateAudience = true,
                             ValidateLifetime = true,
                             ClockSkew = TimeSpan.Zero,
-                            ValidIssuer = "https://localhost:5001", //should come from configuration
-                            ValidAudience = "https://localhost:5001", //should come from configuration
+                            ValidIssuer = "https://localhost:5001", //TODO should come from configuration
+                            ValidAudience = "https://localhost:5001", //TODO do: should come from configuration
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
                         };
                     });
