@@ -55,9 +55,10 @@ namespace MentorApp.Controllers
                 signingCredentials: creds
             );
 
+
             user.RefreshToken = Guid.NewGuid().ToString();
             user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-            _context.SaveChanges();
+            //_context.SaveChanges();
 
             return Ok(new
             {

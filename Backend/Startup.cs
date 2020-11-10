@@ -74,6 +74,10 @@ namespace MentorApp
 
             app.UseRouting();
 
+
+            //check
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
