@@ -10,7 +10,7 @@ using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
-
+using System;
 
 namespace MentorApp.Controllers
 {
@@ -92,6 +92,7 @@ namespace MentorApp.Controllers
 
             var totalRecords = await _context.Post.CountAsync();
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postList, validFilter, totalRecords, _uriService, route);
+            
             return Ok(pagedReponse);
           
         }

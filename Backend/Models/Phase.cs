@@ -6,10 +6,10 @@ namespace MentorApp.Models
     {
         public int IdPhase { get; set; }
         public string Name { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int ProjectIdProject { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public int Project { get; set; }
 
-        public virtual Project ProjectIdProjectNavigation { get; set; }
+        public virtual Project ProjectNavigation { get; set; }
     }
 }

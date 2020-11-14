@@ -1,4 +1,6 @@
-﻿namespace MentorApp.Models
+﻿
+
+namespace MentorApp.Models
 {
     public partial class ProjectPromoter
     {

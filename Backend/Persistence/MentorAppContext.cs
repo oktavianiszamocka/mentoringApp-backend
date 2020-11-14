@@ -26,18 +26,20 @@ namespace MentorApp.Persistence
         public virtual DbSet<PersonalNote> PersonalNote { get; set; }
         public virtual DbSet<Phase> Phase { get; set; }
         public virtual DbSet<Post> Post { get; set; }
+        public virtual DbSet<PostTag> PostTag { get; set; }
         public virtual DbSet<Profile> Profile { get; set; }
         public virtual DbSet<Project> Project { get; set; }
         public virtual DbSet<ProjectHistory> ProjectHistory { get; set; }
         public virtual DbSet<ProjectMembers> ProjectMembers { get; set; }
         public virtual DbSet<ProjectPromoter> ProjectPromoter { get; set; }
         public virtual DbSet<ProjectStatus> ProjectStatus { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Tag> Tag { get; set; }
         public virtual DbSet<Task> Task { get; set; }
         public virtual DbSet<TaskAssigning> TaskAssigning { get; set; }
+        public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<Url> Url { get; set; }
         public virtual DbSet<User> User { get; set; }
-        public virtual DbSet<PostTag> PostTag { get; set; }
-        public virtual DbSet<Tag> Tag { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -54,12 +56,10 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdComment)
                     .HasName("Comment_pk");
 
-                entity.Property(e => e.IdComment).ValueGeneratedNever();
-
                 entity.Property(e => e.Comment1)
                     .IsRequired()
                     .HasColumnName("Comment")
-                    .HasColumnType("text");
+                    .HasMaxLength(2000);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
@@ -81,24 +81,21 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdMeeting)
                     .HasName("Meeting_pk");
 
-                entity.Property(e => e.IdMeeting).ValueGeneratedNever();
+                entity.Property(e => e.DateTime).HasColumnType("datetime");
 
-                entity.Property(e => e.Date).HasColumnType("date");
-
-                entity.Property(e => e.Description).HasColumnType("text");
+                entity.Property(e => e.Description).HasMaxLength(1000);
 
                 entity.Property(e => e.Location)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(500);
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Meeting)
                     .HasForeignKey(d => d.Project)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Meeting_Project");
             });
 
@@ -108,8 +105,6 @@ namespace MentorApp.Persistence
                     .HasName("Meeting_attendence_pk");
 
                 entity.ToTable("Meeting_attendence");
-
-                entity.Property(e => e.IdAttendence).ValueGeneratedNever();
 
                 entity.HasOne(d => d.MeetingNavigation)
                     .WithMany(p => p.MeetingAttendence)
@@ -129,8 +124,6 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdMessage)
                     .HasName("Message_pk");
 
-                entity.Property(e => e.IdMessage).ValueGeneratedNever();
-
                 entity.Property(e => e.Attachment).HasMaxLength(255);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
@@ -138,7 +131,7 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.Message1)
                     .IsRequired()
                     .HasColumnName("Message")
-                    .HasColumnType("text");
+                    .HasMaxLength(500);
 
                 entity.HasOne(d => d.ReceiverNavigation)
                     .WithMany(p => p.MessageReceiverNavigation)
@@ -158,13 +151,9 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdMilestone)
                     .HasName("Milestone_pk");
 
-                entity.Property(e => e.IdMilestone).ValueGeneratedNever();
-
                 entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnType("text");
+                entity.Property(e => e.Description).HasMaxLength(1000);
 
                 entity.Property(e => e.Title)
                     .IsRequired()
@@ -182,8 +171,6 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdNote)
                     .HasName("Note_pk");
 
-                entity.Property(e => e.IdNote).ValueGeneratedNever();
-
                 entity.Property(e => e.Attachments).HasMaxLength(255);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
@@ -191,17 +178,12 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
 
                 entity.Property(e => e.Note1)
-                    .IsRequired()
                     .HasColumnName("Note")
-                    .HasColumnType("text");
+                    .HasMaxLength(4000);
 
-                entity.Property(e => e.Subject)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.Subject).HasMaxLength(500);
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.Title).HasMaxLength(255);
 
                 entity.HasOne(d => d.AuthorNavigation)
                     .WithMany(p => p.Note)
@@ -220,8 +202,6 @@ namespace MentorApp.Persistence
             {
                 entity.HasKey(e => e.IdNotification)
                     .HasName("Notification_pk");
-
-                entity.Property(e => e.IdNotification).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
@@ -244,8 +224,6 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("Personal_Note");
 
-                entity.Property(e => e.IdNote).ValueGeneratedNever();
-
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Description)
@@ -254,7 +232,9 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
 
-            
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(255);
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.PersonalNote)
@@ -268,21 +248,17 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdPhase)
                     .HasName("Phase_pk");
 
-                entity.Property(e => e.IdPhase).ValueGeneratedNever();
-
                 entity.Property(e => e.EndDate).HasColumnType("date");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.ProjectIdProject).HasColumnName("Project_IdProject");
+                    .HasMaxLength(500);
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
-                entity.HasOne(d => d.ProjectIdProjectNavigation)
+                entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Phase)
-                    .HasForeignKey(d => d.ProjectIdProject)
+                    .HasForeignKey(d => d.Project)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Step_Project");
             });
@@ -292,15 +268,14 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdPost)
                     .HasName("Post_pk");
 
-                entity.Property(e => e.IdPost).ValueGeneratedNever();
-
                 entity.Property(e => e.Attachment).HasMaxLength(255);
 
                 entity.Property(e => e.Content)
                     .IsRequired()
-                    .HasColumnType("text");
+                    .HasMaxLength(2000);
 
                 entity.Property(e => e.DateOfPublication).HasColumnType("date");
+
                 entity.Property(e => e.Title).HasMaxLength(255);
 
                 entity.HasOne(d => d.ProjectNavigation)
@@ -319,47 +294,32 @@ namespace MentorApp.Persistence
             {
                 entity.HasKey(e => e.IdPostTag)
                     .HasName("Post_Tag_pk");
-               
-                entity.ToTable("Post_Tag");
-               
-                entity.Property(e => e.IdPostTag)
-                .HasColumnName("idPostTag")
-                    .ValueGeneratedNever();
-               
-                entity.HasOne(d => d.PostNavigation)
 
+                entity.ToTable("Post_Tag");
+
+                entity.HasOne(d => d.PostNavigation)
                     .WithMany(p => p.PostTag)
                     .HasForeignKey(d => d.Post)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Post_Tag_Post");
-                
-                entity.HasOne(d => d.TagNavigation)
 
+                entity.HasOne(d => d.TagNavigation)
                     .WithMany(p => p.PostTag)
                     .HasForeignKey(d => d.Tag)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Post_Tag_Tag");
-               
             });
-
-    
 
             modelBuilder.Entity<Profile>(entity =>
             {
                 entity.HasKey(e => e.IdProfile)
                     .HasName("Profile_pk");
 
-                entity.Property(e => e.IdProfile).ValueGeneratedNever();
-
-                entity.Property(e => e.Experiences)
-                    .IsRequired()
-                    .HasColumnType("text");
+                entity.Property(e => e.Experiences).HasMaxLength(2000);
 
                 entity.Property(e => e.Major).HasMaxLength(250);
 
-                entity.Property(e => e.Skills)
-                    .IsRequired()
-                    .HasColumnType("text");
+                entity.Property(e => e.Skills).HasMaxLength(1000);
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.Profile)
@@ -373,17 +333,17 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdProject)
                     .HasName("Project_pk");
 
-                entity.Property(e => e.IdProject).ValueGeneratedNever();
-
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnType("text");
+                entity.Property(e => e.Description).HasMaxLength(2000);
 
                 entity.Property(e => e.EndDate).HasColumnType("date");
 
-                entity.Property(e => e.Icon).IsRequired();
+                entity.Property(e => e.Icon)
+                    .IsRequired()
+                    .HasMaxLength(1000);
 
-                entity.Property(e => e.Name).IsRequired();
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
@@ -396,7 +356,6 @@ namespace MentorApp.Persistence
                 entity.HasOne(d => d.SuperviserNavigation)
                     .WithMany(p => p.Project)
                     .HasForeignKey(d => d.Superviser)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Project_User");
             });
 
@@ -407,11 +366,9 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("Project_History");
 
-                entity.Property(e => e.IdHistory).ValueGeneratedNever();
-
                 entity.Property(e => e.Change)
                     .IsRequired()
-                    .HasColumnType("text");
+                    .HasMaxLength(1000);
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
@@ -437,11 +394,11 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("Project_Members");
 
-                entity.Property(e => e.IdProjectMember)
-                    .HasColumnName("IdProject_Member")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdProjectMember).HasColumnName("IdProject_Member");
 
-                entity.Property(e => e.Role).IsRequired();
+                entity.Property(e => e.Role)
+                .IsRequired()
+                .HasMaxLength(255); ;
 
                 entity.HasOne(d => d.MemberNavigation)
                     .WithMany(p => p.ProjectMembers)
@@ -463,9 +420,7 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("Project_Promoter");
 
-                entity.Property(e => e.IdProjectPromoter)
-                    .HasColumnName("IdProject_Promoter")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.IdProjectPromoter).HasColumnName("IdProject_Promoter");
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.ProjectPromoter)
@@ -487,11 +442,25 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("Project_Status");
 
-                entity.Property(e => e.IdStatus)
-                    .HasColumnName("idStatus")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
 
-                entity.Property(e => e.Name).IsRequired();
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.IdRole)
+                    .HasName("Role_pk");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<Tag>(entity =>
+            {
+                entity.HasKey(e => e.IdTag)
+                    .HasName("Tag_pk");
             });
 
             modelBuilder.Entity<Task>(entity =>
@@ -499,27 +468,19 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdTask)
                     .HasName("Task_pk");
 
-                entity.Property(e => e.IdTask).ValueGeneratedNever();
-
                 entity.Property(e => e.ActualEndDate).HasColumnType("date");
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
-                entity.Property(e => e.Description)
-                    .IsRequired()
-                    .HasColumnType("text");
+                entity.Property(e => e.Description).HasMaxLength(2000);
 
                 entity.Property(e => e.ExpectedEndDate).HasColumnType("date");
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(255);
-
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(255);
+                    .HasMaxLength(500);
 
                 entity.HasOne(d => d.CreatorNavigation)
                     .WithMany(p => p.Task)
@@ -532,6 +493,12 @@ namespace MentorApp.Persistence
                     .HasForeignKey(d => d.Project)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Task_Project");
+
+                entity.HasOne(d => d.StatusNavigation)
+                    .WithMany(p => p.Task)
+                    .HasForeignKey(d => d.Status)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Task_Task_Status");
             });
 
             modelBuilder.Entity<TaskAssigning>(entity =>
@@ -540,8 +507,6 @@ namespace MentorApp.Persistence
                     .HasName("Task_Assigning_pk");
 
                 entity.ToTable("Task_Assigning");
-
-                entity.Property(e => e.IdAssign).ValueGeneratedNever();
 
                 entity.HasOne(d => d.TaskNavigation)
                     .WithMany(p => p.TaskAssigning)
@@ -556,14 +521,17 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Task_Assigning_User");
             });
 
-             modelBuilder.Entity<Tag>(entity =>
-            {	
-                entity.HasKey(e => e.IdTag)
-                    .HasName("Tag_pk");
-                entity.Property(e => e.IdTag)
-                    .HasColumnName("idTag")
-                    .ValueGeneratedNever();
+            modelBuilder.Entity<TaskStatus>(entity =>
+            {
+                entity.HasKey(e => e.IdStatus)
+                    .HasName("Task_Status_pk");
+
+                entity.ToTable("Task_Status");
+
+                entity.Property(e => e.IdStatus).HasColumnName("idStatus");
+
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(255);
             });
 
@@ -574,17 +542,15 @@ namespace MentorApp.Persistence
 
                 entity.ToTable("URL");
 
-                entity.Property(e => e.IdUrl)
-                    .HasColumnName("IdURL")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Category)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.IdUrl).HasColumnName("IdURL");
 
                 entity.Property(e => e.Link)
                     .IsRequired()
-                    .HasMaxLength(250);
+                    .HasMaxLength(500);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Url)
@@ -598,7 +564,7 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdUser)
                     .HasName("User_pk");
 
-                entity.Property(e => e.IdUser).ValueGeneratedNever();
+                entity.Property(e => e.Avatar).HasMaxLength(1000);
 
                 entity.Property(e => e.Email)
                     .IsRequired()
@@ -612,18 +578,23 @@ namespace MentorApp.Persistence
                     .IsRequired()
                     .HasMaxLength(255);
 
-                entity.Property(e => e.Avatar).HasColumnType("text");
-
-                entity.Property(e => e.RefreshToken).HasColumnType("text");
-                entity.Property(e => e.RefreshTokenExpDate).HasColumnType("datetime");
-
                 entity.Property(e => e.Password)
                     .IsRequired()
                     .HasMaxLength(255);
 
+                entity.Property(e => e.RefreshToken).HasMaxLength(500);
+
+                entity.Property(e => e.RefreshTokenExpDate).HasColumnType("datetime");
+
                 entity.Property(e => e.Salt)
                     .IsRequired()
-                    .HasColumnType("text");
+                    .HasMaxLength(500);
+
+                entity.HasOne(d => d.RoleNavigation)
+                    .WithMany(p => p.User)
+                    .HasForeignKey(d => d.Role)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("User_Role");
             });
 
             OnModelCreatingPartial(modelBuilder);
