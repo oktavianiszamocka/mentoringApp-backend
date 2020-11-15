@@ -24,7 +24,14 @@ namespace MentorApp.Services
             var allPostWrapper = GetPostWrappers(allPost);
             return allPostWrapper;
         }
-        
+
+        public async Task<List<PostWrapper>> GetGeneralPost()
+        {
+            var postGeneral = await _postRepository.GetGeneralPost();
+            var postWrapperList = GetPostWrappers(postGeneral);
+            return postWrapperList;
+        }
+
         public async Task<List<PostWrapper>> GetPostProject(int IdProject)
         {
 
@@ -32,7 +39,33 @@ namespace MentorApp.Services
             var postWrapperList = GetPostWrappers(postProject);
             return postWrapperList;
         }
-        
+
+
+        public async Task<List<CommentWrapper>> GetAllCommentByPostId(int IdPost)
+        {
+            var commentsPost = await _postRepository.GetAllCommentByPostId(IdPost);
+            var commentWrapperList = commentsPost.Comment
+                                    .OrderByDescending(comment => comment.CreatedOn)
+                                    .Select(comment => new CommentWrapper
+                                    {
+
+                                        IdComment = comment.IdComment,
+                                        Comment = comment.Comment1,
+                                        CreatedOn = comment.CreatedOn,
+                                        CreatedBy = new UserWrapper
+                                        {
+                                            firstName = comment.CreatedByNavigation.FirstName,
+                                            lastName = comment.CreatedByNavigation.LastName,
+                                            imageUrl = comment.CreatedByNavigation.Avatar
+                                        }
+                                    })
+                                    .ToList();
+            return commentWrapperList;
+        }
+        public async Task<Post> SaveNewPost(Post post)
+        {
+            return await  _postRepository.SaveNewPost(post);
+        }
         public List<PostWrapper> GetPostWrappers(List<Post> postList)
         {
             var postWrapperList = postList
@@ -70,5 +103,7 @@ namespace MentorApp.Services
                              .ToList();
             return postWrapperList;
         }
+
+
     }
 }

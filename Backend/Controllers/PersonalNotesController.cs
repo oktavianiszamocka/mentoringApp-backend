@@ -16,31 +16,37 @@ namespace MentorApp.Controllers
     public class PersonalNotesController : ControllerBase
     {
         private const int DefaultPageSize = 3;
-        private readonly MentorAppContext _context;
+        private readonly IPersonalNoteService _personalNoteService;
         private readonly IUriService _uriService;
 
-        public PersonalNotesController(MentorAppContext context, IUriService uriService)
+        public PersonalNotesController(IPersonalNoteService personalNoteService, IUriService uriService)
         {
-            _context = context;
+            _personalNoteService = personalNoteService;
             _uriService = uriService;
         }
 
-        [HttpGet("{idUser:int}")]
-        public async Task<IActionResult> GetPersonalNoteList(int idUser, [FromQuery] Filter.PaginationFilter filter )
+        [HttpGet("{IdUser:int}")]
+        public async Task<IActionResult> GetPersonalNoteList(int IdUser, [FromQuery] Filter.PaginationFilter filter )
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
 
-            var personalNoteList = await _context.PersonalNote
-                          .Where(note => note.User.Equals(idUser))
-                         .OrderByDescending(Note => Note.LastModified)
-                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                         .Take(validFilter.PageSize)
-                         .ToListAsync();
+            var personalNoteList = await _personalNoteService.GetPersonalNotesByIdUser(IdUser);
+            var personalNoteWithPaging =  personalNoteList
+                                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                                          .Take(validFilter.PageSize)
+                                          .ToList();
 
             var totalRecords = personalNoteList.Count;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<PersonalNote>(personalNoteList, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PersonalNote>(personalNoteWithPaging, validFilter, totalRecords, _uriService, route);
             return Ok(pagedReponse);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNewPersonalNote(PersonalNote note)
+        {
+            await _personalNoteService.SaveNewNote(note);
+            return StatusCode(201, note);
         }
     }
 }
