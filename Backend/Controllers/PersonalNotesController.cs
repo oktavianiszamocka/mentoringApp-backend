@@ -29,7 +29,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetPersonalNoteList(int idUser, [FromQuery] Filter.PaginationFilter filter )
         {
             var route = Request.Path.Value;
-            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+            var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
 
             var personalNoteList = await _context.PersonalNote
                           .Where(note => note.User.Equals(idUser))

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
 using System;
+using MentorApp.Repository;
 
 namespace MentorApp.Controllers
 {
@@ -21,82 +22,56 @@ namespace MentorApp.Controllers
         private const int DefaultPageSize = 10;
         private readonly MentorAppContext _context;
         private readonly IUriService _uriService;
+        private readonly IPostService _postService;
+       
 
-        public PostsController(MentorAppContext context, IUriService uriService)
+        public PostsController(MentorAppContext context, IUriService uriService, IPostService postService)
         {
             _context = context;
             _uriService = uriService;
+            _postService = postService;
+      
         }
 
-        //mr. Gago
-/*        [HttpGet]
-        public async Task<IActionResult> GetPostList(int pageNumber = 1, int pageSize = DefaultPageSize)
-        {
-            return Ok(await _context.Post
-                         .OrderByDescending(post => post.DateOfPublication)
-                         .GetPage(pageNumber, pageSize)
-                         .ToListAsync());
-        }*/
 
-
-        //tami
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] Filter.PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
-            var postList = await _context.Post
-                           .Include(post => post.WriterNavigation)
-                           .Include(post => post.PostTag)
-                           .ThenInclude(postTag => postTag.TagNavigation)
-                           .Include(post => post.Comment)
-                           .ThenInclude(comment => comment.CreatedByNavigation)
-                          .Select(post => new PostWrapper
-                          {
-                              IdPost = post.IdPost,
-                              Title = post.Title,
-                              Content = post.Content,
-                              DateOfPublication = post.DateOfPublication,
-                              Writer = new UserWrapper
-                              {
-                                  firstName = post.WriterNavigation.FirstName,
-                                  lastName = post.WriterNavigation.LastName,
-                                  imageUrl = post.WriterNavigation.Avatar
+            var postList = await _postService.GetAll();
+            var postWithPaging = postList
+               .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+               .Take(validFilter.PageSize)
+               .ToList();
 
-                              },
-                              NewestComment = post.Comment.OrderByDescending(comment => comment.CreatedOn).Select(comment => new CommentWrapper
-                              {
-                                  IdComment = comment.IdComment,
-                                  Comment = comment.Comment1,
-                                  CreatedOn = comment.CreatedOn,
-                                  CreatedBy = new UserWrapper
-                                  {
-                                      firstName = comment.CreatedByNavigation.FirstName,
-                                      lastName = comment.CreatedByNavigation.LastName,
-                                      imageUrl = comment.CreatedByNavigation.Avatar
-                                  }
-                              }).FirstOrDefault(),
-                              //post.Comment.OrderByDescending(comment => comment.CreatedOn).ToList(),
-                              tags = post.PostTag.Select(postTag => new string
-                              ( postTag.TagNavigation.Name
-
-                              )).ToList()
-                           
-
-                          }) 
-                         .OrderByDescending(post => post.DateOfPublication)
-                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                         .Take(validFilter.PageSize)
-                         .ToListAsync();
-
-            var totalRecords = await _context.Post.CountAsync();
-            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postList, validFilter, totalRecords, _uriService, route);
+            var totalRecords = postWithPaging.Count();
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
             
             return Ok(pagedReponse);
           
         }
-    
+
+        [HttpGet("project/{idProject:int}")]
+        public async Task<IActionResult> GetPostByProject([FromQuery] Filter.PaginationFilter filter, int idProject)
+        {
+            var route = Request.Path.Value;
+            var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+
+            var postList = await _postService.GetPostProject(idProject);
+            var postWithPaging =  postList
+               .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+               .Take(validFilter.PageSize)
+               .ToList();
+
+            var totalRecords = postWithPaging.Count();
+            var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
+
+            return Ok(pagedReponse);
+
+        }
+       
 
         [HttpGet("{idPost:int}/comment")]
         public async Task<IActionResult> GetAllCommentsByPostId(int idPost)
@@ -132,22 +107,5 @@ namespace MentorApp.Controllers
             await _context.SaveChangesAsync();
             return StatusCode(201, post);
         }
-
-        [HttpGet("project/{idProject:int}")]
-        public async Task<IActionResult> GetPostByProject(int idProject, int pageNumber = 1, int pageSize = DefaultPageSize)
-        {
-            IOrderedQueryable<Post> posts = _context.Post
-                            .Where(post => post.Project.Equals(idProject))
-                            .OrderByDescending(post => post.DateOfPublication);
-
-            return Ok((await posts
-                            .GetPage(pageNumber, pageSize)
-                            .ToListAsync())
-                            .ToPagedList(pageNumber,
-                                         pageSize,
-                                         await posts.CountAsync()
-                            ));
-        }
-
     }
 }
