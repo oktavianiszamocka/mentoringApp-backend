@@ -40,7 +40,7 @@ namespace MentorApp.Tests
         [HttpGet("secret-data-for-admin2")]
         public string SecretDataForAdmin2()
         {
-            return "This data is secret and only for admins";
+            return "This data is secret and only for admins2";
         }
     }
 }

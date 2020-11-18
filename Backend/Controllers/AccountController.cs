@@ -58,7 +58,7 @@ namespace MentorApp.Controllers
 
             user.RefreshToken = Guid.NewGuid().ToString();
             user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-            //_context.SaveChanges();
+            _context.SaveChanges();
 
             return Ok(new
             {
@@ -92,7 +92,7 @@ namespace MentorApp.Controllers
                 issuer: "https://localhost:5001",
                 audience: "https://localhost:5001",
                 claims: userclaim,
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddMinutes(15),
                 signingCredentials: creds
             );
 

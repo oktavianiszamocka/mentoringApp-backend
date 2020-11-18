@@ -75,7 +75,7 @@ namespace MentorApp
             app.UseRouting();
 
 
-            //check
+            //Does not work without this
             app.UseAuthentication();
 
             app.UseAuthorization();
