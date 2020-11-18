@@ -1,9 +1,10 @@
-﻿namespace MentorApp.Models
+﻿
+
+namespace MentorApp.Models
 {
     public partial class MeetingAttendence
     {
         public int IdAttendence { get; set; }
-        public bool Attendence { get; set; }
         public int Meeting { get; set; }
         public int User { get; set; }
 

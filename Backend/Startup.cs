@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MentorApp.Persistence;
+using MentorApp.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -51,7 +52,17 @@ namespace MentorApp
                 var request = accessor.HttpContext.Request;
                 var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriService(uri);
-            }); /*services.AddDbContext<s17874Context>(opt => opt.UseSqlServer("Data Source=db-mssql;Initial Catalog=s17874;Persist Security Info=True;User ID=inzs17874;Password=admin"));*/
+            });
+            services.AddTransient<IPostService, PostService>();
+            services.AddTransient<IPostRepository, PostRepository>();
+            services.AddTransient<IPersonalNoteRepository, PersonalNoteRepository>();
+            services.AddTransient<IPersonalNoteService, PersonalNoteService>();
+            services.AddTransient<IProjectMemberRepository, ProjectMemberRepository>();
+            services.AddTransient<IProjectMemberService, ProjectMemberService>();
+            services.AddTransient< IProfileRepository, ProfileRepository>();
+            services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
             services.AddControllers();
         }
 

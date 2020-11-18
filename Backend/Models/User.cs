@@ -32,8 +32,10 @@ namespace MentorApp.Models
         public string FirstName { get; set; }
         public string Avatar { get; set; }
         public string RefreshToken { get; set; }
-        public DateTime RefreshTokenExpDate { get; set; }
+        public DateTime? RefreshTokenExpDate { get; set; }
+        public int Role { get; set; }
 
+        public virtual Role RoleNavigation { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }
         public virtual ICollection<MeetingAttendence> MeetingAttendence { get; set; }
         public virtual ICollection<Message> MessageReceiverNavigation { get; set; }
