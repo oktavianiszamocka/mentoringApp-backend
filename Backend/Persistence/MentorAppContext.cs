@@ -318,8 +318,12 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.Experiences).HasMaxLength(2000);
 
                 entity.Property(e => e.Major).HasMaxLength(250);
+                entity.Property(e => e.Country).HasMaxLength(225);
 
                 entity.Property(e => e.Skills).HasMaxLength(1000);
+                entity.Property(e => e.Phone).HasMaxLength(50);
+
+                entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.Profile)

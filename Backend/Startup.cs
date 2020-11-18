@@ -57,6 +57,12 @@ namespace MentorApp
             services.AddTransient<IPostRepository, PostRepository>();
             services.AddTransient<IPersonalNoteRepository, PersonalNoteRepository>();
             services.AddTransient<IPersonalNoteService, PersonalNoteService>();
+            services.AddTransient<IProjectMemberRepository, ProjectMemberRepository>();
+            services.AddTransient<IProjectMemberService, ProjectMemberService>();
+            services.AddTransient< IProfileRepository, ProfileRepository>();
+            services.AddTransient<IProfileService, ProfileService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserService, UserService>();
             services.AddControllers();
         }
 

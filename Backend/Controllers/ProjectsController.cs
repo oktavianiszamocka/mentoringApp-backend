@@ -1,6 +1,10 @@
-﻿using MentorApp.Persistence;
+﻿using MentorApp.Models;
+using MentorApp.Persistence;
+using MentorApp.Services;
+using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,20 +14,18 @@ namespace MentorApp.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
-        private readonly MentorAppContext _context;
+        private readonly IProjectMemberService _projectMemberService;
 
-        public ProjectsController(MentorAppContext context)
+       public ProjectsController(IProjectMemberService projectMemberService)
         {
-            _context = context;
+            _projectMemberService = projectMemberService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetUserProject(int idUser)
+        [HttpGet("{IdUser:int}")]
+        public async Task<IActionResult> GetUserProject(int IdUser)
         {
-            return Ok(await _context.ProjectMembers
-                                        .Where(project => project.Member.Equals(idUser))
-                                        .Select(project => project.Project)
-                                        .ToListAsync());
+            var projectList = await _projectMemberService.GetProjectsNameByIdUser(IdUser);
+            return Ok(new Response<List<string>>(projectList));
         }
 
     }

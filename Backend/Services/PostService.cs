@@ -17,7 +17,7 @@ namespace MentorApp.Services
         {
             _postRepository = postRepository;
         }
-        //public Task<List<PostWrapper>> GetAll()
+     
         public async Task<List<PostWrapper>> GetAll()
         {
             var allPost =  await _postRepository.GetAllPost();
