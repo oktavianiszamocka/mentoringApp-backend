@@ -54,6 +54,7 @@ namespace MentorApp.Services
                                         CreatedOn = comment.CreatedOn,
                                         CreatedBy = new UserWrapper
                                         {
+                                            IdUser = comment.CreatedBy,
                                             firstName = comment.CreatedByNavigation.FirstName,
                                             lastName = comment.CreatedByNavigation.LastName,
                                             imageUrl = comment.CreatedByNavigation.Avatar
@@ -77,6 +78,7 @@ namespace MentorApp.Services
                                     DateOfPublication = post.DateOfPublication,
                                     Writer = new UserWrapper
                                     {
+                                        IdUser = post.Writer,
                                         firstName = post.WriterNavigation.FirstName,
                                         lastName = post.WriterNavigation.LastName,
                                         imageUrl = post.WriterNavigation.Avatar
@@ -89,6 +91,7 @@ namespace MentorApp.Services
                                         CreatedOn = comment.CreatedOn,
                                         CreatedBy = new UserWrapper
                                         {
+                                            IdUser = comment.CreatedBy,
                                             firstName = comment.CreatedByNavigation.FirstName,
                                             lastName = comment.CreatedByNavigation.LastName,
                                             imageUrl = comment.CreatedByNavigation.Avatar

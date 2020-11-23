@@ -17,6 +17,7 @@ namespace MentorApp.Wrappers
 
     public class UserWrapper
     {
+        public int IdUser { get; set; }
         public String firstName { get; set; }
         public String lastName { get; set; }
         public String imageUrl { get; set; }
