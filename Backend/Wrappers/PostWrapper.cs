@@ -12,6 +12,7 @@ namespace MentorApp.Wrappers
         public DateTime DateOfPublication { get; set; }
         public UserWrapper Writer { get; set; }
         public virtual CommentWrapper NewestComment { get; set; }
+        public Boolean hasMoreThanOneComment { get; set; }
         public virtual ICollection<String> tags { get; set; }
     }
 

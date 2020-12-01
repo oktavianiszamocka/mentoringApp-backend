@@ -71,6 +71,14 @@ namespace MentorApp.Repository
             return post;
         }
 
-       
+        public Task<Tag> SaveNewTag(Tag newTag)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<PostTag> SaveNewPostTag(PostTag postTag)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

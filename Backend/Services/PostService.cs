@@ -84,6 +84,7 @@ namespace MentorApp.Services
                                         imageUrl = post.WriterNavigation.Avatar
 
                                     },
+                                    hasMoreThanOneComment = post.Comment.Count() > 1 ? true : false,
                                     NewestComment = post.Comment.OrderByDescending(comment => comment.CreatedOn).Select(comment => new CommentWrapper
                                     {
                                         IdComment = comment.IdComment,
