@@ -17,6 +17,15 @@ namespace MentorApp.Repository
             _context = context;
         }
 
+        public async Task<PersonalNote> DeletePersonalNote(int PersonalNoteId)
+        {
+            var note = await _context.PersonalNote.FindAsync(PersonalNoteId);
+            _context.PersonalNote.Remove(note);
+            await _context.SaveChangesAsync();
+            return note;
+            
+        }
+
         public async Task<List<PersonalNote>> GetPersonalNotesByUser(int IdUser)
         {
             return await _context.PersonalNote
@@ -30,6 +39,14 @@ namespace MentorApp.Repository
             _context.PersonalNote.Add(note);
             await _context.SaveChangesAsync();
             return note;
+        }
+
+        public async Task<PersonalNote> UpdatePersonalNote(PersonalNote Note)
+        {
+            _context.Entry(Note).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return Note;
+            
         }
     }
 }

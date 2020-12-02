@@ -10,5 +10,7 @@ namespace MentorApp.Services
     {
         Task<List<PersonalNote>> GetPersonalNotesByIdUser(int IdUser);
         Task<PersonalNote> SaveNewNote(PersonalNote note);
+        Task<PersonalNote> DeletePersonalNote(int PersonalNoteId);
+        Task<PersonalNote> UpdatePersonalNote(PersonalNote Note);
     }
 }
