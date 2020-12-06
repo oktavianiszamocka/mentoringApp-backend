@@ -1,4 +1,5 @@
-﻿using MentorApp.Persistence;
+﻿using MentorApp.Models;
+using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,13 @@ namespace MentorApp.Repository
         {
             _context = context;
         }
-        public async Task<List<string>> GetProjectName(int IdUser)
+        public async Task<List<Project>> GetProjectName(int IdUser)
         {
             return await _context.ProjectMembers
                         .Include(project => project.ProjectNavigation)
                         .Where(project => project.Member.Equals(IdUser))
-                        .Select(project => project.ProjectNavigation.Name)
+                        .Select(project => project.ProjectNavigation)
+                    //    .Select(project => project.ProjectNavigation.Name)
                         .ToListAsync();
         }
     }

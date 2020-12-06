@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using AutoMapper;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp
 {
@@ -63,6 +65,15 @@ namespace MentorApp
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddControllers();
         }
 
@@ -91,6 +102,8 @@ namespace MentorApp
             {
                 endpoints.MapControllers();
             });
+
+            
         }
     }
 }
