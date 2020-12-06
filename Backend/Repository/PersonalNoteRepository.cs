@@ -43,7 +43,11 @@ namespace MentorApp.Repository
 
         public async Task<PersonalNote> UpdatePersonalNote(PersonalNote Note)
         {
-            _context.Entry(Note).State = EntityState.Modified;
+            var existingNote = await _context.PersonalNote.FindAsync(Note.IdNote);
+            existingNote.Description = Note.Description;
+            existingNote.LastModified = Note.LastModified;
+            // _context.Entry(Note).State = EntityState.Modified;
+            _context.PersonalNote.Update(existingNote);
             await _context.SaveChangesAsync();
             return Note;
             

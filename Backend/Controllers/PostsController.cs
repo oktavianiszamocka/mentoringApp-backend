@@ -39,12 +39,13 @@ namespace MentorApp.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
             var postList = await _postService.GetAll();
-            var postWithPaging = postList
+            var postWithPaging =  postList
                                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                                .Take(validFilter.PageSize)
                                .ToList();
 
-            var totalRecords = postWithPaging.Count();
+            var totalRecords = postList.Count();
+           
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
             
             return Ok(pagedReponse);
@@ -63,7 +64,7 @@ namespace MentorApp.Controllers
                                .Take(validFilter.PageSize)
                                .ToList();
 
-            var totalRecords = postWithPaging.Count();
+            var totalRecords = postList.Count();
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
 
             return Ok(pagedReponse);
@@ -82,7 +83,7 @@ namespace MentorApp.Controllers
                                .Take(validFilter.PageSize)
                                .ToList();
 
-            var totalRecords = postWithPaging.Count();
+            var totalRecords = postList.Count();
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
 
             return Ok(pagedReponse);

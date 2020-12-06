@@ -60,7 +60,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> UpdatePersonalNote(PersonalNote note)
         {
             await _personalNoteService.UpdatePersonalNote(note);
-            return StatusCode(200);
+            return StatusCode(200, note);
         }
     }
 }
