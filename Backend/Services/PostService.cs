@@ -67,6 +67,10 @@ namespace MentorApp.Services
         {
             return await  _postRepository.SaveNewPost(post);
         }
+        public async Task<Comment> SaveNewComment(Comment comment)
+        {
+            return await _postRepository.SaveNewComment(comment);
+        }
         public List<PostWrapper> GetPostWrappers(List<Post> postList)
         {
             var postWrapperList = postList
@@ -108,6 +112,6 @@ namespace MentorApp.Services
             return postWrapperList;
         }
 
-
+        
     }
 }

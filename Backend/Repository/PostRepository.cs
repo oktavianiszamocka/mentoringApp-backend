@@ -80,5 +80,12 @@ namespace MentorApp.Repository
         {
             throw new System.NotImplementedException();
         }
+
+        public async Task<Comment> SaveNewComment(Comment comment)
+        {
+            _context.Comment.Add(comment);
+            await _context.SaveChangesAsync();
+            return comment;
+        }
     }
 }

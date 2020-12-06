@@ -103,5 +103,12 @@ namespace MentorApp.Controllers
             await _postService.SaveNewPost(post);
             return StatusCode(201, post);
         }
+
+        [HttpPost("/comment")]
+        public async Task<IActionResult> CreateComment(Comment comment)
+        {
+            await _postService.SaveNewComment(comment);
+            return StatusCode(201, comment);
+        }
     }
 }

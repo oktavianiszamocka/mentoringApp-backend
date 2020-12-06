@@ -17,6 +17,7 @@ namespace MentorApp.Services
         Task<List<CommentWrapper>> GetAllCommentByPostId(int IdPost);
 
         Task<Post> SaveNewPost(Post post);
+        Task<Comment> SaveNewComment(Comment comment);
 
     }
 }
