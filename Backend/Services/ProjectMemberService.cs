@@ -1,4 +1,6 @@
-﻿using MentorApp.Repository;
+﻿using AutoMapper;
+using MentorApp.DTOs.Responses;
+using MentorApp.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +11,17 @@ namespace MentorApp.Services
     public class ProjectMemberService : IProjectMemberService
     {
         private readonly IProjectMemberRepository _projectMemberRepository;
-        public ProjectMemberService(IProjectMemberRepository projectMemberRepository)
+        private readonly IMapper _mapper;
+        public ProjectMemberService(IProjectMemberRepository projectMemberRepository, IMapper mapper)
         {
             _projectMemberRepository = projectMemberRepository;
+            _mapper = mapper;
         }
-        public async Task<List<string>> GetProjectsNameByIdUser(int IdUser)
+        public async Task<List<ProjectDTO>> GetProjectsNameByIdUser(int IdUser)
         {
-            return await _projectMemberRepository.GetProjectName(IdUser);
+            var projectList =  await _projectMemberRepository.GetProjectName(IdUser);
+            var projectDTOList = _mapper.Map<List<ProjectDTO>>(projectList);
+            return projectDTOList;
         }
     }
 }

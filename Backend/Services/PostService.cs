@@ -54,6 +54,7 @@ namespace MentorApp.Services
                                         CreatedOn = comment.CreatedOn,
                                         CreatedBy = new UserWrapper
                                         {
+                                            IdUser = comment.CreatedBy,
                                             firstName = comment.CreatedByNavigation.FirstName,
                                             lastName = comment.CreatedByNavigation.LastName,
                                             imageUrl = comment.CreatedByNavigation.Avatar
@@ -66,6 +67,10 @@ namespace MentorApp.Services
         {
             return await  _postRepository.SaveNewPost(post);
         }
+        public async Task<Comment> SaveNewComment(Comment comment)
+        {
+            return await _postRepository.SaveNewComment(comment);
+        }
         public List<PostWrapper> GetPostWrappers(List<Post> postList)
         {
             var postWrapperList = postList
@@ -77,11 +82,13 @@ namespace MentorApp.Services
                                     DateOfPublication = post.DateOfPublication,
                                     Writer = new UserWrapper
                                     {
+                                        IdUser = post.Writer,
                                         firstName = post.WriterNavigation.FirstName,
                                         lastName = post.WriterNavigation.LastName,
                                         imageUrl = post.WriterNavigation.Avatar
 
                                     },
+                                    hasMoreThanOneComment = post.Comment.Count() > 1 ? true : false,
                                     NewestComment = post.Comment.OrderByDescending(comment => comment.CreatedOn).Select(comment => new CommentWrapper
                                     {
                                         IdComment = comment.IdComment,
@@ -89,6 +96,7 @@ namespace MentorApp.Services
                                         CreatedOn = comment.CreatedOn,
                                         CreatedBy = new UserWrapper
                                         {
+                                            IdUser = comment.CreatedBy,
                                             firstName = comment.CreatedByNavigation.FirstName,
                                             lastName = comment.CreatedByNavigation.LastName,
                                             imageUrl = comment.CreatedByNavigation.Avatar
@@ -104,6 +112,6 @@ namespace MentorApp.Services
             return postWrapperList;
         }
 
-
+        
     }
 }

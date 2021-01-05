@@ -12,11 +12,13 @@ namespace MentorApp.Wrappers
         public DateTime DateOfPublication { get; set; }
         public UserWrapper Writer { get; set; }
         public virtual CommentWrapper NewestComment { get; set; }
+        public Boolean hasMoreThanOneComment { get; set; }
         public virtual ICollection<String> tags { get; set; }
     }
 
     public class UserWrapper
     {
+        public int IdUser { get; set; }
         public String firstName { get; set; }
         public String lastName { get; set; }
         public String imageUrl { get; set; }

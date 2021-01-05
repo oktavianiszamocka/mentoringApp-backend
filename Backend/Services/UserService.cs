@@ -26,6 +26,7 @@ namespace MentorApp.Services
         {
             return new UserWrapper
             {
+                IdUser = user.IdUser,
                 firstName = user.FirstName,
                 lastName = user.LastName,
                 imageUrl = user.Avatar

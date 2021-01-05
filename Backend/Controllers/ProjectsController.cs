@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Responses;
+using MentorApp.Models;
 using MentorApp.Persistence;
 using MentorApp.Services;
 using MentorApp.Wrappers;
@@ -25,7 +26,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetUserProject(int IdUser)
         {
             var projectList = await _projectMemberService.GetProjectsNameByIdUser(IdUser);
-            return Ok(new Response<List<string>>(projectList));
+            return Ok(new Response<List<ProjectDTO>>(projectList));
         }
 
     }

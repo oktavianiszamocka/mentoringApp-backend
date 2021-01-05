@@ -48,5 +48,19 @@ namespace MentorApp.Controllers
             await _personalNoteService.SaveNewNote(note);
             return StatusCode(201, note);
         }
+
+        [HttpDelete("{IdNote:int}")]
+        public async Task<IActionResult> DeletePersonalNote(int IdNote)
+        {
+            await _personalNoteService.DeletePersonalNote(IdNote);
+            return StatusCode(200);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePersonalNote(PersonalNote note)
+        {
+            await _personalNoteService.UpdatePersonalNote(note);
+            return StatusCode(200, note);
+        }
     }
 }
