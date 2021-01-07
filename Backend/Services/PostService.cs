@@ -1,4 +1,6 @@
-﻿using MentorApp.Models;
+﻿
+using MentorApp.DTOs.Requests;
+using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +14,12 @@ namespace MentorApp.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
+       
 
         public PostService(IPostRepository postRepository)
         {
             _postRepository = postRepository;
+          
         }
      
         public async Task<List<PostWrapper>> GetAll()
@@ -63,13 +67,110 @@ namespace MentorApp.Services
                                     .ToList();
             return commentWrapperList;
         }
-        public async Task<Post> SaveNewPost(Post post)
+        public async Task<Post> SaveNewPost(NewPostDTO newPost)
         {
-            return await  _postRepository.SaveNewPost(post);
+
+            var post = ConvertPostRequestDTOToPost(newPost);
+            var saveNewPost = await _postRepository.SaveNewPost(post);
+            await mappingTag(newPost.Tags, saveNewPost.IdPost);
+            return saveNewPost;
         }
+        public async Task<Post> UpdatePost(EditPostDTO newPost)
+        {
+            var post = new Post
+            {
+                IdPost = newPost.IdPost,
+                Title = newPost.Title,
+                Content = newPost.Content,
+                Attachment = newPost.Attachment
+
+            };
+            post = await _postRepository.UpdatePost(post);
+
+            var tagsList = await _postRepository.GetAllPostTagByPostId(post.IdPost);
+            List<string> nonExistingPostTag = new List<string>();
+            foreach (string tag in newPost.Tags)
+            {
+                var existingPostTag = tagsList.Find(posttag => posttag.TagNavigation.Name.Equals(tag));
+                if (existingPostTag == null)
+                {
+                    nonExistingPostTag.Add(tag);
+                 
+                }
+            }
+            await mappingTag(nonExistingPostTag, post.IdPost);
+          
+            return post;
+        }
+
         public async Task<Comment> SaveNewComment(Comment comment)
         {
             return await _postRepository.SaveNewComment(comment);
+        }
+
+        public async Task<Post> DeletePost(int IdPost)
+        {
+            var allPostTagsOfPost = await _postRepository.GetAllPostTagByPostId(IdPost);
+            foreach(PostTag postTag in allPostTagsOfPost)
+            {
+                await _postRepository.DeletePostTag(postTag.IdPostTag);
+            }
+
+            return await _postRepository.DeletePost(IdPost);
+        }
+
+        public async Task<List<string>> mappingTag(List<string> tags, int IdPost)
+        {
+            foreach (string tag in tags)
+            {
+                var existingTag = await _postRepository.GetTagByName(tag);
+                if (existingTag != null)
+                {
+
+                    var newPostTag = new PostTag
+                    {
+                        Post = IdPost,
+                        Tag = existingTag.IdTag
+                    };
+                    var saveNewPostTag = await _postRepository.SaveNewPostTag(newPostTag);
+
+                }
+                else
+                {
+                    var newTag = new Tag
+                    {
+                        Name = tag
+                    };
+
+                    var saveNewTag = await _postRepository.SaveNewTag(newTag);
+
+                    var newPostTag = new PostTag
+                    {
+                        Post = IdPost,
+                        Tag = saveNewTag.IdTag
+                    };
+                    var saveNewPostTag = await _postRepository.SaveNewPostTag(newPostTag);
+
+                }
+            }
+            return tags;
+        }
+
+
+        public Post ConvertPostRequestDTOToPost(NewPostDTO newPost)
+        {
+            var post = new Post
+            {
+                Title = newPost.Title,
+                Content = newPost.Content,
+                DateOfPublication = newPost.DateOfPublication,
+                Writer = newPost.Writer,
+                Project = newPost.Project,
+                Attachment = newPost.Attachment
+
+            };
+
+            return post;
         }
         public List<PostWrapper> GetPostWrappers(List<Post> postList)
         {
@@ -112,6 +213,6 @@ namespace MentorApp.Services
             return postWrapperList;
         }
 
-        
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -16,8 +17,10 @@ namespace MentorApp.Services
         Task<List<PostWrapper>> GetGeneralPost();
         Task<List<CommentWrapper>> GetAllCommentByPostId(int IdPost);
 
-        Task<Post> SaveNewPost(Post post);
+        Task<Post> SaveNewPost(NewPostDTO post);
+        Task<Post> UpdatePost(EditPostDTO post);
         Task<Comment> SaveNewComment(Comment comment);
+        Task<Post> DeletePost(int IdPost);
 
     }
 }

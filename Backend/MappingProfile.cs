@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using System;
@@ -13,6 +14,8 @@ namespace MentorApp
         public MappingProfile()
         {
             CreateMap<Project, ProjectDTO>();
+            
+
         }
     }
 }

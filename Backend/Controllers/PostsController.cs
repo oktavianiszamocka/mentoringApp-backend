@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
 using System;
-
+using MentorApp.DTOs.Requests;
 
 namespace MentorApp.Controllers
 {
@@ -98,10 +98,10 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost(Post post)
+        public async Task<IActionResult> CreatePost(NewPostDTO newPost)
         {
-            await _postService.SaveNewPost(post);
-            return StatusCode(201, post);
+            var newPostSaved = await _postService.SaveNewPost(newPost);
+            return StatusCode(201, newPostSaved);
         }
 
         [HttpPost("/comment")]
@@ -109,6 +109,20 @@ namespace MentorApp.Controllers
         {
             await _postService.SaveNewComment(comment);
             return StatusCode(201, comment);
+        }
+
+        [HttpDelete("{IdPost:int}")]
+        public async Task<IActionResult> DeletePost(int IdPost)
+        {
+            await _postService.DeletePost(IdPost);
+            return StatusCode(200);
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdatePost(EditPostDTO newPostDTO)
+        {
+            await _postService.UpdatePost(newPostDTO);
+            return StatusCode(200, newPostDTO);
         }
     }
 }
