@@ -23,11 +23,17 @@ namespace MentorApp.Controllers
         }
 
         [HttpGet("{IdUser:int}")]
-        public async Task<IActionResult> GetUserProject(int IdUser)
+        public async Task<IActionResult> GetUserProjectsName(int IdUser)
         {
             var projectList = await _projectMemberService.GetProjectsNameByIdUser(IdUser);
             return Ok(new Response<List<ProjectDTO>>(projectList));
         }
 
+        [HttpGet("userProjects/{IdUser:int}")]
+        public async Task<IActionResult> GetUserProjects(int IdUser)
+        {
+            var projectList = await _projectMemberService.GetProjectsByIdUser(IdUser);
+            return Ok(new Response<List<ProjectWrapper>>(projectList));
+        }
     }
 }

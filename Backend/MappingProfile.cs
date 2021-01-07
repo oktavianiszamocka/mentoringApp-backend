@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MentorApp.DTOs.Responses;
 using MentorApp.Models;
+using MentorApp.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
