@@ -20,6 +20,7 @@ namespace MentorApp.Repository
         {
             return await _context.ProjectMembers
                         .Include(project => project.ProjectNavigation)
+                        .ThenInclude(superVisor => superVisor.SuperviserNavigation)
                         .Where(project => project.Member.Equals(IdUser))
                         .Select(project => project.ProjectNavigation)
                     //    .Select(project => project.ProjectNavigation.Name)

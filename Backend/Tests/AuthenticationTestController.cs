@@ -36,11 +36,12 @@ namespace MentorApp.Tests
             return "This data is secret and only for admins";
         }
 
+        //check
         [Authorize(Roles = "admin2")]
         [HttpGet("secret-data-for-admin2")]
         public string SecretDataForAdmin2()
         {
-            return "This data is secret and only for admins";
+            return "This data is secret and only for admins2";
         }
     }
 }
