@@ -52,6 +52,7 @@ namespace MentorApp.Repository
                             .Include(post => post.Comment)
                             .ThenInclude(comment => comment.CreatedByNavigation)
                             .OrderByDescending(post => post.DateOfPublication)
+                            .ThenByDescending(post => post.IdPost)
                           .ToListAsync();
         }
         public async Task<Post> GetAllCommentByPostId(int IdPost)
