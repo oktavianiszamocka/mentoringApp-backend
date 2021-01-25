@@ -36,5 +36,12 @@ namespace MentorApp.Controllers
             var userWrapper = await _userService.GetUserById(IdUser);
             return Ok(new Response<UserWrapper>(userWrapper));
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateUserProfile(Profile Profile)
+        {
+            await _profileService.UpdateUserProfile(Profile);
+            return StatusCode(200, Profile);
+        }
     }
 }
