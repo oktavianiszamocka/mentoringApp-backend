@@ -22,6 +22,19 @@ namespace MentorApp.Repository
                         .FirstOrDefaultAsync();
         }
 
+        public async Task<Profile> UpdateUserProfile(Profile Profile)
+        {
+            var existingProfile = await _context.Profile.FindAsync(Profile.IdProfile);
+            existingProfile.Phone = Profile.Phone;
+            existingProfile.Major = Profile.Major;
+            existingProfile.Skills = Profile.Skills;
+            existingProfile.Experiences = Profile.Experiences;
+            existingProfile.Semester = Profile.Semester;
+            _context.Profile.Update(existingProfile);
+            await _context.SaveChangesAsync();
+            return Profile;
+        }
+
 
     }
 }

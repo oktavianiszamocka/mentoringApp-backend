@@ -9,5 +9,6 @@ namespace MentorApp.Services
     public interface IProfileService
     {
         Task<Profile> GetUserProfile(int IdUser);
+        Task<Profile> UpdateUserProfile(Profile Profile);
     }
 }

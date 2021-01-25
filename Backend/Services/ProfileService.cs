@@ -18,5 +18,10 @@ namespace MentorApp.Services
         {
             return await _profileRepository.GetUserProfile(IdUser);
         }
+
+        public async Task<Profile> UpdateUserProfile(Profile Profile)
+        {
+            return await _profileRepository.UpdateUserProfile(Profile);
+        }
     }
 }
