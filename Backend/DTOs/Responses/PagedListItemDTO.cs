@@ -2,7 +2,7 @@
 
 namespace MentorApp.DTOs.Responses
 {
-    public class PagedListItem<T>
+    public class PagedListItemDTO<T>
     {
         public int CurrentPage { get; set; }
         public int PageSize { get; set; }

@@ -34,8 +34,8 @@ namespace MentorApp.Controllers
             var personalNoteList = await _personalNoteService.GetPersonalNotesByIdUser(IdUser);
             var personalNoteWithPaging =  personalNoteList
                                          .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                                          .Take(validFilter.PageSize)
-                                          .ToList();
+                                         .Take(validFilter.PageSize)
+                                         .ToList();
 
             var totalRecords = personalNoteList.Count;
             var pagedReponse = PaginationHelper.CreatePagedReponse<PersonalNote>(personalNoteWithPaging, validFilter, totalRecords, _uriService, route);

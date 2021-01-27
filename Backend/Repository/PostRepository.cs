@@ -126,7 +126,7 @@ namespace MentorApp.Repository
         public async Task<List<PostTag>> GetAllPostTagByPostId(int IdPost)
         {
             return await _context.PostTag
-                            .Include(postTag => postTag.TagNavigation)
+                           .Include(postTag => postTag.TagNavigation)
                            .Where(postTag => postTag.Post.Equals(IdPost))
                            .ToListAsync();
         }

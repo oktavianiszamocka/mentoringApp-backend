@@ -27,7 +27,7 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public IActionResult Login(LoginRequestDTO request)
         {
             //TODO Here we should check the credentials! Here we are just taking the first user.
             User user = _context.User.ToList().First();

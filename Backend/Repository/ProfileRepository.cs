@@ -26,6 +26,8 @@ namespace MentorApp.Repository
         {
             var existingProfile = await _context.Profile.FindAsync(Profile.IdProfile);
             existingProfile.Phone = Profile.Phone;
+            existingProfile.Country = Profile.Country;
+            existingProfile.DateOfBirth = Profile.DateOfBirth;
             existingProfile.Major = Profile.Major;
             existingProfile.Skills = Profile.Skills;
             existingProfile.Experiences = Profile.Experiences;
