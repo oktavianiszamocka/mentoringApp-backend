@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace MentorApp.Services
 {
+
     public class ProjectMemberService : IProjectMemberService
     {
         private readonly IProjectMemberRepository _projectMemberRepository;
@@ -27,23 +28,36 @@ namespace MentorApp.Services
             return projectDTOList;
         }
 
+        public async Task<List<ProjectWrapper>> GetProjectByNameSearch(int IdUser, String SearchString)
+        {
+            var projectList = await _projectMemberRepository.GetProjectByNameSearch(IdUser, SearchString);
+            var projectDTOList = GetProjectWrappers(projectList);
+            return projectDTOList;
+        }
         public async Task<List<ProjectWrapper>> GetProjectsByIdUser(int IdUser)
         {
             var projectList = await _projectMemberRepository.GetProjectName(IdUser);
-            var projectDTOList = projectList
-                                 .Select(project => new ProjectWrapper
-                                 {
-                                     IdProject = project.IdProject,
-                                     Name = project.Name,
-                                     Description = project.Description,
-                                     StartDate = project.StartDate,
-                                     EndDate = project.EndDate,
-                                     SuperviserFullName = project.SuperviserNavigation.FirstName + " " + project.SuperviserNavigation.LastName
-                                 }).ToList();
-            //var projectDTOList = _mapper.Map<List<ProjectWrapper>>(projectList);
+            var projectDTOList = GetProjectWrappers(projectList);
             return projectDTOList;
 
         }
 
+        public List<ProjectWrapper> GetProjectWrappers(List<Project> projects)
+        {
+            var projectDTOList = projects
+                      .Select(project => new ProjectWrapper
+                      {
+                          IdProject = project.IdProject,
+                          Name = project.Name,
+                          Description = project.Description,
+                          StartDate = project.StartDate,
+                          EndDate = project.EndDate,
+                          SuperviserFullName = project.SuperviserNavigation.FirstName + " " + project.SuperviserNavigation.LastName
+                      }).ToList();
+
+            return projectDTOList;
+        }
+
+       
     }
 }

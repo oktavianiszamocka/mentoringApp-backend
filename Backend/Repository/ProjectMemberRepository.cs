@@ -16,6 +16,17 @@ namespace MentorApp.Repository
         {
             _context = context;
         }
+
+        public async Task<List<Project>> GetProjectByNameSearch(int IdUser, String SearchString)
+        {
+            return await _context.ProjectMembers
+                        .Include(project => project.ProjectNavigation)
+                        .ThenInclude(superVisor => superVisor.SuperviserNavigation)
+                        .Where(project => project.Member.Equals(IdUser) && project.ProjectNavigation.Name.StartsWith(SearchString))
+                        .Select(project => project.ProjectNavigation)
+                        .ToListAsync();
+        }
+
         public async Task<List<Project>> GetProjectName(int IdUser)
         {
             return await _context.ProjectMembers
@@ -23,7 +34,6 @@ namespace MentorApp.Repository
                         .ThenInclude(superVisor => superVisor.SuperviserNavigation)
                         .Where(project => project.Member.Equals(IdUser))
                         .Select(project => project.ProjectNavigation)
-                    //    .Select(project => project.ProjectNavigation.Name)
                         .ToListAsync();
         }
     }
