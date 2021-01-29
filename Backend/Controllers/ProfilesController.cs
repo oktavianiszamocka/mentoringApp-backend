@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Requests;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
@@ -38,10 +39,10 @@ namespace MentorApp.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> UpdateUserProfile(Profile Profile)
+        public async Task<IActionResult> UpdateUserProfile(EditProfileDTO ProfileDTO)
         {
-            await _profileService.UpdateUserProfile(Profile);
-            return StatusCode(200, Profile);
+            await _profileService.UpdateUserProfile(ProfileDTO);
+            return StatusCode(200, ProfileDTO);
         }
     }
 }

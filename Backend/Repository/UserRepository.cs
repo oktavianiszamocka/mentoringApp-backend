@@ -23,5 +23,16 @@ namespace MentorApp.Repository
                         .Where(user => user.IdUser.Equals(IdUser))
                         .FirstOrDefaultAsync();
         }
+
+        public async Task<User> UpdateProfileUser(User User)
+        {
+            var existingUser = await _context.User.FindAsync(User.IdUser);
+            existingUser.FirstName = User.FirstName;
+            existingUser.LastName = User.LastName;
+            existingUser.Email = User.Email;
+            _context.User.Update(existingUser);
+            await _context.SaveChangesAsync();
+            return User;
+        }
     }
 }
