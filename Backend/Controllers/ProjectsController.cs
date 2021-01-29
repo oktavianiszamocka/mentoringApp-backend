@@ -71,5 +71,15 @@ namespace MentorApp.Controllers
 
             return Ok(pagedResponse);
         }
+
+
+        [HttpGet("members/{IdProject:int}")]
+        public async Task<IActionResult> GetProjectMembers(int IdProject)
+        {
+            var projectMemberList = await _projectMemberService.GetProjectMembers(IdProject);
+            return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
+        }
+
+
     }
 }

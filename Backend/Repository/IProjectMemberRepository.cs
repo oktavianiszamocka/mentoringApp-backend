@@ -10,5 +10,6 @@ namespace MentorApp.Repository
     {
         Task<List<Project>> GetProjectName(int IdUser);
         Task<List<Project>> GetProjectByNameSearch(int IdUser, String SearchString);
+        Task<List<ProjectMembers>> GetProjectMembers(int IdProject);
     }
 }

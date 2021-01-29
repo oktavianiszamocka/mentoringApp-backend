@@ -13,5 +13,7 @@ namespace MentorApp.Services
         Task<List<ProjectDTO>> GetProjectsNameByIdUser(int IdUser);
         Task<List<ProjectWrapper>> GetProjectsByIdUser(int IdUser);
         Task<List<ProjectWrapper>> GetProjectByNameSearch (int IdUser, String SearchString);
+
+        Task<List<ProjectMemberDTO>> GetProjectMembers(int IdProject);
     }
 }
