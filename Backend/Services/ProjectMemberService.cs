@@ -58,6 +58,23 @@ namespace MentorApp.Services
             return projectDTOList;
         }
 
-       
+        public async Task<List<ProjectMemberDTO>> GetProjectMembers(int IdProject)
+        {
+            var projectMembers = await _projectMemberRepository.GetProjectMembers(IdProject);
+
+            var projectMembersDTO = projectMembers
+                                .Select(member => new ProjectMemberDTO
+                                {
+                                    IdUser = member.Member,
+                                    FirstName = member.MemberNavigation.FirstName,
+                                    LastName = member.MemberNavigation.LastName,
+                                    Avatar = member.MemberNavigation.Avatar,
+                                    ProjectRole = member.Role,
+                                    Major = member.MemberNavigation.Profile.FirstOrDefault().Major,
+                                    Semester = member.MemberNavigation.Profile.FirstOrDefault().Semester
+                                }).ToList();
+
+            return projectMembersDTO;
+        }
     }
 }
