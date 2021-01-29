@@ -1,4 +1,5 @@
-﻿using MentorApp.Wrappers;
+﻿using MentorApp.Models;
+using MentorApp.Wrappers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace MentorApp.Services
     public interface IUserService
     {
         Task<UserWrapper> GetUserById(int IdUser);
+        Task<User> UpdateProfileUser(User User);
     }
 }

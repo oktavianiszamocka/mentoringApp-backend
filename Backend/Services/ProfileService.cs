@@ -11,9 +11,11 @@ namespace MentorApp.Services
     public class ProfileService : IProfileService
     {
         private readonly IProfileRepository _profileRepository;
-        public ProfileService(IProfileRepository profileRepository)
+        private readonly IUserRepository _userRepository;
+        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository)
         {
             _profileRepository = profileRepository;
+            _userRepository = userRepository;
         }
         public async Task<Profile> GetUserProfile(int IdUser)
         {
@@ -33,12 +35,18 @@ namespace MentorApp.Services
                 Experiences = ProfileDTO.Experiences,
                 Semester = ProfileDTO.Semester
             };
+
             profile =  await _profileRepository.UpdateUserProfile(profile);
 
             var user = new User
             {
-
+                IdUser = ProfileDTO.IdUser,
+                FirstName = ProfileDTO.FirstName,
+                LastName = ProfileDTO.LastName,
+                Email = ProfileDTO.Email
             };
+
+            user = await _userRepository.UpdateProfileUser(user);
 
             return profile;
         }

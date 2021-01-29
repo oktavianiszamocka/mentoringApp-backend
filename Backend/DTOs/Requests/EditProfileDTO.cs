@@ -7,6 +7,7 @@ namespace MentorApp.DTOs.Requests
 {
     public class EditProfileDTO
     {
+        public int IdUser { get; set; }
         public int IdProfile { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
