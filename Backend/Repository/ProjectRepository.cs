@@ -22,7 +22,6 @@ namespace MentorApp.Repository
             return await _context.Project
                          .Where(project => project.IdProject.Equals(idProject))
                          .FirstOrDefaultAsync();
-
         }
 
     }

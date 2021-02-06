@@ -9,8 +9,8 @@ namespace MentorApp.Services
 {
     public class ProfileService : IProfileService
     {
-        private readonly IProjectRepository _profileRepository;
-        public ProfileService(IProjectRepository profileRepository)
+        private readonly IProfileRepository _profileRepository;
+        public ProfileService(IProfileRepository profileRepository)
         {
             _profileRepository = profileRepository;
         }
