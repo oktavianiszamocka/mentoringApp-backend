@@ -21,12 +21,14 @@ namespace MentorApp.Controllers
         private const int DefaultPageSize = 5;
         private readonly IProjectMemberService _projectMemberService;
         private readonly IUriService _uriService;
+        private readonly IProjectService _projectService;
         
 
-        public ProjectsController(IProjectMemberService projectMemberService, IUriService uriService)
+        public ProjectsController(IProjectMemberService projectMemberService, IUriService uriService, IProjectService projectService)
         {
             _projectMemberService = projectMemberService;
             _uriService = uriService;
+            _projectService = projectService;
         }
 
         [HttpGet("{IdUser:int}")]
@@ -83,7 +85,8 @@ namespace MentorApp.Controllers
         [HttpGet("projectInfo/{IdProject:int}")]
         public async Task<IActionResult> GetProjectsInfo(int IdProject)
         {
-
+            var project = await _projectService.GetProjectById(IdProject);
+            return Ok(new Response<Project>(project));
         }
 
     }

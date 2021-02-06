@@ -61,10 +61,12 @@ namespace MentorApp
             services.AddTransient<IPersonalNoteService, PersonalNoteService>();
             services.AddTransient<IProjectMemberRepository, ProjectMemberRepository>();
             services.AddTransient<IProjectMemberService, ProjectMemberService>();
-            services.AddTransient<IProjectRepository, ProfileRepository>();
+            services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IProjectService, ProjectService>();
+            services.AddTransient<IProjectRepository, ProjectRepository>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
