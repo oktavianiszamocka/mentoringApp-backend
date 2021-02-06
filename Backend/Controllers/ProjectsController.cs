@@ -80,6 +80,11 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
 
+        [HttpGet("projectInfo/{IdProject:int}")]
+        public async Task<IActionResult> GetProjectsInfo(int IdProject)
+        {
+
+        }
 
     }
 }
