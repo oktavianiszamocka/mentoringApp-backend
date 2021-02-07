@@ -20,6 +20,7 @@ namespace MentorApp.Persistence
         public virtual DbSet<Meeting> Meeting { get; set; }
         public virtual DbSet<MeetingAttendence> MeetingAttendence { get; set; }
         public virtual DbSet<Message> Message { get; set; }
+        public virtual DbSet<MemberRole> MemberRole { get; set; }
         public virtual DbSet<Milestone> Milestone { get; set; }
         public virtual DbSet<Note> Note { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
@@ -39,6 +40,8 @@ namespace MentorApp.Persistence
         public virtual DbSet<TaskAssigning> TaskAssigning { get; set; }
         public virtual DbSet<TaskStatus> TaskStatus { get; set; }
         public virtual DbSet<Url> Url { get; set; }
+        public virtual DbSet<UrlType> UrlType { get; set; }
+
         public virtual DbSet<User> User { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -155,9 +158,9 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.Description).HasMaxLength(1000);
 
-                entity.Property(e => e.Title)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.Property(e => e.Sequence)
+                    .IsRequired();
+                    
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Milestone)
@@ -397,9 +400,11 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.IdProjectMember).HasColumnName("IdProject_Member");
 
-                entity.Property(e => e.Role)
-                .IsRequired()
-                .HasMaxLength(255); ;
+                entity.HasOne(d => d.MemberRoleNavigation)
+                     .WithMany(p => p.ProjectMembers)
+                     .HasForeignKey(d => d.Role)
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("Project_Members_Member_Role");
 
                 entity.HasOne(d => d.MemberNavigation)
                     .WithMany(p => p.ProjectMembers)
@@ -446,6 +451,30 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<UrlType>(entity =>
+            {
+                entity.HasKey(e => e.IdUrlType)
+                    .HasName("Url_Type_pk");
+
+                entity.ToTable("Url_Type");
+
+                entity.Property(e => e.UrlName)
+                    .IsRequired()
+                    .HasMaxLength(500);
+            });
+
+            modelBuilder.Entity<MemberRole>(entity =>
+            {
+                entity.HasKey(e => e.IdRoleMember)
+                    .HasName("Member_Role_pk");
+
+                entity.ToTable("Member_Role");
+
+                entity.Property(e => e.Role)
+                    .IsRequired()
+                    .HasMaxLength(500);
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -549,9 +578,11 @@ namespace MentorApp.Persistence
                     .IsRequired()
                     .HasMaxLength(500);
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(255);
+                entity.HasOne(d => d.TypeNavigation)
+                     .WithMany(p => p.Urls)
+                     .HasForeignKey(d => d.Type)
+                     .OnDelete(DeleteBehavior.ClientSetNull)
+                     .HasConstraintName("Type");
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Url)
