@@ -14,12 +14,10 @@ namespace MentorApp.Services
     public class PostService : IPostService
     {
         private readonly IPostRepository _postRepository;
-       
 
         public PostService(IPostRepository postRepository)
         {
             _postRepository = postRepository;
-          
         }
      
         public async Task<List<PostWrapper>> GetAll()
