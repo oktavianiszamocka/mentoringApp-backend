@@ -7,7 +7,7 @@ namespace MentorApp.Models
         public int IdMilestone { get; set; }
         
         public string Description { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime? Date { get; set; }
         public int Project { get; set; }
         public int Sequence { get; set; }
 

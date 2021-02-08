@@ -1,4 +1,5 @@
 ﻿using MentorApp.DTOs.Requests;
+using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace MentorApp.Services
 {
     public interface IProfileService
     {
-        Task<Profile> GetUserProfile(int IdUser);
+        Task<ProfileDTO> GetUserProfile(int IdUser);
         Task<Profile> UpdateUserProfile(EditProfileDTO ProfileDTO);
     }
 }
