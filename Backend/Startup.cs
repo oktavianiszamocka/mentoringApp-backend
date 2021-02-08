@@ -65,6 +65,8 @@ namespace MentorApp
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IProjectPromotersRepository, ProjectPromotersRepository>();
+            services.AddTransient<IProjectPromoterService, ProjectPromoterService>();
 
             var mapperConfig = new MapperConfiguration(mc =>
             {
