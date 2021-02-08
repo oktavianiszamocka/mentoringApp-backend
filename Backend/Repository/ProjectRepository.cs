@@ -17,9 +17,11 @@ namespace MentorApp.Repository
             _context = context;
         }
 
-        public async Task<Project> GetProjectById(int idProject)
+        public async Task<Project> GetProjectInfoById(int idProject)
         {
             return await _context.Project
+                         .Include(project => project.StatusNavigation)
+                         .Include(project => project.SuperviserNavigation)
                          .Where(project => project.IdProject.Equals(idProject))
                          .FirstOrDefaultAsync();
         }

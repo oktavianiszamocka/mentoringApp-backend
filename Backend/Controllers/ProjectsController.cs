@@ -1,4 +1,5 @@
-﻿using MentorApp.DTOs.Responses;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.DTOs.Responses;
 using MentorApp.Filter;
 using MentorApp.Helpers;
 using MentorApp.Models;
@@ -85,8 +86,8 @@ namespace MentorApp.Controllers
         [HttpGet("projectInfo/{IdProject:int}")]
         public async Task<IActionResult> GetProjectsInfo(int IdProject)
         {
-            var project = await _projectService.GetProjectById(IdProject);
-            return Ok(new Response<Project>(project));
+            var project = await _projectService.GetProjectInfoById(IdProject);
+            return Ok(new Response<ProjectInfoDTO>(project));
         }
 
     }

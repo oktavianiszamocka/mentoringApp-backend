@@ -8,6 +8,6 @@ namespace MentorApp.Repository
 {
     public interface IProjectRepository
     {
-        Task<Project> GetProjectById(int idProject);
+        Task<Project> GetProjectInfoById(int idProject);
     }
 }

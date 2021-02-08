@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.Models;
 using MentorApp.Repository;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,22 @@ namespace MentorApp.Services
             _projectRepository = projectRepository;
         }
 
-        public async Task<Project> GetProjectById(int idProject)
+        public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
         {
-            return await _projectRepository.GetProjectById(idProject);
+            var projectInfo =  await _projectRepository.GetProjectInfoById(idProject);
+            var projectInfoDTO = new ProjectInfoDTO
+            {
+                Name = projectInfo.Name,
+                Description = projectInfo.Description,
+                StartDate = projectInfo.StartDate,
+                EndDate = projectInfo.EndDate,
+                StatusName = projectInfo.StatusNavigation.Name,
+                SuperviserFirstName = projectInfo.SuperviserNavigation.FirstName,
+                SuperviserLastName = projectInfo.SuperviserNavigation.LastName,
+                Icon = projectInfo.Icon
+            };
+
+            return projectInfoDTO;
         }
     }
 }

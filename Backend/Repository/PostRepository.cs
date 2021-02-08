@@ -27,7 +27,7 @@ namespace MentorApp.Repository
                            .Include(post => post.Comment)
                            .ThenInclude(comment => comment.CreatedByNavigation)
                            .OrderByDescending(post => post.DateOfPublication)
-                         .ToListAsync();
+                           .ToListAsync();
         }
 
         public async Task<List<Post>> GetPostByProject(int IdProject)
@@ -40,7 +40,7 @@ namespace MentorApp.Repository
                            .Include(post => post.Comment)
                            .ThenInclude(comment => comment.CreatedByNavigation)
                            .OrderByDescending(post => post.DateOfPublication)
-                         .ToListAsync();
+                           .ToListAsync();
         }
         public async Task<List<Post>> GetGeneralPost()
         {
