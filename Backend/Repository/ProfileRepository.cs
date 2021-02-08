@@ -19,6 +19,7 @@ namespace MentorApp.Repository
         {
             return await _context.Profile
                         .Where(profile => profile.User.Equals(IdUser))
+                        .Include(profile => profile.UserNavigation)
                         .FirstOrDefaultAsync();
         }
 
