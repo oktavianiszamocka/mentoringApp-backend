@@ -41,6 +41,7 @@ namespace MentorApp.Repository
         public async Task<List<ProjectMembers>> GetProjectMembers(int IdProject)
         {
             return await _context.ProjectMembers
+                        .Include(member => member.MemberRoleNavigation)
                         .Include(project => project.MemberNavigation)
                         .ThenInclude(user => user.Profile)
                         .Where(project => project.Project.Equals(IdProject))

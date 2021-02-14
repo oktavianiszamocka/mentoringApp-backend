@@ -33,7 +33,7 @@ namespace MentorApp.Repository
         public async Task<List<Post>> GetPostByProject(int IdProject)
         {
             return await _context.Post
-                            .Where(post => post.Project.Equals(IdProject))
+                           .Where(post => post.Project.Equals(IdProject))
                            .Include(post => post.WriterNavigation)
                            .Include(post => post.PostTag)
                            .ThenInclude(postTag => postTag.TagNavigation)
@@ -45,7 +45,7 @@ namespace MentorApp.Repository
         public async Task<List<Post>> GetGeneralPost()
         {
             return await _context.Post
-                             .Where(post => !post.Project.HasValue)
+                            .Where(post => !post.Project.HasValue)
                             .Include(post => post.WriterNavigation)
                             .Include(post => post.PostTag)
                             .ThenInclude(postTag => postTag.TagNavigation)
@@ -53,7 +53,7 @@ namespace MentorApp.Repository
                             .ThenInclude(comment => comment.CreatedByNavigation)
                             .OrderByDescending(post => post.DateOfPublication)
                             .ThenByDescending(post => post.IdPost)
-                          .ToListAsync();
+                            .ToListAsync();
         }
         public async Task<Post> GetAllCommentByPostId(int IdPost)
         {
@@ -126,7 +126,7 @@ namespace MentorApp.Repository
         public async Task<List<PostTag>> GetAllPostTagByPostId(int IdPost)
         {
             return await _context.PostTag
-                            .Include(postTag => postTag.TagNavigation)
+                           .Include(postTag => postTag.TagNavigation)
                            .Where(postTag => postTag.Post.Equals(IdPost))
                            .ToListAsync();
         }

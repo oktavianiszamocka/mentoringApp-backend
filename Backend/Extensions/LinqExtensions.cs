@@ -24,7 +24,7 @@ namespace MentorApp.Extensions
             return rows.Take(pageSize).Skip(pageNumber - 1);
         }
 
-        public static PagedListItem<T> ToPagedList<T>(this IEnumerable<T> rows, int pageNumber = 1, int pageSize = DefaultPageSize, int pagesTotal = 1)
+        public static PagedListItemDTO<T> ToPagedList<T>(this IEnumerable<T> rows, int pageNumber = 1, int pageSize = DefaultPageSize, int pagesTotal = 1)
         {
             if (pageNumber < 1)
             {
@@ -41,7 +41,7 @@ namespace MentorApp.Extensions
                 throw new ArgumentException("Number of pages must be greated than zero");
             }
 
-            return new PagedListItem<T>
+            return new PagedListItemDTO<T>
             {
                 Data = rows,
                 PageSize = pageSize,

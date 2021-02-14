@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace MentorApp.Repository
 {
-    public interface IProfileRepository
+    public interface IProjectPromotersRepository
     {
-        Task<Profile> GetUserProfile(int IdUser);
-        Task<Profile> UpdateUserProfile(Profile Profile);
+        Task <Project> GetProjectPromoters(int IdProject);
     }
 }

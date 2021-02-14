@@ -69,7 +69,7 @@ namespace MentorApp.Services
                                     FirstName = member.MemberNavigation.FirstName,
                                     LastName = member.MemberNavigation.LastName,
                                     Avatar = member.MemberNavigation.Avatar,
-                                    ProjectRole = member.Role,
+                                    ProjectRole = member.MemberRoleNavigation.Role,
                                     Major = member.MemberNavigation.Profile.FirstOrDefault().Major,
                                     Semester = member.MemberNavigation.Profile.FirstOrDefault().Semester
                                 }).ToList();
