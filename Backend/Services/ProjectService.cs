@@ -19,6 +19,24 @@ namespace MentorApp.Services
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
         {
             var projectInfo =  await _projectRepository.GetProjectInfoById(idProject);
+
+            var leaderFirstName = "";
+            var leaderLastName = "";
+            foreach (ProjectMembers member in projectInfo.ProjectMembers)
+            {
+                if (member.Role.Equals(1))
+                {
+                    leaderFirstName = member.MemberNavigation.FirstName;
+                    leaderLastName = member.MemberNavigation.LastName;
+                }
+            }
+
+            List<string> links = new List<string>();
+            foreach (Url u in projectInfo.Url)
+            {
+                links.Add(u.Link);
+            }
+
             var projectInfoDTO = new ProjectInfoDTO
             {
                 Name = projectInfo.Name,
@@ -28,7 +46,10 @@ namespace MentorApp.Services
                 StatusName = projectInfo.StatusNavigation.Name,
                 SuperviserFirstName = projectInfo.SuperviserNavigation.FirstName,
                 SuperviserLastName = projectInfo.SuperviserNavigation.LastName,
-                Icon = projectInfo.Icon
+                Icon = projectInfo.Icon,
+                projectLeaderFirstName = leaderFirstName,
+                projectLeaderLastName = leaderLastName,
+                UrlLinks = links
             };
 
             return projectInfoDTO;

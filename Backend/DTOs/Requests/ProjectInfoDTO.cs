@@ -15,5 +15,8 @@ namespace MentorApp.DTOs.Requests
         public string SuperviserFirstName { get; set; }
         public string SuperviserLastName { get; set; }
         public string Icon { get; set; }
+        public string projectLeaderFirstName { get; set; }
+        public string projectLeaderLastName { get; set; }
+        public List<string> UrlLinks { get; set; }
     }
 }

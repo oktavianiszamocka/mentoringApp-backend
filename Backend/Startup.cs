@@ -64,8 +64,7 @@ namespace MentorApp
             services.AddTransient<IProfileRepository, ProfileRepository>();
             services.AddTransient<IProfileService, ProfileService>();
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserService, UserService>();services.AddTransient<IProjectPromotersRepository, ProjectPromotersRepository>();
-            services.AddTransient<IProjectPromoterService, ProjectPromoterService>();
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IProjectService, ProjectService>();
             services.AddTransient<IProjectRepository, ProjectRepository>();
 
