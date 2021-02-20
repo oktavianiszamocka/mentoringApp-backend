@@ -22,10 +22,11 @@ namespace MentorApp.Repository
         {
             return  await _context.Post
                            .Include(post => post.WriterNavigation)
+                                .ThenInclude(user => user.Profile)
                            .Include(post => post.PostTag)
-                           .ThenInclude(postTag => postTag.TagNavigation)
+                                .ThenInclude(postTag => postTag.TagNavigation)
                            .Include(post => post.Comment)
-                           .ThenInclude(comment => comment.CreatedByNavigation)
+                                .ThenInclude(comment => comment.CreatedByNavigation)
                            .OrderByDescending(post => post.DateOfPublication)
                            .ToListAsync();
         }
@@ -35,6 +36,7 @@ namespace MentorApp.Repository
             return await _context.Post
                            .Where(post => post.Project.Equals(IdProject))
                            .Include(post => post.WriterNavigation)
+                                 .ThenInclude(user => user.Profile)
                            .Include(post => post.PostTag)
                            .ThenInclude(postTag => postTag.TagNavigation)
                            .Include(post => post.Comment)
@@ -47,10 +49,11 @@ namespace MentorApp.Repository
             return await _context.Post
                             .Where(post => !post.Project.HasValue)
                             .Include(post => post.WriterNavigation)
+                                 .ThenInclude(user => user.Profile)
                             .Include(post => post.PostTag)
-                            .ThenInclude(postTag => postTag.TagNavigation)
+                                .ThenInclude(postTag => postTag.TagNavigation)
                             .Include(post => post.Comment)
-                            .ThenInclude(comment => comment.CreatedByNavigation)
+                                .ThenInclude(comment => comment.CreatedByNavigation)
                             .OrderByDescending(post => post.DateOfPublication)
                             .ThenByDescending(post => post.IdPost)
                             .ToListAsync();

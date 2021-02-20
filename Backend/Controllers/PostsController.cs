@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using MentorApp.Persistence;
 using System;
 using MentorApp.DTOs.Requests;
+using System.Threading.Tasks.Dataflow;
 
 namespace MentorApp.Controllers
 {
@@ -47,6 +48,7 @@ namespace MentorApp.Controllers
             var totalRecords = postList.Count();
            
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
+            string headers = Request.Headers.ToString();
             
             return Ok(pagedReponse);
           
@@ -108,6 +110,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> CreateComment(Comment comment)
         {
             await _postService.SaveNewComment(comment);
+
             return StatusCode(201, comment);
         }
 
