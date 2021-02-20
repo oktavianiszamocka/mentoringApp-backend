@@ -15,6 +15,7 @@ namespace MentorApp
         public MappingProfile()
         {
             CreateMap<Project, ProjectDTO>();
+            CreateMap<Models.Profile, ProfileDTO>();
             
 
         }

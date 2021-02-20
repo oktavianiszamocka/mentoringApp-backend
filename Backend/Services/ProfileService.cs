@@ -1,4 +1,6 @@
-﻿using MentorApp.DTOs.Requests;
+﻿using AutoMapper;
+using MentorApp.DTOs.Requests;
+using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using MentorApp.Repository;
 using System;
@@ -12,19 +14,29 @@ namespace MentorApp.Services
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IUserRepository _userRepository;
-        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository)
+        private readonly IMapper _mapper;
+        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper)
         {
             _profileRepository = profileRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
-        public async Task<Profile> GetUserProfile(int IdUser)
+        public async Task<ProfileDTO> GetUserProfile(int IdUser)
         {
-            return await _profileRepository.GetUserProfile(IdUser);
+            var userProfile = await _profileRepository.GetUserProfile(IdUser);
+            var profileDTO = _mapper.Map<ProfileDTO>(userProfile);
+
+            profileDTO.FirstName = userProfile.UserNavigation.FirstName;
+            profileDTO.LastName = userProfile.UserNavigation.LastName;
+            profileDTO.Email = userProfile.UserNavigation.Email;
+            profileDTO.Avatar = userProfile.UserNavigation.Avatar;
+
+            return profileDTO;
         }
 
-        public async Task<Profile> UpdateUserProfile(EditProfileDTO ProfileDTO)
+        public async Task<Models.Profile> UpdateUserProfile(EditProfileDTO ProfileDTO)
         {
-            var profile = new Profile
+            var profile = new Models.Profile
             {
                 IdProfile = ProfileDTO.IdProfile,
                 Phone = ProfileDTO.Phone,
@@ -50,5 +62,7 @@ namespace MentorApp.Services
 
             return profile;
         }
+
+   
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
+using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
@@ -28,7 +29,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetUserProfile(int IdUser)
         {
             var profileUser = await _profileService.GetUserProfile(IdUser);
-            return Ok(new Response<Profile>(profileUser));
+            return Ok(new Response<ProfileDTO>(profileUser));
         }
 
         [HttpGet("user/{IdUser:int}")]
