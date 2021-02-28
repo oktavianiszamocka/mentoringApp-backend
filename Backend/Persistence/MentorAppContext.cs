@@ -160,6 +160,7 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.Sequence)
                     .IsRequired();
+                entity.Property(e => e.IsDone);
                     
 
                 entity.HasOne(d => d.ProjectNavigation)
