@@ -111,6 +111,13 @@ namespace MentorApp.Controllers
             return StatusCode(201, comment);
         }
 
+        [HttpDelete("deletecomment/{IdComment:int}")]
+        public async Task<IActionResult> DeleteComment(int IdComment)
+        {
+            await _postService.DeleteComment(IdComment);
+            return StatusCode(200);
+        }
+
         [HttpDelete("{IdPost:int}")]
         public async Task<IActionResult> DeletePost(int IdPost)
         {

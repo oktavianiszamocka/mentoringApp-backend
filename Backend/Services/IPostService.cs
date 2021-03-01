@@ -21,6 +21,7 @@ namespace MentorApp.Services
         Task<Post> UpdatePost(EditPostDTO post);
         Task<Comment> SaveNewComment(Comment comment);
         Task<Post> DeletePost(int IdPost);
+        Task<Comment> DeleteComment(int IdComment);
 
     }
 }

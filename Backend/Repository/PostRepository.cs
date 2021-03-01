@@ -101,6 +101,14 @@ namespace MentorApp.Repository
                             .FirstOrDefaultAsync();
         }
 
+        public async Task<Comment> DeleteComment(int IdComment)
+        {
+            var comment = await _context.Comment.FindAsync(IdComment);
+            _context.Comment.Remove(comment);
+            await _context.SaveChangesAsync();
+            return comment;
+        }
+
         public async Task<Post> DeletePost(int PostId)
         {
             var post = await _context.Post.FindAsync(PostId);
@@ -108,6 +116,7 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return post;
         }
+
 
         public async Task<PostTag> DeletePostTag(int PostTagId)
         {
@@ -140,5 +149,6 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return post;
         }
+
     }
 }

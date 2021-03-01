@@ -21,6 +21,7 @@ namespace MentorApp.Repository
         Task<PostTag> SaveNewPostTag(PostTag postTag);
         Task<Comment> SaveNewComment(Comment comment);
         Task<Post> DeletePost(int PostId);
+        Task<Comment> DeleteComment(int IdComment);
         Task<PostTag> DeletePostTag(int PostTagId);
         Task<Post> UpdatePost(Post post);
 
