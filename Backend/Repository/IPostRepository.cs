@@ -24,6 +24,7 @@ namespace MentorApp.Repository
         Task<Comment> DeleteComment(int IdComment);
         Task<PostTag> DeletePostTag(int PostTagId);
         Task<Post> UpdatePost(Post post);
+        Task<Comment> UpdateComment(Comment comment);
 
     }
 }

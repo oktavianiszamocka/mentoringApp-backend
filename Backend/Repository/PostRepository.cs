@@ -150,5 +150,14 @@ namespace MentorApp.Repository
             return post;
         }
 
+        public async Task<Comment> UpdateComment(Comment comment)
+        {
+            var existingComment = await _context.Comment.FindAsync(comment.IdComment);
+            existingComment.Comment1 = comment.Comment1;
+            _context.Comment.Update(existingComment);
+            await _context.SaveChangesAsync();
+            return comment;
+        }
+
     }
 }

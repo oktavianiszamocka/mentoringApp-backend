@@ -22,6 +22,7 @@ namespace MentorApp.Services
         Task<Comment> SaveNewComment(Comment comment);
         Task<Post> DeletePost(int IdPost);
         Task<Comment> DeleteComment(int IdComment);
+        Task<Comment> UpdateComment(Comment comment);
 
     }
 }
