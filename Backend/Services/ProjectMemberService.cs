@@ -23,7 +23,7 @@ namespace MentorApp.Services
 
         public async Task<List<ProjectDTO>> GetProjectsNameByIdUser(int IdUser)
         {
-            var projectList =  await _projectMemberRepository.GetProjectName(IdUser);
+            var projectList = await _projectMemberRepository.GetProjectName(IdUser);
             var projectDTOList = _mapper.Map<List<ProjectDTO>>(projectList);
             return projectDTOList;
         }

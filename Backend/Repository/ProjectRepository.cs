@@ -1,7 +1,6 @@
 ﻿using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +16,12 @@ namespace MentorApp.Repository
             _context = context;
         }
 
+        public async Task<List<ProjectStatus>> GetAllProjectStatus()
+        {
+            return await _context.ProjectStatus
+                        .ToListAsync();
+        }
+
         public async Task<Project> GetProjectInfoById(int idProject)
         {
             return await _context.Project
@@ -30,5 +35,11 @@ namespace MentorApp.Repository
                          .FirstOrDefaultAsync();
         }
 
+        public async Task<Project> SaveNewProject(Project project)
+        {
+            _context.Project.Add(project);
+            await _context.SaveChangesAsync();
+            return project;
+        }
     }
 }

@@ -1,13 +1,10 @@
-﻿
-using MentorApp.Persistence;
+﻿using MentorApp.Filter;
+using MentorApp.Helpers;
+using MentorApp.Models;
+using MentorApp.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using MentorApp.Services;
-using MentorApp.Helpers;
-using MentorApp.Filter;
-using MentorApp.Models;
 
 namespace MentorApp.Controllers
 {
@@ -26,13 +23,13 @@ namespace MentorApp.Controllers
         }
 
         [HttpGet("{IdUser:int}")]
-        public async Task<IActionResult> GetPersonalNoteList(int IdUser, [FromQuery] Filter.PaginationFilter filter )
+        public async Task<IActionResult> GetPersonalNoteList(int IdUser, [FromQuery] Filter.PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
 
             var personalNoteList = await _personalNoteService.GetPersonalNotesByIdUser(IdUser);
-            var personalNoteWithPaging =  personalNoteList
+            var personalNoteWithPaging = personalNoteList
                                          .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                                          .Take(validFilter.PageSize)
                                          .ToList();

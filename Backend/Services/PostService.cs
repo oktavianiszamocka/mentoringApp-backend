@@ -3,8 +3,6 @@ using MentorApp.DTOs.Requests;
 using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,10 +17,10 @@ namespace MentorApp.Services
         {
             _postRepository = postRepository;
         }
-     
+
         public async Task<List<PostWrapper>> GetAll()
         {
-            var allPost =  await _postRepository.GetAllPost();
+            var allPost = await _postRepository.GetAllPost();
             var allPostWrapper = GetPostWrappers(allPost);
             return allPostWrapper;
         }
@@ -93,11 +91,11 @@ namespace MentorApp.Services
                 if (existingPostTag == null)
                 {
                     nonExistingPostTag.Add(tag);
-                 
+
                 }
             }
             await mappingTag(nonExistingPostTag, post.IdPost);
-          
+
             return post;
         }
 
@@ -109,7 +107,7 @@ namespace MentorApp.Services
         public async Task<Post> DeletePost(int IdPost)
         {
             var allPostTagsOfPost = await _postRepository.GetAllPostTagByPostId(IdPost);
-            foreach(PostTag postTag in allPostTagsOfPost)
+            foreach (PostTag postTag in allPostTagsOfPost)
             {
                 await _postRepository.DeletePostTag(postTag.IdPostTag);
             }

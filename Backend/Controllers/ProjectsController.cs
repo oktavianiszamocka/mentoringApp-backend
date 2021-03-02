@@ -90,5 +90,28 @@ namespace MentorApp.Controllers
             return Ok(new Response<ProjectInfoDTO>(project));
         }
 
+        [HttpGet("status")]
+        public async Task<IActionResult> GetAllProjectStatus()
+        {
+            var allProjectStatus = await _projectService.GetAllProjectStatus();
+            return Ok(new Response<List<ProjectStatus>>(allProjectStatus));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveNewProject(NewProjectDTO projectDTO)
+        {
+            try
+            {
+                var newProject = await _projectService.SaveNewProject(projectDTO);
+                return StatusCode(201, newProject);
+            } catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+            
+        }
+
+
+
     }
 }

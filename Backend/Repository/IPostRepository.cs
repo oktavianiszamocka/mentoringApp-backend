@@ -1,9 +1,7 @@
 ﻿
-using System.Collections.Generic;
-
-using MentorApp.Wrappers;
-using System.Threading.Tasks;
 using MentorApp.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MentorApp.Repository
 {
@@ -14,7 +12,7 @@ namespace MentorApp.Repository
         Task<List<Post>> GetGeneralPost();
         Task<Post> GetAllCommentByPostId(int IdPost);
         Task<Post> GetPostById(int IdPost);
-        Task<List<PostTag>> GetAllPostTagByPostId (int IdPost);
+        Task<List<PostTag>> GetAllPostTagByPostId(int IdPost);
         Task<Post> SaveNewPost(Post post);
         Task<Tag> SaveNewTag(Tag newTag);
         Task<Tag> GetTagByName(string tag);

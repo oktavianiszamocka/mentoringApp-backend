@@ -1,10 +1,9 @@
 ﻿using MentorApp.Models;
 using MentorApp.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace MentorApp.Repository
 {
@@ -20,7 +19,7 @@ namespace MentorApp.Repository
 
         public async Task<List<Post>> GetAllPost()
         {
-            return  await _context.Post
+            return await _context.Post
                            .Include(post => post.WriterNavigation)
                                 .ThenInclude(user => user.Profile)
                            .Include(post => post.PostTag)
@@ -65,7 +64,7 @@ namespace MentorApp.Repository
                                 .Include(post => post.Comment)
                                 .ThenInclude(comment => comment.CreatedByNavigation)
                                 .FirstOrDefaultAsync();
-            
+
         }
 
         public async Task<Post> SaveNewPost(Post post)
@@ -86,7 +85,7 @@ namespace MentorApp.Repository
         {
             _context.PostTag.Add(postTag);
             await _context.SaveChangesAsync();
-           
+
             return postTag;
         }
 

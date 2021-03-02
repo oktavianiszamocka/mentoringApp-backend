@@ -1,7 +1,5 @@
 ﻿using MentorApp.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MentorApp.Repository
@@ -9,5 +7,7 @@ namespace MentorApp.Repository
     public interface IProjectRepository
     {
         Task<Project> GetProjectInfoById(int idProject);
+        Task<Project> SaveNewProject(Project project);
+        Task<List<ProjectStatus>> GetAllProjectStatus();
     }
 }

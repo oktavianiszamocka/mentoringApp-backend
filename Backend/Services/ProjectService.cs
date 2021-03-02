@@ -1,9 +1,8 @@
 ﻿using MentorApp.DTOs.Requests;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MentorApp.Services
@@ -11,14 +10,21 @@ namespace MentorApp.Services
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _projectRepository;
-        public ProjectService(IProjectRepository projectRepository)
+        private readonly IProjectPromotersRepository _projectPromotersRepository;
+        public ProjectService(IProjectRepository projectRepository, IProjectPromotersRepository projectPromotersRepository)
         {
             _projectRepository = projectRepository;
+            _projectPromotersRepository = projectPromotersRepository;
+        }
+
+        public async Task<List<ProjectStatus>> GetAllProjectStatus()
+        {
+            return await _projectRepository.GetAllProjectStatus();
         }
 
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
         {
-            var projectInfo =  await _projectRepository.GetProjectInfoById(idProject);
+            var projectInfo = await _projectRepository.GetProjectInfoById(idProject);
 
             var leaderFirstName = "";
             var leaderLastName = "";
@@ -53,6 +59,28 @@ namespace MentorApp.Services
             };
 
             return projectInfoDTO;
+        }
+
+        public async Task<Project> SaveNewProject(NewProjectDTO project)
+        {
+            var promoter = await _projectPromotersRepository.GetProjectPromoterByEmail(project.SuperviserEmail);
+            if (promoter == null)
+            {
+                throw new HttpResponseException("Superviser Email is not found. Please enter correct supervisor email");
+            }
+
+            var newproject = new Project
+            {
+                Name = project.Name,
+                Description = project.Description,
+                StartDate = project.StartDate,
+                EndDate = project.EndDate,
+                Status = project.Status,
+                Superviser = promoter.IdUser,
+            };
+
+            var newProjectInserted = await _projectRepository.SaveNewProject(newproject);
+            return newProjectInserted;
         }
     }
 }
