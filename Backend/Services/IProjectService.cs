@@ -2,6 +2,7 @@
 using MentorApp.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp.Services
 {
@@ -9,6 +10,6 @@ namespace MentorApp.Services
     {
         Task<ProjectInfoDTO> GetProjectInfoById(int idProject);
         Task<Project> SaveNewProject(NewProjectDTO project);
-        Task<List<ProjectStatus>> GetAllProjectStatus();
+        Task<List<ProjectStatusDTO>> GetAllProjectStatus();
     }
 }

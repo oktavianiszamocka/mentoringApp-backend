@@ -3,7 +3,9 @@ using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp.Services
 {
@@ -17,9 +19,15 @@ namespace MentorApp.Services
             _projectPromotersRepository = projectPromotersRepository;
         }
 
-        public async Task<List<ProjectStatus>> GetAllProjectStatus()
+        public async Task<List<ProjectStatusDTO>> GetAllProjectStatus()
         {
-            return await _projectRepository.GetAllProjectStatus();
+            var projectStatus = await _projectRepository.GetAllProjectStatus();
+            var projectStatusDTO = projectStatus.Select(status => new ProjectStatusDTO
+            {
+                Value = status.IdStatus,
+                Label = status.Name
+            }).ToList();
+            return projectStatusDTO;
         }
 
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)

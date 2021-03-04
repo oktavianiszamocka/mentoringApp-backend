@@ -1,14 +1,11 @@
-﻿
-
-using Microsoft.VisualBasic;
-using System;
+﻿using System;
 
 namespace MentorApp.Models
 {
     public partial class Profile
     {
         public int IdProfile { get; set; }
-        public string Phone{ get; set; }
+        public string Phone { get; set; }
         public string Country { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string Major { get; set; }
