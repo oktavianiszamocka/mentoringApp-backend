@@ -1,7 +1,6 @@
 ﻿using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,7 +22,7 @@ namespace MentorApp.Repository
             _context.PersonalNote.Remove(note);
             await _context.SaveChangesAsync();
             return note;
-            
+
         }
 
         public async Task<List<PersonalNote>> GetPersonalNotesByUser(int IdUser)
@@ -50,7 +49,7 @@ namespace MentorApp.Repository
             _context.PersonalNote.Update(existingNote);
             await _context.SaveChangesAsync();
             return Note;
-            
+
         }
     }
 }

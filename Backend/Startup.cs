@@ -1,5 +1,8 @@
-using MentorApp.Models;
+using AutoMapper;
+using MentorApp.Persistence;
+using MentorApp.Repository;
 using MentorApp.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -7,14 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MentorApp.Persistence;
-using MentorApp.Repository;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
-using AutoMapper;
-using MentorApp.DTOs.Responses;
 
 namespace MentorApp
 {

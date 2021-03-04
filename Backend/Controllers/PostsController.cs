@@ -1,18 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.Extensions;
+﻿using MentorApp.DTOs.Requests;
 using MentorApp.Filter;
 using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MentorApp.Persistence;
-using System;
-using MentorApp.DTOs.Requests;
-using System.Threading.Tasks.Dataflow;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
@@ -23,13 +18,13 @@ namespace MentorApp.Controllers
         private const int DefaultPageSize = 10;
         private readonly IUriService _uriService;
         private readonly IPostService _postService;
-       
+
 
         public PostsController(IUriService uriService, IPostService postService)
         {
             _uriService = uriService;
             _postService = postService;
-      
+
         }
 
 
@@ -40,18 +35,18 @@ namespace MentorApp.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
             var postList = await _postService.GetAll();
-            var postWithPaging =  postList
+            var postWithPaging = postList
                                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                                .Take(validFilter.PageSize)
                                .ToList();
 
             var totalRecords = postList.Count();
-           
+
             var pagedReponse = PaginationHelper.CreatePagedReponse<PostWrapper>(postWithPaging, validFilter, totalRecords, _uriService, route);
             string headers = Request.Headers.ToString();
-            
+
             return Ok(pagedReponse);
-          
+
         }
 
         [HttpGet("project/{idProject:int}")]
@@ -61,7 +56,7 @@ namespace MentorApp.Controllers
             var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
 
             var postList = await _postService.GetPostProject(idProject);
-            var postWithPaging =  postList
+            var postWithPaging = postList
                                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                                .Take(validFilter.PageSize)
                                .ToList();

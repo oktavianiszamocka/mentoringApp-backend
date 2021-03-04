@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MentorApp.Models;
 
 namespace MentorApp.Wrappers
 {

@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.Models;
-using MentorApp.Persistence;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Tests
@@ -13,8 +6,8 @@ namespace MentorApp.Tests
     [Route("api/test")]
     public class AuthenticationTestController : Controller
     {
-/*        private readonly MentorAppContext _context;
-        private readonly UserManager<AppUser> _userManager;*/
+        /*        private readonly MentorAppContext _context;
+                private readonly UserManager<AppUser> _userManager;*/
 
         [HttpGet("public-data")]
         public string PublicTest()

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MentorApp.DTOs.Responses;
+﻿using MentorApp.DTOs.Responses;
 using MentorApp.Services;
 using MentorApp.Wrappers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
