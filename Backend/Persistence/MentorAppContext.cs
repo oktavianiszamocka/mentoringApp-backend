@@ -160,7 +160,8 @@ namespace MentorApp.Persistence
 
                 entity.Property(e => e.Sequence)
                     .IsRequired();
-                    
+                entity.Property(e => e.IsDone);
+
 
                 entity.HasOne(d => d.ProjectNavigation)
                     .WithMany(p => p.Milestone)
@@ -342,7 +343,6 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.EndDate).HasColumnType("date");
 
                 entity.Property(e => e.Icon)
-                    .IsRequired()
                     .HasMaxLength(1000);
 
                 entity.Property(e => e.Name)

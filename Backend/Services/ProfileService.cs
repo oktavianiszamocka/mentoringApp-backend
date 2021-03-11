@@ -3,9 +3,6 @@ using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using MentorApp.Repository;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MentorApp.Services
@@ -48,7 +45,7 @@ namespace MentorApp.Services
                 Semester = ProfileDTO.Semester
             };
 
-            profile =  await _profileRepository.UpdateUserProfile(profile);
+            profile = await _profileRepository.UpdateUserProfile(profile);
 
             var user = new User
             {
@@ -63,6 +60,6 @@ namespace MentorApp.Services
             return profile;
         }
 
-   
+
     }
 }

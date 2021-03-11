@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using MentorApp.Models;
+using MentorApp.Persistence;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MentorApp.Models;
-using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace MentorApp.Repository
 {
@@ -19,14 +20,15 @@ namespace MentorApp.Repository
 
         public async Task<List<Post>> GetAllPost()
         {
-            return await _context.Post
-                .Include(post => post.WriterNavigation)
-                .Include(post => post.PostTag)
-                .ThenInclude(postTag => postTag.TagNavigation)
-                .Include(post => post.Comment)
-                .ThenInclude(comment => comment.CreatedByNavigation)
-                .OrderByDescending(post => post.DateOfPublication)
-                .ToListAsync();
+            return  await _context.Post
+                           .Include(post => post.WriterNavigation)
+                                .ThenInclude(user => user.Profile)
+                           .Include(post => post.PostTag)
+                                .ThenInclude(postTag => postTag.TagNavigation)
+                           .Include(post => post.Comment)
+                                .ThenInclude(comment => comment.CreatedByNavigation)
+                           .OrderByDescending(post => post.DateOfPublication)
+                           .ToListAsync();
         }
 
         public async Task<List<Post>> GetPostByProject(int IdProject)
@@ -59,10 +61,11 @@ namespace MentorApp.Repository
         public async Task<Post> GetAllCommentByPostId(int IdPost)
         {
             return await _context.Post
-                .Where(post => post.IdPost.Equals(IdPost))
-                .Include(post => post.Comment)
-                .ThenInclude(comment => comment.CreatedByNavigation)
-                .FirstOrDefaultAsync();
+                                .Where(post => post.IdPost.Equals(IdPost))
+                                .Include(post => post.Comment)
+                                .ThenInclude(comment => comment.CreatedByNavigation)
+                                .FirstOrDefaultAsync();
+            
         }
 
         public async Task<Post> SaveNewPost(Post post)
