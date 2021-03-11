@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
-using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -25,25 +20,25 @@ namespace MentorApp.Controllers
             _userService = userService;
         }
 
-        [HttpGet("{IdUser:int}")]
-        public async Task<IActionResult> GetUserProfile(int IdUser)
+        [HttpGet("{idUser:int}")]
+        public async Task<IActionResult> GetUserProfile(int idUser)
         {
-            var profileUser = await _profileService.GetUserProfile(IdUser);
+            var profileUser = await _profileService.GetUserProfile(idUser);
             return Ok(new Response<ProfileDTO>(profileUser));
         }
 
-        [HttpGet("user/{IdUser:int}")]
-        public async Task<IActionResult> GetUserImageAndName(int IdUser)
+        [HttpGet("user/{idUser:int}")]
+        public async Task<IActionResult> GetUserImageAndName(int idUser)
         {
-            var userWrapper = await _userService.GetUserById(IdUser);
+            var userWrapper = await _userService.GetUserById(idUser);
             return Ok(new Response<UserWrapper>(userWrapper));
         }
 
         [HttpPatch]
-        public async Task<IActionResult> UpdateUserProfile(EditProfileDTO ProfileDTO)
+        public async Task<IActionResult> UpdateUserProfile(EditProfileDTO profileDTO)
         {
-            await _profileService.UpdateUserProfile(ProfileDTO);
-            return StatusCode(200, ProfileDTO);
+            await _profileService.UpdateUserProfile(profileDTO);
+            return StatusCode(200, profileDTO);
         }
     }
 }

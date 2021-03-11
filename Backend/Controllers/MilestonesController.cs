@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -21,10 +18,10 @@ namespace MentorApp.Controllers
             _milestoneService = milestoneService;
         }
 
-        [HttpGet("{IdProject:int}")]
-        public async Task<IActionResult> GetProjectMilestones(int IdProject)
+        [HttpGet("{idProject:int}")]
+        public async Task<IActionResult> GetProjectMilestones(int idProject)
         {
-            var milestones = await _milestoneService.GetProjectMilestones(IdProject);
+            var milestones = await _milestoneService.GetProjectMilestones(idProject);
             return Ok(new Response<List<Milestone>>(milestones));
         }
     }

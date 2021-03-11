@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
 using MentorApp.Services;
 using MentorApp.Wrappers;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -22,12 +19,11 @@ namespace MentorApp.Controllers
         }
 
 
-        [HttpGet("{IdProject:int}")]
-        public async Task<IActionResult> GetProjectMembers(int IdProject)
+        [HttpGet("{idProject:int}")]
+        public async Task<IActionResult> GetProjectMembers(int idProject)
         {
-            var projectMemberList = await _projectMemberService.GetProjectMembers(IdProject);
+            var projectMemberList = await _projectMemberService.GetProjectMembers(idProject);
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
-
     }
 }

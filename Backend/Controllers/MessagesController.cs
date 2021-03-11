@@ -1,10 +1,9 @@
-﻿using MentorApp.Models;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MentorApp.Controllers
 {
@@ -31,11 +30,11 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetMessageByReceiverAndSender(int receiverId, int senderId)
         {
             return Ok(await _context.Message
-                            .Where(msg => (msg.Receiver.Equals(receiverId) && msg.Sender.Equals(senderId)) ||
-                            (msg.Receiver.Equals(senderId) && msg.Sender.Equals(receiverId)))
-                            .OrderByDescending(msg => msg.CreatedOn)
-                            .ToListAsync()
-                     );
+                .Where(msg => msg.Receiver.Equals(receiverId) && msg.Sender.Equals(senderId) ||
+                              msg.Receiver.Equals(senderId) && msg.Sender.Equals(receiverId))
+                .OrderByDescending(msg => msg.CreatedOn)
+                .ToListAsync()
+            );
         }
 
 
@@ -43,18 +42,15 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetSenderUsersByReceiver(int receiverId)
         {
             var message = (from msg in _context.Message
-                           where msg.Receiver == receiverId
-                           join user in _context.User on msg.Sender equals user.IdUser
-                           select new
-                           {
-                               Name = user.FirstName + ' ' + user.LastName
-
-                           })
-                       .ToListAsync();
+                    where msg.Receiver == receiverId
+                    join user in _context.User on msg.Sender equals user.IdUser
+                    select new
+                    {
+                        Name = user.FirstName + ' ' + user.LastName
+                    })
+                .ToListAsync();
 
             return Ok(await message);
         }
-
     }
-
 }

@@ -1,13 +1,10 @@
-﻿
-using MentorApp.Persistence;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using MentorApp.Services;
-using MentorApp.Helpers;
 using MentorApp.Filter;
+using MentorApp.Helpers;
 using MentorApp.Models;
+using MentorApp.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
 {
@@ -25,20 +22,21 @@ namespace MentorApp.Controllers
             _uriService = uriService;
         }
 
-        [HttpGet("{IdUser:int}")]
-        public async Task<IActionResult> GetPersonalNoteList(int IdUser, [FromQuery] Filter.PaginationFilter filter )
+        [HttpGet("{idUser:int}")]
+        public async Task<IActionResult> GetPersonalNoteList(int idUser, [FromQuery] PaginationFilter filter)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
 
-            var personalNoteList = await _personalNoteService.GetPersonalNotesByIdUser(IdUser);
-            var personalNoteWithPaging =  personalNoteList
-                                         .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                                         .Take(validFilter.PageSize)
-                                         .ToList();
+            var personalNoteList = await _personalNoteService.GetPersonalNotesByIdUser(idUser);
+            var personalNoteWithPaging = personalNoteList
+                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                .Take(validFilter.PageSize)
+                .ToList();
 
             var totalRecords = personalNoteList.Count;
-            var pagedReponse = PaginationHelper.CreatePagedReponse<PersonalNote>(personalNoteWithPaging, validFilter, totalRecords, _uriService, route);
+            var pagedReponse = PaginationHelper.CreatePagedReponse(personalNoteWithPaging, validFilter, totalRecords,
+                _uriService, route);
             return Ok(pagedReponse);
         }
 
@@ -49,10 +47,10 @@ namespace MentorApp.Controllers
             return StatusCode(201, note);
         }
 
-        [HttpDelete("{IdNote:int}")]
-        public async Task<IActionResult> DeletePersonalNote(int IdNote)
+        [HttpDelete("{idNote:int}")]
+        public async Task<IActionResult> DeletePersonalNote(int idNote)
         {
-            await _personalNoteService.DeletePersonalNote(IdNote);
+            await _personalNoteService.DeletePersonalNote(idNote);
             return StatusCode(200);
         }
 
