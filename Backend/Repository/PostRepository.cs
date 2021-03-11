@@ -1,10 +1,9 @@
-﻿using MentorApp.Models;
-using MentorApp.Persistence;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.Models;
+using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace MentorApp.Repository
 {
@@ -20,52 +19,50 @@ namespace MentorApp.Repository
 
         public async Task<List<Post>> GetAllPost()
         {
-            return  await _context.Post
-                           .Include(post => post.WriterNavigation)
-                                .ThenInclude(user => user.Profile)
-                           .Include(post => post.PostTag)
-                                .ThenInclude(postTag => postTag.TagNavigation)
-                           .Include(post => post.Comment)
-                                .ThenInclude(comment => comment.CreatedByNavigation)
-                           .OrderByDescending(post => post.DateOfPublication)
-                           .ToListAsync();
+            return await _context.Post
+                .Include(post => post.WriterNavigation)
+                .Include(post => post.PostTag)
+                .ThenInclude(postTag => postTag.TagNavigation)
+                .Include(post => post.Comment)
+                .ThenInclude(comment => comment.CreatedByNavigation)
+                .OrderByDescending(post => post.DateOfPublication)
+                .ToListAsync();
         }
 
         public async Task<List<Post>> GetPostByProject(int IdProject)
         {
             return await _context.Post
-                           .Where(post => post.Project.Equals(IdProject))
-                           .Include(post => post.WriterNavigation)
-                                 .ThenInclude(user => user.Profile)
-                           .Include(post => post.PostTag)
-                           .ThenInclude(postTag => postTag.TagNavigation)
-                           .Include(post => post.Comment)
-                           .ThenInclude(comment => comment.CreatedByNavigation)
-                           .OrderByDescending(post => post.DateOfPublication)
-                           .ToListAsync();
+                .Where(post => post.Project.Equals(IdProject))
+                .Include(post => post.WriterNavigation)
+                .Include(post => post.PostTag)
+                .ThenInclude(postTag => postTag.TagNavigation)
+                .Include(post => post.Comment)
+                .ThenInclude(comment => comment.CreatedByNavigation)
+                .OrderByDescending(post => post.DateOfPublication)
+                .ToListAsync();
         }
+
         public async Task<List<Post>> GetGeneralPost()
         {
             return await _context.Post
-                            .Where(post => !post.Project.HasValue)
-                            .Include(post => post.WriterNavigation)
-                                 .ThenInclude(user => user.Profile)
-                            .Include(post => post.PostTag)
-                                .ThenInclude(postTag => postTag.TagNavigation)
-                            .Include(post => post.Comment)
-                                .ThenInclude(comment => comment.CreatedByNavigation)
-                            .OrderByDescending(post => post.DateOfPublication)
-                            .ThenByDescending(post => post.IdPost)
-                            .ToListAsync();
+                .Where(post => !post.Project.HasValue)
+                .Include(post => post.WriterNavigation)
+                .Include(post => post.PostTag)
+                .ThenInclude(postTag => postTag.TagNavigation)
+                .Include(post => post.Comment)
+                .ThenInclude(comment => comment.CreatedByNavigation)
+                .OrderByDescending(post => post.DateOfPublication)
+                .ThenByDescending(post => post.IdPost)
+                .ToListAsync();
         }
+
         public async Task<Post> GetAllCommentByPostId(int IdPost)
         {
             return await _context.Post
-                                .Where(post => post.IdPost.Equals(IdPost))
-                                .Include(post => post.Comment)
-                                .ThenInclude(comment => comment.CreatedByNavigation)
-                                .FirstOrDefaultAsync();
-            
+                .Where(post => post.IdPost.Equals(IdPost))
+                .Include(post => post.Comment)
+                .ThenInclude(comment => comment.CreatedByNavigation)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<Post> SaveNewPost(Post post)
@@ -86,7 +83,7 @@ namespace MentorApp.Repository
         {
             _context.PostTag.Add(postTag);
             await _context.SaveChangesAsync();
-           
+
             return postTag;
         }
 
@@ -100,8 +97,16 @@ namespace MentorApp.Repository
         public async Task<Tag> GetTagByName(string tagName)
         {
             return await _context.Tag
-                            .Where(tag => tag.Name.Equals(tagName) || tag.Name.Equals(tagName.ToLower()))
-                            .FirstOrDefaultAsync();
+                .Where(tag => tag.Name.Equals(tagName) || tag.Name.Equals(tagName.ToLower()))
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Comment> DeleteComment(int IdComment)
+        {
+            var comment = await _context.Comment.FindAsync(IdComment);
+            _context.Comment.Remove(comment);
+            await _context.SaveChangesAsync();
+            return comment;
         }
 
         public async Task<Post> DeletePost(int PostId)
@@ -111,6 +116,7 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return post;
         }
+
 
         public async Task<PostTag> DeletePostTag(int PostTagId)
         {
@@ -129,9 +135,9 @@ namespace MentorApp.Repository
         public async Task<List<PostTag>> GetAllPostTagByPostId(int IdPost)
         {
             return await _context.PostTag
-                           .Include(postTag => postTag.TagNavigation)
-                           .Where(postTag => postTag.Post.Equals(IdPost))
-                           .ToListAsync();
+                .Include(postTag => postTag.TagNavigation)
+                .Where(postTag => postTag.Post.Equals(IdPost))
+                .ToListAsync();
         }
 
         public async Task<Post> UpdatePost(Post post)
@@ -142,6 +148,15 @@ namespace MentorApp.Repository
             _context.Post.Update(existingPost);
             await _context.SaveChangesAsync();
             return post;
+        }
+
+        public async Task<Comment> UpdateComment(Comment comment)
+        {
+            var existingComment = await _context.Comment.FindAsync(comment.IdComment);
+            existingComment.Comment1 = comment.Comment1;
+            _context.Comment.Update(existingComment);
+            await _context.SaveChangesAsync();
+            return comment;
         }
     }
 }

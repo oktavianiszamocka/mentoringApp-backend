@@ -24,7 +24,7 @@ namespace MentorApp.Services
             var leaderLastName = "";
             foreach (ProjectMembers member in projectInfo.ProjectMembers)
             {
-                if (member.Role.Equals(1))
+                if(member.Role.Equals(1))
                 {
                     leaderFirstName = member.MemberNavigation.FirstName;
                     leaderLastName = member.MemberNavigation.LastName;

@@ -214,6 +214,14 @@ namespace MentorApp.Services
             return postWrapperList;
         }
 
+        public async Task<Comment> DeleteComment(int IdComment)
+        {
+            return await _postRepository.DeleteComment(IdComment);
+        }
 
+        public async Task<Comment> UpdateComment(Comment comment)
+        {
+            return await _postRepository.UpdateComment(comment);
+        }
     }
 }
