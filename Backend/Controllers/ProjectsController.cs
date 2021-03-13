@@ -29,19 +29,19 @@ namespace MentorApp.Controllers
             _projectService = projectService;
         }
 
-        [HttpGet("{IdUser:int}")]
-        public async Task<IActionResult> GetUserProjectsName(int IdUser)
+        [HttpGet("{idUser:int}")]
+        public async Task<IActionResult> GetUserProjectsName(int idUser)
         {
-            var projectList = await _projectMemberService.GetProjectsNameByIdUser(IdUser);
+            var projectList = await _projectMemberService.GetProjectsNameByIdUser(idUser);
             return Ok(new Response<List<ProjectDTO>>(projectList));
         }
 
-        [HttpGet("userProjects/{IdUser:int}")]
-        public async Task<IActionResult> GetUserProjects([FromQuery] PaginationFilter filter, int IdUser)
+        [HttpGet("user-projects/{idUser:int}")]
+        public async Task<IActionResult> GetUserProjects([FromQuery] PaginationFilter filter, int idUser)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
-            var projectList = await _projectMemberService.GetProjectsByIdUser(IdUser);
+            var projectList = await _projectMemberService.GetProjectsByIdUser(idUser);
             var projectsListWithPaging = projectList
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
@@ -55,13 +55,13 @@ namespace MentorApp.Controllers
             return Ok(pagedResponse);
         }
 
-        [HttpGet("userProjects/{IdUser:int}/search")]
-        public async Task<IActionResult> GetUserProjectsBySearchName([FromQuery] PaginationFilter filter, int IdUser,
+        [HttpGet("user-projects/{idUser:int}/search")]
+        public async Task<IActionResult> GetUserProjectsBySearchName([FromQuery] PaginationFilter filter, int idUser,
             [FromQuery(Name = "projectName")] string SearchName)
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
-            var projectList = await _projectMemberService.GetProjectByNameSearch(IdUser, SearchName);
+            var projectList = await _projectMemberService.GetProjectByNameSearch(idUser, SearchName);
             var projectsListWithPaging = projectList
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
@@ -76,17 +76,17 @@ namespace MentorApp.Controllers
         }
 
 
-        [HttpGet("members/{IdProject:int}")]
-        public async Task<IActionResult> GetProjectMembers(int IdProject)
+        [HttpGet("members/{idProject:int}")]
+        public async Task<IActionResult> GetProjectMembers(int idProject)
         {
-            var projectMemberList = await _projectMemberService.GetProjectMembers(IdProject);
+            var projectMemberList = await _projectMemberService.GetProjectMembers(idProject);
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
 
-        [HttpGet("projectInfo/{IdProject:int}")]
-        public async Task<IActionResult> GetProjectsInfo(int IdProject)
+        [HttpGet("project-info/{idProject:int}")]
+        public async Task<IActionResult> GetProjectsInfo(int idProject)
         {
-            var project = await _projectService.GetProjectInfoById(IdProject);
+            var project = await _projectService.GetProjectInfoById(idProject);
             return Ok(new Response<ProjectInfoDTO>(project));
         }
 

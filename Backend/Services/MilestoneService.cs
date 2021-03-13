@@ -13,9 +13,24 @@ namespace MentorApp.Services
         {
             _milestoneRepository = milestoneRepository;
         }
-        public async Task<List<Milestone>> GetProjectMilestones(int IdProject)
+        public async Task<List<Milestone>> GetProjectMilestones(int idProject)
         {
-            return await _milestoneRepository.GetProjectMilestones(IdProject);
+            return await _milestoneRepository.GetProjectMilestones(idProject);
+        }
+
+        public async Task<Milestone> UpdateMilestoneToPassed(Milestone milestone)
+        {
+            return await _milestoneRepository.UpdateMilestoneToPassed(milestone);
+        }
+
+        public async Task<Milestone> CreateMilestone(Milestone newMilestone)
+        {
+            return await _milestoneRepository.CreateMilestone(newMilestone);
+        }
+
+        public async Task<Milestone> UpdateMilestone(Milestone milestone)
+        {
+            return await _milestoneRepository.UpdateMilestone(milestone);
         }
     }
 }
