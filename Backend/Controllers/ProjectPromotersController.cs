@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
 {
-    [Route("api/projectpromoters")]
+    [Route("api/project-promoters")]
     [ApiController]
     public class ProjectPromotersController : ControllerBase
     {

@@ -6,6 +6,10 @@ namespace MentorApp.Repository
 {
     public interface IMilestoneRepository
     {
-        Task<List<Milestone>> GetProjectMilestones(int IdProject);
+        Task<List<Milestone>> GetProjectMilestones(int idProject);
+        Task<Milestone> UpdateMilestoneToPassed(Milestone milestone);
+        Task<Milestone> UpdateMilestone(Milestone milestone);
+
+        Task<Milestone> CreateMilestone(Milestone newMilestone);
     }
 }
