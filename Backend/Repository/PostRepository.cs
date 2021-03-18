@@ -36,6 +36,7 @@ namespace MentorApp.Repository
             return await _context.Post
                 .Where(post => post.Project.Equals(IdProject))
                 .Include(post => post.WriterNavigation)
+                    .ThenInclude(user => user.Profile)
                 .Include(post => post.PostTag)
                 .ThenInclude(postTag => postTag.TagNavigation)
                 .Include(post => post.Comment)
@@ -49,6 +50,7 @@ namespace MentorApp.Repository
             return await _context.Post
                 .Where(post => !post.Project.HasValue)
                 .Include(post => post.WriterNavigation)
+                    .ThenInclude(user => user.Profile)
                 .Include(post => post.PostTag)
                 .ThenInclude(postTag => postTag.TagNavigation)
                 .Include(post => post.Comment)
