@@ -86,9 +86,9 @@ namespace MentorApp.Controllers
         }
 
         [HttpGet("{idPost:int}/comment")]
-        public async Task<IActionResult> GetAllCommentsByPostId(int IdPost)
+        public async Task<IActionResult> GetAllCommentsByPostId(int idPost)
         {
-            var postCommentList = await _postService.GetAllCommentByPostId(IdPost);
+            var postCommentList = await _postService.GetAllCommentByPostId(idPost);
             return Ok(new Response<List<CommentWrapper>>(postCommentList));
         }
 
@@ -120,7 +120,7 @@ namespace MentorApp.Controllers
             return StatusCode(201, comment);
         }
 
-        [HttpDelete("comment/{IdComment:int}")]
+        [HttpDelete("comment/{idComment:int}")]
         public async Task<IActionResult> DeleteComment(int idComment)
         {
             await _postService.DeleteComment(idComment);
