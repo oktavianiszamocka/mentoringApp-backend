@@ -9,7 +9,7 @@ namespace MentorApp.DTOs.Responses
         public string Country { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string Major { get; set; }
-        public string Skills { get; set; }
+        public string[] Skills { get; set; }
         public string Experiences { get; set; }
         public int? Semester { get; set; }
         public int User { get; set; }

@@ -1,0 +1,41 @@
+mentor 
+- create project
+-
+
+
+asking gago :
+--(mentor d).	Each project has the optional option of adding studies (e.g. IT) and 
+  mode (e.g. extramural). Important for didactics who implement projects
+ in various directions and modes. Both options will be used when filtering data in views.
+-- asking uploading picture (s3)
+
+
+backlog :
+- (main page) --> post to project
+- (mentor b ) history of status changes and who made the change
+- (mentor c ) Each project has the optional option of adding a project icon
+- (mentor e ) adding button so mentor can insert project 
+- (mentor f) adding invitation flow + sending email. group leader flow
+- 2 (CRUD project)
+(student, mentor)
+- CALENDAR, MEETING, EXPORT CALENDAR
+- MEETING NOTE , FILE ATTACHMENT
+- PRESENT INVITATION FOR MEETING
+- SENDING EMAIL REMAINDER
+
+(mentor)
+- ADDING add n edit MILESTONE PAGE
+
+
+6 .	 - A mentor can send messages 
+directly to a specific person in a given group 
+	- Can send messages to other team members - including "mentors".
+	
+7. TASK  (mentor n student)
+
+
+
+
+
+
+
