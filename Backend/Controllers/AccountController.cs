@@ -20,10 +20,11 @@ namespace MentorApp.Controllers
         private readonly MentorAppContext _context;
         private readonly IUserService _userService;
 
-        public AccountController(MentorAppContext context, IConfiguration configuration)
+        public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService)
         {
             _context = context;
             _configuration = configuration;
+            _userService = userService;
         }
 
         [HttpPost("login")]
