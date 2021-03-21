@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Responses;
+using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -31,6 +32,16 @@ namespace MentorApp.Repository
             _context.User.Update(existingUser);
             await _context.SaveChangesAsync();
             return User;
+        }
+
+        public async Task<User> Authenticate(LoginRequestDTO loginRequest)
+        {
+            var user = await _context.User
+                        .Where(x => x.Email.Equals(loginRequest.Username) && x.Password.Equals(loginRequest.Password))
+                        .FirstOrDefaultAsync();
+            if(user == null) 
+                return null;
+            return user;
         }
     }
 }

@@ -3,8 +3,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
 using MentorApp.Persistence;
+using MentorApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -16,6 +18,7 @@ namespace MentorApp.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly MentorAppContext _context;
+        private readonly IUserService _userService;
 
         public AccountController(MentorAppContext context, IConfiguration configuration)
         {
@@ -24,10 +27,11 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequestDTO request)
+        public async Task<IActionResult> Login(LoginRequestDTO request)
         {
             //TODO Here we should check the credentials! Here we are just taking the first user.
-            var user = _context.User.ToList().First();
+            //var user = _context.User.ToList().First();
+            var user = await _userService.Authenticate(request);
 
             if (user == null) return NotFound();
 
