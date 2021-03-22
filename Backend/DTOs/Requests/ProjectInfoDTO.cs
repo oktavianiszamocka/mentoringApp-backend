@@ -5,6 +5,7 @@ namespace MentorApp.DTOs.Requests
 {
     public class ProjectInfoDTO
     {
+        public int IdProject { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }

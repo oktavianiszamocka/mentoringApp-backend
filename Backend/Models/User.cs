@@ -22,6 +22,7 @@ namespace MentorApp.Models
             ProjectPromoter = new HashSet<ProjectPromoter>();
             Task = new HashSet<Task>();
             TaskAssigning = new HashSet<TaskAssigning>();
+            Invitation = new HashSet<Invitation>();
         }
 
         public int IdUser { get; set; }
@@ -51,5 +52,6 @@ namespace MentorApp.Models
         public virtual ICollection<ProjectPromoter> ProjectPromoter { get; set; }
         public virtual ICollection<Task> Task { get; set; }
         public virtual ICollection<TaskAssigning> TaskAssigning { get; set; }
+        public virtual ICollection<Invitation> Invitation { get; set; }
     }
 }

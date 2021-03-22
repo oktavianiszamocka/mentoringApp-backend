@@ -53,6 +53,7 @@ namespace MentorApp.Services
 
             var projectInfoDTO = new ProjectInfoDTO
             {
+                IdProject =  projectInfo.IdProject,
                 Name = projectInfo.Name,
                 Description = projectInfo.Description,
                 StartDate = projectInfo.StartDate,

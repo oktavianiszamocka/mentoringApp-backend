@@ -13,6 +13,7 @@ namespace MentorApp.Models
         public string Experiences { get; set; }
         public int? Semester { get; set; }
         public int User { get; set; }
+        public string Title { get; set; }
 
         public virtual User UserNavigation { get; set; }
     }
