@@ -17,6 +17,7 @@ namespace MentorApp.Persistence
 
         public IConfiguration Configuration { get; }
         public virtual DbSet<Comment> Comment { get; set; }
+        public virtual DbSet<Invitation> Invitation { get; set; }
         public virtual DbSet<Meeting> Meeting { get; set; }
         public virtual DbSet<MeetingAttendence> MeetingAttendence { get; set; }
         public virtual DbSet<Message> Message { get; set; }
@@ -322,6 +323,7 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.Country).HasMaxLength(225);
 
                 entity.Property(e => e.Skills).HasMaxLength(1000);
+                entity.Property(e => e.Title).HasMaxLength(500);
                 entity.Property(e => e.Phone).HasMaxLength(50);
 
                 entity.Property(e => e.DateOfBirth).HasColumnType("datetime");
@@ -417,6 +419,38 @@ namespace MentorApp.Persistence
                     .HasForeignKey(d => d.Project)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Project_ProjectMember_Project");
+            });
+            modelBuilder.Entity<Invitation>(entity =>
+            {
+                entity.HasKey(e => e.IdInvitation)
+                    .HasName("Invitation_pk");
+
+                entity.ToTable("Invitation");
+
+                entity.Property(e => e.IdInvitation).HasColumnName("IdInvitation");
+
+                entity.HasOne(d => d.MemberRoleNavigation)
+                    .WithMany(p => p.Invitation)
+                    .HasForeignKey(d => d.Role)
+                    .IsRequired(false)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Invitation_Member_Role");
+
+                entity.HasOne(d => d.UserNavigation)
+                    .WithMany(p => p.Invitation)
+                    .HasForeignKey(d => d.ForWho)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Invitation_User");
+
+                entity.HasOne(d => d.ProjectNavigation)
+                    .WithMany(p => p.Invitation)
+                    .HasForeignKey(d => d.Project)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Invitation_Project");
+
+                entity.Property(e => e.IsAccepted);
+                entity.Property(e => e.IsMemberInvitation)
+                    .IsRequired();
             });
 
             modelBuilder.Entity<ProjectPromoter>(entity =>

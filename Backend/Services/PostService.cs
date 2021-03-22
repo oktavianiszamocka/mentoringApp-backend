@@ -177,15 +177,15 @@ namespace MentorApp.Services
                                     Title = post.Title,
                                     Content = post.Content,
                                     DateOfPublication = post.DateOfPublication,
-                                    Writer = new UserWrapperWithSemesterAndMajor
+                                    Writer = new UserWrapperWithDescription
                                     {
                                         IdUser = post.Writer,
                                         firstName = post.WriterNavigation.FirstName,
                                         lastName = post.WriterNavigation.LastName,
                                         imageUrl = post.WriterNavigation.Avatar,
-                                        semester = post.WriterNavigation.Profile.Select(user => user.Semester).FirstOrDefault().ToString(),
-                                        major = post.WriterNavigation.Profile.Select(user => user.Major).FirstOrDefault()
-
+                                        description = post.WriterNavigation.Role == 2 ? post.WriterNavigation.Profile.Select(user => user.Major).FirstOrDefault() + ",  Semester " + post.WriterNavigation.Profile.Select(user => user.Semester).FirstOrDefault().ToString()
+                                                : post.WriterNavigation.Profile.Select(user => user.Title).FirstOrDefault()
+                                       
 
                                     },
                                     hasMoreThanOneComment = post.Comment.Count() > 1 ? true : false,
