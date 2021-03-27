@@ -1,4 +1,4 @@
-﻿using MentorApp.DTOs.Responses;
+﻿using MentorApp.DTOs.Requests;
 using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
