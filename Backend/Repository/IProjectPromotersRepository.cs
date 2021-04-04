@@ -1,5 +1,6 @@
 ﻿using MentorApp.Models;
 using System.Threading.Tasks;
+using Task = System.Threading.Tasks.Task;
 
 namespace MentorApp.Repository
 {
@@ -8,5 +9,7 @@ namespace MentorApp.Repository
         Task<Project> GetProjectPromoters(int IdProject);
 
         Task<User> GetProjectPromoterByEmail(string emailUser);
+
+        Task<ProjectPromoter> CreateProjectPromoter(ProjectPromoter promoter);
     }
 }

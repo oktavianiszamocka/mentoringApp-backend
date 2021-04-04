@@ -49,5 +49,18 @@ namespace MentorApp.Repository
 
         }
 
+        public async Task<User> GetStudentByEmail(string emailUser)
+        {
+            return await _context.User
+                .Where(user => user.Email.Equals(emailUser) && user.Role == 2)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<ProjectMembers> CreateNewProjectMember(ProjectMembers newMember)
+        {
+            var insertedNewMember = await _context.ProjectMembers.AddAsync(newMember);
+            await _context.SaveChangesAsync();
+            return insertedNewMember.Entity;
+        }
     }
 }
