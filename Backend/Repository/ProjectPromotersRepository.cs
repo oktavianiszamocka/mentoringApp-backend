@@ -16,8 +16,6 @@ namespace MentorApp.Repository
 
         }
 
-
-
         public async Task<Project> GetProjectPromoters(int IdProject)
         {
             return await _context.Project
@@ -35,6 +33,14 @@ namespace MentorApp.Repository
             return await _context.User
                         .Where(user => user.Email.Equals(emailUser) && user.Role == 3)
                         .FirstOrDefaultAsync();
+        }
+
+        public async Task<ProjectPromoter> CreateProjectPromoter(ProjectPromoter promoter)
+        {
+            var newPromoter = await _context.ProjectPromoter.AddAsync(promoter);
+            await _context.SaveChangesAsync();
+            return newPromoter.Entity;
+
         }
     }
 }

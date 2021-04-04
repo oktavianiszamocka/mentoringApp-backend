@@ -430,15 +430,14 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.IdInvitation).HasColumnName("IdInvitation");
 
                 entity.HasOne(d => d.MemberRoleNavigation)
-                    .WithMany(p => p.Invitation)
+                    .WithMany(p => p.Invitations)
                     .HasForeignKey(d => d.Role)
-                    .IsRequired(false)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Invitation_Member_Role");
+
 
                 entity.HasOne(d => d.UserNavigation)
                     .WithMany(p => p.Invitation)
-                    .HasForeignKey(d => d.ForWho)
+                    .HasForeignKey(d => d.For_Who)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Invitation_User");
 
@@ -449,8 +448,14 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Invitation_Project");
 
                 entity.Property(e => e.IsAccepted);
+
                 entity.Property(e => e.IsMemberInvitation)
                     .IsRequired();
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValue(true);
+
             });
 
             modelBuilder.Entity<ProjectPromoter>(entity =>
@@ -473,6 +478,9 @@ namespace MentorApp.Persistence
                     .HasForeignKey(d => d.User)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Project_Promoter_User");
+
+               
+
             });
 
             modelBuilder.Entity<ProjectStatus>(entity =>
