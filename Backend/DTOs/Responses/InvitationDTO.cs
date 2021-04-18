@@ -11,6 +11,7 @@ namespace MentorApp.DTOs.Responses
         public int IdProject { get; set; }
         public int For_Who { get; set; }
         public String ProjectName { get; set; }
+        public String  Avatar { get; set; }
         public String ProjectOwnerName { get; set; }
         public int? Role { get; set; }
         public String RoleName { get; set; }
