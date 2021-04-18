@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
 using System.Threading.Tasks;
@@ -13,10 +14,15 @@ namespace MentorApp.Services
         {
             _userRepository = userRepository;
         }
-        public async Task<UserWrapper> GetUserById(int IdUser)
+        public async Task<UserWrapper> GetUserById(int idUser)
         {
-            var userInfo = await _userRepository.GetUserById(IdUser);
+            var userInfo = await _userRepository.GetUserById(idUser);
             return GetUserWrapper(userInfo);
+        }
+
+        public async Task<User> Authenticate(LoginRequestDTO loginRequest)
+        {
+            return await _userRepository.Authenticate(loginRequest);
         }
 
         public UserWrapper GetUserWrapper(User user)
@@ -30,9 +36,9 @@ namespace MentorApp.Services
             };
         }
 
-        public async Task<User> UpdateProfileUser(User User)
+        public async Task<User> UpdateProfileUser(User user)
         {
-            return await _userRepository.UpdateProfileUser(User);
+            return await _userRepository.UpdateProfileUser(user);
         }
     }
 }

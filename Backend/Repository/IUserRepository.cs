@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.Models;
 using System.Threading.Tasks;
 
 namespace MentorApp.Repository
@@ -7,5 +8,6 @@ namespace MentorApp.Repository
     {
         Task<User> GetUserById(int IdUser);
         Task<User> UpdateProfileUser(User User);
+        Task<User> Authenticate(LoginRequestDTO loginRequest);
     }
 }
