@@ -37,9 +37,9 @@ namespace MentorApp.Repository
 
         public async Task<Project> SaveNewProject(Project project)
         {
-            _context.Project.Add(project);
+            var newProject = await _context.Project.AddAsync(project);
             await _context.SaveChangesAsync();
-            return project;
+            return newProject.Entity;
         }
     }
 }

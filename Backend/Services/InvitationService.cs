@@ -62,6 +62,7 @@ namespace MentorApp.Services
                     ProjectName = inv.ProjectNavigation.Name,
                     ProjectOwnerName = inv.ProjectNavigation.SuperviserNavigation.FirstName + " " +
                                        inv.ProjectNavigation.SuperviserNavigation.LastName,
+                    Avatar = inv.ProjectNavigation.SuperviserNavigation.Avatar,
                     Role = (inv.IsMemberInvitation != false) ? inv.Role : null,
                     RoleName = (inv.IsMemberInvitation != false) ? inv.MemberRoleNavigation.Role : null,
                     IsMemberInvitation = inv.IsMemberInvitation,
