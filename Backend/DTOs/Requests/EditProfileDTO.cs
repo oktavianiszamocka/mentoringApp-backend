@@ -14,7 +14,7 @@ namespace MentorApp.DTOs.Requests
         public string Country { get; set; }
         public string Major { get; set; }
         public int? Semester { get; set; }
-        public string Skills { get; set; }
+        public string[] Skills { get; set; }
         public string Experiences { get; set; }
 
     }

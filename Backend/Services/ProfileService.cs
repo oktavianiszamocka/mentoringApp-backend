@@ -33,6 +33,8 @@ namespace MentorApp.Services
 
         public async Task<Models.Profile> UpdateUserProfile(EditProfileDTO ProfileDTO)
         {
+            var formatedSkillsToString = string.Join(",", ProfileDTO.Skills);
+
             var profile = new Models.Profile
             {
                 IdProfile = ProfileDTO.IdProfile,
@@ -40,7 +42,7 @@ namespace MentorApp.Services
                 Country = ProfileDTO.Country,
                 DateOfBirth = ProfileDTO.DateOfBirth,
                 Major = ProfileDTO.Major,
-                Skills = ProfileDTO.Skills,
+                Skills = formatedSkillsToString,
                 Experiences = ProfileDTO.Experiences,
                 Semester = ProfileDTO.Semester
             };
