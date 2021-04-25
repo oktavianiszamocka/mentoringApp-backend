@@ -34,8 +34,8 @@ namespace MentorApp.Controllers
             //var user = _context.User.ToList().First();
             var user = await _userService.Authenticate(request);
 
-            //if (user == null) return NotFound();
-            if(user == null)
+            if (user == null) return NotFound();
+            if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
             Claim[] userclaim =
@@ -105,6 +105,11 @@ namespace MentorApp.Controllers
                 token = new JwtSecurityTokenHandler().WriteToken(token),
                 refreshToken = user.RefreshToken
             });
+        }
+
+        public async Task<IActionResult> Register([FromBody] UserRegistrationDTO request)
+        {
+
         }
     }
 }
