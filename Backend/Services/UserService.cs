@@ -1,4 +1,5 @@
 ﻿using MentorApp.DTOs.Requests;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
@@ -39,6 +40,47 @@ namespace MentorApp.Services
         public async Task<User> UpdateProfileUser(User user)
         {
             return await _userRepository.UpdateProfileUser(user);
+        }
+
+        public async Task<AuthenticationResult> Register(UserRegistrationDTO request)
+        {
+            var existingUser = await _userRepository.GetUserByEmail(request.Email);
+
+            if(existingUser != null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User with this email address already exists" }
+                };
+            }
+
+            //TODO hash the password
+            var newUser = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Role = request.Role,
+                Email = request.Email,
+                Password = request.Password
+            };
+            var newProfile = new Profile
+            {
+                Country = request.Country,
+                Major = request.Major,
+                Semester = request.Semester,
+                Phone = request.Phone,
+                DateOfBirth = request.DateOfBirth
+            };
+
+            var createdUser = await _userRepository.CreateNewUser(newUser, newProfile);
+
+            if(createdUser != null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Error in creating an user" }
+                };
+            }
         }
     }
 }

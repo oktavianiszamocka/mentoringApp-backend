@@ -45,5 +45,20 @@ namespace MentorApp.Repository
                 return null;
             return user;
         }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.User
+                        .Where(user => user.Email.Equals(email))
+                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> CreateNewUser(User newUser, Profile newProfile)
+        {
+            _context.User.Add(newUser);
+            _context.Profile.Add(newProfile);
+            await _context.SaveChangesAsync();
+            return newUser;
+        }
     }
 }
