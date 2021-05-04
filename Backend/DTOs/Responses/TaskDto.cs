@@ -9,6 +9,7 @@ namespace MentorApp.DTOs.Responses
         public int IdTask { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Priority { get; set; }
         public DateTime? ExpectedEndDate { get; set; }
         public DateTime? StartDate { get; set; }
         public int Status { get; set; }

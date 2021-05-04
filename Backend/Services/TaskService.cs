@@ -48,6 +48,7 @@ namespace MentorApp.Services
                     Title = taskProject.Title,
                     StatusCode = taskProject.Status,
                     Status = taskProject.StatusNavigation.Name,
+                    Priority = taskProject.Priority,
                     ExpectedEndDate = taskProject.ExpectedEndDate,
                     AssignedUserAvatars = taskProject.TaskAssigning
                         .Select(taskAssign => taskAssign.UserNavigation.Avatar).ToList()
@@ -68,6 +69,7 @@ namespace MentorApp.Services
                 Description = task.Description,
                 ExpectedEndDate = task.ExpectedEndDate,
                 StartDate = task.StartDate,
+                Priority = task.Priority,
                 Status = task.Status,
                 Project = task.Project,
                 StatusName = task.StatusNavigation.Name,

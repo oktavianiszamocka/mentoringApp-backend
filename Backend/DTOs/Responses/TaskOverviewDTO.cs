@@ -18,6 +18,7 @@ namespace MentorApp.DTOs.Responses
     {
         public int IdTask { get; set; }
         public string Title { get; set; }
+        public string Priority { get; set; }
         public int StatusCode { get; set; }
         public String Status { get; set; }
         public DateTime? ExpectedEndDate { get; set; }
