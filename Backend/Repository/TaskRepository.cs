@@ -34,8 +34,6 @@ namespace MentorApp.DTOs.Responses
                 .ToListAsync();
 
             return tasks;
-
-
         }
 
         public async Task<Task> GetTaskById(int idTask)

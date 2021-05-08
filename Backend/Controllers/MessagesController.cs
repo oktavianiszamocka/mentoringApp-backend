@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using MentorApp.Persistence;
+using MentorApp.Services;
+using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,13 +15,14 @@ namespace MentorApp.Controllers
     [ApiController]
     public class MessagesController : ControllerBase
     {
-        private readonly MentorAppContext _context;
+        private readonly IMessageService _messageService;
 
-        public MessagesController(MentorAppContext context)
+        public MessagesController(IMessageService messageService)
         {
-            _context = context;
+            _messageService = messageService;
         }
 
+        /*
         [HttpPost]
         public async Task<IActionResult> CreatePost(Message message)
         {
@@ -25,32 +30,23 @@ namespace MentorApp.Controllers
             await _context.SaveChangesAsync();
             return StatusCode(201, message);
         }
+        */
 
-        [HttpGet("{receiverId:int}/{senderId:int}/")]
-        public async Task<IActionResult> GetMessageByReceiverAndSender(int receiverId, int senderId)
+        [HttpGet("detail")]
+        public async Task<IActionResult> GetMessageByReceiverAndSender([FromQuery(Name = "receiver")] int receiverId, [FromQuery(Name = "sender")] int senderId)
         {
-            return Ok(await _context.Message
-                .Where(msg => msg.Receiver.Equals(receiverId) && msg.Sender.Equals(senderId) ||
-                              msg.Receiver.Equals(senderId) && msg.Sender.Equals(receiverId))
-                .OrderByDescending(msg => msg.CreatedOn)
-                .ToListAsync()
-            );
+            var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
+            return Ok(new Response<MessageDetailDto>(msgDetail));
+
         }
 
 
         [HttpGet("{receiverId:int}")]
-        public async Task<IActionResult> GetSenderUsersByReceiver(int receiverId)
+        public async Task<IActionResult> GetMessageByReceiverId(int receiverId)
         {
-            var message = (from msg in _context.Message
-                    where msg.Receiver == receiverId
-                    join user in _context.User on msg.Sender equals user.IdUser
-                    select new
-                    {
-                        Name = user.FirstName + ' ' + user.LastName
-                    })
-                .ToListAsync();
+            var messageOverview = await _messageService.GetAllMessageOfUser(receiverId);
 
-            return Ok(await message);
+            return Ok(new Response<List<MessageOverviewDto>>(messageOverview));
         }
     }
 }
