@@ -56,9 +56,12 @@ namespace MentorApp.Repository
         public async Task<User> CreateNewUser(User newUser, Profile newProfile)
         {
             _context.User.Add(newUser);
+            await _context.SaveChangesAsync();
+            var newCreatedUser = await GetUserByEmail(newUser.Email);
+            newProfile.User = newCreatedUser.IdUser;
             _context.Profile.Add(newProfile);
             await _context.SaveChangesAsync();
-            return newUser;
+            return newCreatedUser;
         }
     }
 }

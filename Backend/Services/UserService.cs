@@ -61,7 +61,9 @@ namespace MentorApp.Services
                 LastName = request.LastName,
                 Role = request.Role,
                 Email = request.Email,
-                Password = request.Password
+                Password = request.Password,
+                //TODO set the salt
+                Salt = "qwerty"
             };
             var newProfile = new Profile
             {
@@ -69,18 +71,25 @@ namespace MentorApp.Services
                 Major = request.Major,
                 Semester = request.Semester,
                 Phone = request.Phone,
-                DateOfBirth = request.DateOfBirth
+                DateOfBirth = request.DateOfBirth,
+                User = 0
             };
 
             var createdUser = await _userRepository.CreateNewUser(newUser, newProfile);
 
-            if(createdUser != null)
+            if(createdUser == null)
             {
                 return new AuthenticationResult
                 {
                     Errors = new[] { "Error in creating an user" }
                 };
             }
+
+            return new AuthenticationResult
+            {
+                Success = true
+            };
+
         }
     }
 }

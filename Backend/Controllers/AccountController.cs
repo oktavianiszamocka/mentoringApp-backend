@@ -107,11 +107,12 @@ namespace MentorApp.Controllers
             });
         }
 
+        [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDTO request)
         {
             var authResponse = await _userService.Register(request);
 
-            return Ok();
+            return Ok(authResponse);
         }
     }
 }
