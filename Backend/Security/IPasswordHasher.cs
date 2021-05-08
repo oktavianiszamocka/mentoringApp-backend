@@ -10,6 +10,6 @@ namespace MentorApp.Security
         string Hash(string password);
 
         //tuples feature
-        (bool Verified, bool NeedsUpgrade) Check(string hash, string password);
+        bool Check(string hash, string password);
     }
 }

@@ -2,6 +2,7 @@
 using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
+using MentorApp.Security;
 using MentorApp.Wrappers;
 using System.Threading.Tasks;
 
@@ -54,14 +55,16 @@ namespace MentorApp.Services
                 };
             }
 
-            //TODO hash the password
+            var passwordHasher = new PasswordHasher(new HashingOptions() { /*Iterations = 20000 */}) ;
+            var hashedPassword = passwordHasher.Hash(request.Password);
+
             var newUser = new User
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Role = request.Role,
                 Email = request.Email,
-                Password = request.Password,
+                Password = hashedPassword,
                 //TODO set the salt
                 Salt = "qwerty"
             };
