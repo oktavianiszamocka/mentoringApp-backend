@@ -34,7 +34,7 @@ namespace MentorApp.Controllers
             //var user = _context.User.ToList().First();
             var user = await _userService.Authenticate(request);
 
-            if (user == null) return NotFound();
+            //if (user == null) return NotFound();
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
