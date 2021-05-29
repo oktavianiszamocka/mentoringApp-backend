@@ -84,6 +84,7 @@ namespace MentorApp.Services
         public async Task<NewProjectMembersDTO> CreateProjectMembers(NewProjectMembersDTO newProjectMembersDTO)
         {
             List<Invitation> invitationsToInsert = new List<Invitation>();
+            Boolean hasProjectLeader = false;
             if (newProjectMembersDTO.NewMembers.Count == 1)
             {
                 await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[0].MemberEmail, 1, 1,
@@ -95,15 +96,23 @@ namespace MentorApp.Services
                 {
                     await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[i].MemberEmail, newProjectMembersDTO.NewMembers[i].Role, i + 1,
                         newProjectMembersDTO.IdProject, invitationsToInsert);
+                    if (newProjectMembersDTO.NewMembers[i].Role.Equals(1))
+                    {
+                        hasProjectLeader = true;
+                    }
                 }
             }
 
-            if (invitationsToInsert.Count > 0)
+            if (invitationsToInsert.Count > 0 && hasProjectLeader)
             {
                 await _invitationRepository.CreateManyInvitations(invitationsToInsert);
 
             }
-            
+
+            if (!hasProjectLeader)
+            {
+                throw new HttpResponseException("Please choose one of project member to be Project Leader");
+            }
             return newProjectMembersDTO;
         }
 
@@ -119,6 +128,17 @@ namespace MentorApp.Services
             var inserted = await _projectMemberRepository.CreateNewProjectMember(newMember);
             return inserted;
 
+        }
+
+        public async Task<List<DropdownDTO>> GetMemberRoles()
+        {
+            var roles = await _projectMemberRepository.GetMemberRoles();
+            var rolesDto = roles.Select(role => new DropdownDTO
+            {
+                Label = role.Role,
+                Value = role.IdRoleMember
+            }).ToList();
+            return rolesDto;
         }
 
         public async Task<Invitation> searchStudentAndCreateInvitation(String userEmail, int role, int index, int idProject, List<Invitation> invitations)

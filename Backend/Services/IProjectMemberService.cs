@@ -17,5 +17,7 @@ namespace MentorApp.Services
         Task<List<ProjectMemberDTO>> GetProjectMembers(int IdProject);
         Task<NewProjectMembersDTO> CreateProjectMembers(NewProjectMembersDTO newProjectMembersDTO);
         Task<ProjectMembers> InsertProjectMember(Invitation invitation);
+
+        Task<List<DropdownDTO>> GetMemberRoles();
     }
 }
