@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
+using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -28,13 +29,20 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
 
+        [HttpGet("roles")]
+        public async Task<IActionResult> GetMemberRoles()
+        {
+            var roleList = await _projectMemberService.GetMemberRoles();
+            return Ok(new Response<List<DropdownDTO>>(roleList));
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateNewProjectMembers(NewProjectMembersDTO newMembersDTO)
         {
             try
             {
-                await _projectMemberService.CreateProjectMembers(newMembersDTO);
-                return StatusCode(200);
+                var newProjectMembers = await _projectMemberService.CreateProjectMembers(newMembersDTO);
+                return StatusCode(200, newProjectMembers);
             }
             catch (HttpResponseException ex)
             {
