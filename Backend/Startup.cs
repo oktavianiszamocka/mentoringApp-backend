@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
 
 namespace MentorApp
@@ -43,6 +44,18 @@ namespace MentorApp
                             ValidIssuer = "https://localhost:5001", //should come from configuration
                             ValidAudience = "https://localhost:5001", //should come from configuration
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["SecretKey"]))
+                        };
+
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnAuthenticationFailed = (context) =>
+                            {
+                                if (context.Exception is SecurityTokenExpiredException)
+                                {
+                                    context.Response.Headers.Add("Token-Expired", "true");
+                                }
+                                return Task.CompletedTask;
+                            }
                         };
                     });
 

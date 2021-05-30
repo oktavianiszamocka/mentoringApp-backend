@@ -1,6 +1,8 @@
 ﻿using MentorApp.DTOs.Requests;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
+using MentorApp.Security;
 using MentorApp.Wrappers;
 using System.Threading.Tasks;
 
@@ -39,6 +41,58 @@ namespace MentorApp.Services
         public async Task<User> UpdateProfileUser(User user)
         {
             return await _userRepository.UpdateProfileUser(user);
+        }
+
+        public async Task<AuthenticationResult> Register(UserRegistrationDTO request)
+        {
+            var existingUser = await _userRepository.GetUserByEmail(request.Email);
+
+            if(existingUser != null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "User with this email address already exists" }
+                };
+            }
+
+            var passwordHasher = new PasswordHasher(new HashingOptions() { /*Iterations = 20000 */}) ;
+            var hashedPassword = passwordHasher.Hash(request.Password);
+
+            var newUser = new User
+            {
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                Role = request.Role,
+                Email = request.Email,
+                Password = hashedPassword,
+                //TODO set the salt
+                Salt = "qwerty"
+            };
+            var newProfile = new Profile
+            {
+                Country = request.Country,
+                Major = request.Major,
+                Semester = request.Semester,
+                Phone = request.Phone,
+                DateOfBirth = request.DateOfBirth,
+                User = 0
+            };
+
+            var createdUser = await _userRepository.CreateNewUser(newUser, newProfile);
+
+            if(createdUser == null)
+            {
+                return new AuthenticationResult
+                {
+                    Errors = new[] { "Error in creating an user" }
+                };
+            }
+
+            return new AuthenticationResult
+            {
+                Success = true
+            };
+
         }
     }
 }

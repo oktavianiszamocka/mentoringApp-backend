@@ -1,6 +1,7 @@
 ﻿using MentorApp.DTOs.Requests;
 using MentorApp.Models;
 using MentorApp.Persistence;
+using MentorApp.Security;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -37,13 +38,42 @@ namespace MentorApp.Repository
 
         public async Task<User> Authenticate(LoginRequestDTO loginRequest)
         {
-            /*            var user = await _context.User
-                                    .Where(x => x.Email.Equals(loginRequest.Username) && x.Password.Equals(loginRequest.Password))
-                                    .FirstOrDefaultAsync();*/
-            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username && u.Password == loginRequest.Password);
-            if(user == null) 
+            var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username);
+            if (user == null)
                 return null;
-            return user;
+
+            var passwordHasher = new PasswordHasher(new HashingOptions() {});
+            var passwordVerified = passwordHasher.Check(user.Password, loginRequest.Password);
+
+            if (passwordVerified == false)
+            {
+                return null;
+            } else
+            {
+                return user;
+            }
+
+            /*var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username && u.Password == loginRequest.Password);
+            if(user == null) 
+                return null;*/
+        }
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.User
+                        .Where(user => user.Email.Equals(email))
+                        .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> CreateNewUser(User newUser, Profile newProfile)
+        {
+            _context.User.Add(newUser);
+            await _context.SaveChangesAsync();
+            var newCreatedUser = await GetUserByEmail(newUser.Email);
+            newProfile.User = newCreatedUser.IdUser;
+            _context.Profile.Add(newProfile);
+            await _context.SaveChangesAsync();
+            return newCreatedUser;
         }
     }
 }
