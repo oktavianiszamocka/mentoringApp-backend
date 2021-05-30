@@ -54,13 +54,15 @@ namespace MentorApp.Services
                 {
                     IdUser = messageList.FirstOrDefault().Sender,
                     firstName = messageList.FirstOrDefault().SenderNavigation.FirstName,
-                    lastName = messageList.FirstOrDefault().SenderNavigation.LastName
+                    lastName = messageList.FirstOrDefault().SenderNavigation.LastName,
+                    imageUrl = messageList.FirstOrDefault().SenderNavigation.Avatar
                 },
                 ReceiverUser = new UserWrapper
                 {
                     IdUser = messageList.FirstOrDefault().Receiver,
                     firstName = messageList.FirstOrDefault().ReceiverNavigation.FirstName,
-                    lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName
+                    lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName,
+                    imageUrl = messageList.FirstOrDefault().ReceiverNavigation.Avatar
                 },
                 Messages = messageList.Select(msg => new MessageDto
                 {
