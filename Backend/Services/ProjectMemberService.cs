@@ -89,6 +89,7 @@ namespace MentorApp.Services
             {
                 await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[0].MemberEmail, 1, 1,
                     newProjectMembersDTO.IdProject, invitationsToInsert);
+                hasProjectLeader = true;
             }
             else
             {
