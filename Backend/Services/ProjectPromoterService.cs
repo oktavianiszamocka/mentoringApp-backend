@@ -61,8 +61,12 @@ namespace MentorApp.Services
             {
                 for (int i = 0; i < newSupervisors.SupervisorEmails.Count; i++)
                 {
-                    await searchSupervisorUserAndCreateInvitation(newSupervisors.SupervisorEmails[i], i + 1,
-                        newSupervisors.IdProject, invitationsToInsert);
+                    if (newSupervisors.SupervisorEmails[i] != "")
+                    {
+                        await searchSupervisorUserAndCreateInvitation(newSupervisors.SupervisorEmails[i], i + 2,
+                            newSupervisors.IdProject, invitationsToInsert);
+                    }
+                    
                 }
             }
             else

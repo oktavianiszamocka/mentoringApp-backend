@@ -10,6 +10,6 @@ namespace MentorApp.Services
     {
         Task<ProjectInfoDTO> GetProjectInfoById(int idProject);
         Task<Project> SaveNewProject(NewProjectDTO project);
-        Task<List<ProjectStatusDTO>> GetAllProjectStatus();
+        Task<List<DropdownDTO>> GetAllProjectStatus();
     }
 }

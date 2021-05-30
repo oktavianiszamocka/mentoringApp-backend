@@ -62,5 +62,10 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return insertedNewMember.Entity;
         }
+
+        public async Task<List<MemberRole>> GetMemberRoles()
+        {
+            return await _context.MemberRole.ToListAsync();
+        }
     }
 }

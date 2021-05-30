@@ -19,10 +19,10 @@ namespace MentorApp.Services
             _projectPromotersRepository = projectPromotersRepository;
         }
 
-        public async Task<List<ProjectStatusDTO>> GetAllProjectStatus()
+        public async Task<List<DropdownDTO>> GetAllProjectStatus()
         {
             var projectStatus = await _projectRepository.GetAllProjectStatus();
-            var projectStatusDTO = projectStatus.Select(status => new ProjectStatusDTO
+            var projectStatusDTO = projectStatus.Select(status => new DropdownDTO
             {
                 Value = status.IdStatus,
                 Label = status.Name

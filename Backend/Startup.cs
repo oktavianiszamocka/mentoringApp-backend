@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp
 {
@@ -85,7 +86,10 @@ namespace MentorApp
             services.AddTransient<IMilestoneService, MilestoneService>();
             services.AddTransient<IInvitationRepository, InvitationRepository>();
             services.AddTransient<IInvitationService, InvitationService>();
-
+            services.AddTransient<IMessageRepository, MessageRepository>();
+            services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<ITaskRepository, TaskRepository>();
+            services.AddTransient<ITaskService, TaskService>();
 
 
             var mapperConfig = new MapperConfiguration(mc =>
