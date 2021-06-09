@@ -14,5 +14,7 @@ namespace MentorApp.Repository
         Task<User> GetStudentByEmail(string emailUser);
 
         Task<ProjectMembers> CreateNewProjectMember(ProjectMembers newMember);
+
+        Task<List<MemberRole>> GetMemberRoles();
     }
 }

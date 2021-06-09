@@ -94,7 +94,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetAllProjectStatus()
         {
             var allProjectStatus = await _projectService.GetAllProjectStatus();
-            return Ok(new Response<List<ProjectStatusDTO>>(allProjectStatus));
+            return Ok(new Response<List<DropdownDTO>>(allProjectStatus));
         }
 
         [HttpPost]

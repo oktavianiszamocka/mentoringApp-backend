@@ -545,6 +545,7 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.Description).HasMaxLength(2000);
+                entity.Property(e => e.Priority).HasMaxLength(50);
 
                 entity.Property(e => e.ExpectedEndDate).HasColumnType("date");
 
