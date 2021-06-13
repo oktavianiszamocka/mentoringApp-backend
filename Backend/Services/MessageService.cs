@@ -75,5 +75,17 @@ namespace MentorApp.Services
             };
             return messageDetailDto;
         }
+
+        public async Task<Message> CreateNewMessage(Message message)
+        {
+            var newMessage = await _messageRepository.CreateNewMessage(message);
+            return newMessage;
+        }
+
+        public async Task<Message> DeleteMessage(int idMessage)
+        {
+            var message = await _messageRepository.DeleteMessage(idMessage);
+            return message;
+        }
     }
 }

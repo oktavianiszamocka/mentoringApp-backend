@@ -36,5 +36,21 @@ namespace MentorApp.Repository
                 .OrderByDescending(msg => msg.CreatedOn)
                 .ToListAsync();
         }
+
+        public async Task<Message> CreateNewMessage(Message message)
+        {
+            _context.Message.Add(message);
+            await _context.SaveChangesAsync();
+            return message;
+        }
+
+        public async Task<Message> DeleteMessage(int idMessage)
+        {
+            var message = await _context.Message.FindAsync(idMessage);
+            _context.Message.Remove(message);
+            await _context.SaveChangesAsync();
+            return message;
+        }
+
     }
 }

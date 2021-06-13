@@ -109,7 +109,7 @@ namespace MentorApp.Controllers
         [HttpDelete("{idPost:int}")]
         public async Task<IActionResult> DeletePost(int idPost)
         {
-            await _postService.DeletePost(idPost);
+                await _postService.DeletePost(idPost);
             return StatusCode(200);
         }
 
