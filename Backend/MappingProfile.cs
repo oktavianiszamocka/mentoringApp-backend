@@ -1,4 +1,5 @@
-﻿using MentorApp.DTOs.Responses;
+﻿using MentorApp.DTOs.Requests;
+using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 
 namespace MentorApp
@@ -9,6 +10,7 @@ namespace MentorApp
         {
             CreateMap<Project, ProjectDTO>();
             CreateMap<Models.Profile, ProfileDTO>();
+            CreateMap<TaskRequestDTO, Models.Task>();
 
 
         }

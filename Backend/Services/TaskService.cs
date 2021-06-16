@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
+using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -14,10 +17,12 @@ namespace MentorApp.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IMapper _mapper;
 
-        public TaskService(ITaskRepository taskRepository)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
+            _mapper = mapper;
         }
         public async Task<List<TaskOverviewDTO>> GetTasksByProject(int idProject)
         {
@@ -95,6 +100,79 @@ namespace MentorApp.Services
 
             };
             return taskDto;
+        }
+
+        public async Task<List<DropdownDTO>> GetAllTaskStatus()
+        {
+            var taskStatus = await _taskRepository.GetTaskStatus();
+            var statusDropdown = taskStatus.Select(status => new DropdownDTO
+            {
+                Value = status.IdStatus,
+                Label = status.Name
+            }).ToList();
+            return statusDropdown;
+        }
+
+        public async Task<TaskDto> CreateNewTask(TaskRequestDTO newTaskRequestDto)
+        {
+            var newTask = _mapper.Map<Models.Task>(newTaskRequestDto);
+            var newCreatedTask = await _taskRepository.CreateNewTask(newTask);
+            if (newTaskRequestDto.AssignedUsers.Count > 0)
+            {
+                foreach (var user in newTaskRequestDto.AssignedUsers)
+                {
+                    var newTaskAssign = new TaskAssigning
+                    {
+                        Task = newCreatedTask.IdTask,
+                        User = user
+                    };
+                    await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
+
+                }
+            }
+            var newCreatedTaskDto = await this.GetTaskById(newCreatedTask.IdTask);
+            return newCreatedTaskDto;
+        }
+
+        public async Task<Task> UpdateTaskStatus(Task taskToUpdate)
+        {
+            return await _taskRepository.UpdateTaskStatus(taskToUpdate);
+        }
+
+        public async Task<TaskDto> UpdateTask(TaskRequestDTO taskToUpdateDTO)
+        {
+            var taskUpdate = _mapper.Map<Models.Task>(taskToUpdateDTO);
+            var taskUpdateDB = await _taskRepository.UpdateTask(taskUpdate);
+            if (taskToUpdateDTO.IsAddNewAssignee && taskToUpdateDTO.AssignedUsersToAdd.Count > 0)
+            {
+                foreach (var user in taskToUpdateDTO.AssignedUsersToAdd)
+                {
+                    var newTaskAssign = new TaskAssigning
+                    {
+                        Task = taskToUpdateDTO.IdTask,
+                        User = user
+                    };
+                    await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
+
+                }
+            }
+
+            if (taskToUpdateDTO.IsRemoveAssignee && taskToUpdateDTO.AssignedUsersToRemove.Count > 0)
+            {
+                foreach (var user in taskToUpdateDTO.AssignedUsersToRemove)
+                {
+                    var taskAssigningToRemove =
+                        await _taskRepository.GetTaskAssigningByTaskAndUser(taskToUpdateDTO.IdTask, user);
+                    await _taskRepository.DeleteTaskAssigning(taskAssigningToRemove.IdAssign);
+                }
+            }
+            return await this.GetTaskById(taskToUpdateDTO.IdTask);
+
+        }
+
+        public async Task<Task> DeleteTask(int idTask)
+        {
+            return await _taskRepository.DeleteTask(idTask);
         }
     }
 }
