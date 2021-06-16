@@ -48,5 +48,19 @@ namespace MentorApp.Controllers
 
             return Ok(new Response<List<MessageOverviewDto>>(messageOverview));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMessage(Message message)
+        {
+            await _messageService.CreateNewMessage(message);
+            return StatusCode(201, message);
+        }
+
+        [HttpDelete("{idMessage:int}")]
+        public async Task<IActionResult> DeleteMessage(int idMessage)
+        {
+            await _messageService.DeleteMessage(idMessage);
+            return StatusCode(200);
+        }
     }
 }
