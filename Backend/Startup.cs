@@ -90,6 +90,7 @@ namespace MentorApp
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<ITaskRepository, TaskRepository>();
             services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IUploadService, UploadService>();
 
 
             var mapperConfig = new MapperConfiguration(mc =>
@@ -126,7 +127,7 @@ namespace MentorApp
 
             app.UseRouting();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
