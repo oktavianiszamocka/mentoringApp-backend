@@ -17,7 +17,7 @@ namespace MentorApp.Services
             _userRepository = userRepository;
         }
 
-        public async Task UploadUserAvatar(string imageUrl)
+        public async Task UploadUserAvatar()
         {
             const string filePath = "C:\\Users\\Tami\\Desktop\\mentoringApp-backend\\testAvatar.jpg";
             const string bucketName = "mentoring-app-avatars";

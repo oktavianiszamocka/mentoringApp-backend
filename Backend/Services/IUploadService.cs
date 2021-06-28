@@ -7,6 +7,6 @@ namespace MentorApp.Services
 {
     interface IUploadService
     {
-        Task UploadUserAvatar(string imageUrl);
+        Task UploadUserAvatar();
     }
 }
