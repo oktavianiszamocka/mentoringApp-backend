@@ -1,12 +1,14 @@
-﻿using System;
+﻿using MentorApp.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MentorApp.Services
 {
-    interface IUploadService
+    public interface IUploadService
     {
         Task UploadUserAvatar();
+        Task<S3Response> CreateBucketAsync(string bucketName);
     }
 }

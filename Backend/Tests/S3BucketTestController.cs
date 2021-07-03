@@ -16,6 +16,13 @@ namespace MentorApp.Tests
             _uploadService = uploadService;
         }
 
+        [HttpPost("{bucketName}")]
+        public async Task<IActionResult> CreateBucket([FromRoute] string bucketName)
+        {
+            var response = await _uploadService.CreateBucketAsync(bucketName);
+            return Ok(response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> UploadImage()
         {
