@@ -49,12 +49,9 @@ namespace MentorApp.Services
 
             if(existingUser != null)
             {
-                return new AuthenticationResult
-                {
-                    Errors = new[] { "User with this email address already exists" }
-                };
+                throw new HttpResponseException("User with this email address already exists");
             }
-
+            
             var passwordHasher = new PasswordHasher(new HashingOptions() { /*Iterations = 20000 */}) ;
             var hashedPassword = passwordHasher.Hash(request.Password);
 
@@ -81,12 +78,9 @@ namespace MentorApp.Services
             var createdUser = await _userRepository.CreateNewUser(newUser, newProfile);
 
             if(createdUser == null)
-            {
-                return new AuthenticationResult
-                {
-                    Errors = new[] { "Error in creating an user" }
-                };
-            }
+            { 
+                throw new HttpResponseException("Error in creating an user");
+            };
 
             return new AuthenticationResult
             {
