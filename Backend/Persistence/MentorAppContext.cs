@@ -85,7 +85,9 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdMeeting)
                     .HasName("Meeting_pk");
 
-                entity.Property(e => e.DateTime).HasColumnType("datetime");
+                entity.Property(e => e.MeetingDate).HasColumnType("date");
+                entity.Property(e => e.StartTime).HasColumnType("time");
+                entity.Property(e => e.EndTime).HasColumnType("time");
 
                 entity.Property(e => e.Description).HasMaxLength(1000);
 
@@ -121,6 +123,8 @@ namespace MentorApp.Persistence
                     .HasForeignKey(d => d.User)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Meeting_attendence_User");
+
+                entity.Property(e => e.IsAttend);
             });
 
             modelBuilder.Entity<Message>(entity =>

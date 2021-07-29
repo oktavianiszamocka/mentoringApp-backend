@@ -11,6 +11,9 @@ namespace MentorApp
             CreateMap<Project, ProjectDTO>();
             CreateMap<Models.Profile, ProfileDTO>();
             CreateMap<TaskRequestDTO, Models.Task>();
+            CreateMap<Models.Meeting, MeetingDetailDto>();
+            CreateMap<Models.Meeting, MeetingHeadDto>();
+            CreateMap<MeetingRequestDto, Models.Meeting>();
 
 
         }

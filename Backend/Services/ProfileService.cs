@@ -27,6 +27,7 @@ namespace MentorApp.Services
             profileDTO.LastName = userProfile.UserNavigation.LastName;
             profileDTO.Email = userProfile.UserNavigation.Email;
             profileDTO.Avatar = userProfile.UserNavigation.Avatar;
+            profileDTO.Skills = userProfile.Skills.Split(",");
 
             return profileDTO;
         }

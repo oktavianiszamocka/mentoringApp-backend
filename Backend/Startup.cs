@@ -91,8 +91,14 @@ namespace MentorApp
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<ITaskRepository, TaskRepository>();
             services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IMeetingRepository, MeetingRepository>();
+            services.AddTransient<IMeetingService, MeetingService>();
+
             services.AddTransient<IUploadService, UploadService>();
+          
+          
             services.AddAWSService<IAmazonS3>();
+
 
 
             var mapperConfig = new MapperConfiguration(mc =>
