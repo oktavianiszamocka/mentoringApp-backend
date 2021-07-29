@@ -15,6 +15,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
+using Amazon.S3;
 
 namespace MentorApp
 {
@@ -92,6 +93,12 @@ namespace MentorApp
             services.AddTransient<ITaskService, TaskService>();
             services.AddTransient<IMeetingRepository, MeetingRepository>();
             services.AddTransient<IMeetingService, MeetingService>();
+
+            services.AddTransient<IUploadService, UploadService>();
+          
+          
+            services.AddAWSService<IAmazonS3>();
+
 
 
             var mapperConfig = new MapperConfiguration(mc =>
