@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace MentorApp.Models
+namespace MentorApp.DTOs.Requests
 {
-    public partial class Meeting
+    public class MeetingRequestDto
     {
-        public Meeting()
-        {
-            MeetingAttendence = new HashSet<MeetingAttendence>();
-            Note = new HashSet<Note>();
-        }
-
         public int IdMeeting { get; set; }
         public string Title { get; set; }
         public DateTime? MeetingDate { get; set; }
@@ -19,10 +15,13 @@ namespace MentorApp.Models
         public int? Project { get; set; }
         public TimeSpan? StartTime { get; set; }
         public TimeSpan? EndTime { get; set; }
+        public List<int> AttendeeUsers { get; set; }
+
+        public Boolean IsAddNewAttendee { get; set; }
+        public Boolean IsRemoveAttendee { get; set; }
+        public List<int> AttendeeToRemove { get; set; }
+        public List<int> AttendeeToAdd { get; set; }
 
 
-        public virtual Project ProjectNavigation { get; set; }
-        public virtual ICollection<MeetingAttendence> MeetingAttendence { get; set; }
-        public virtual ICollection<Note> Note { get; set; }
     }
 }

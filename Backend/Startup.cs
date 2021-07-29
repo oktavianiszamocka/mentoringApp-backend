@@ -90,6 +90,8 @@ namespace MentorApp
             services.AddTransient<IMessageService, MessageService>();
             services.AddTransient<ITaskRepository, TaskRepository>();
             services.AddTransient<ITaskService, TaskService>();
+            services.AddTransient<IMeetingRepository, MeetingRepository>();
+            services.AddTransient<IMeetingService, MeetingService>();
 
 
             var mapperConfig = new MapperConfiguration(mc =>
