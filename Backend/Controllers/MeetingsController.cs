@@ -32,16 +32,16 @@ namespace MentorApp.Controllers
         }
 
         [HttpGet("user/{idUser:int}")]
-        public async Task<IActionResult> GetMeetingListByIdUser(int idUser)
+        public async Task<IActionResult> GetMeetingListByIdUser(int idUser, [FromQuery(Name = "date")] DateTime dateCalendar)
         {
-            var userMeetingList = await _meetingService.GetMeetingByUser(idUser);
+            var userMeetingList = await _meetingService.GetMeetingByUser(idUser, dateCalendar);
             return Ok(new Response<List<MeetingHeadDto>>(userMeetingList));
         }
 
         [HttpGet("project/{idProject:int}")]
-        public async Task<IActionResult> GetMeetingListByIdProject(int idProject)
+        public async Task<IActionResult> GetMeetingListByIdProject(int idProject, [FromQuery(Name = "date")] DateTime dateCalendar)
         {
-            var projectMeetingList = await _meetingService.GetMeetingByProject(idProject);
+            var projectMeetingList = await _meetingService.GetMeetingByProject(idProject, dateCalendar);
             return Ok(new Response<List<MeetingHeadDto>>(projectMeetingList));
         }
 
@@ -51,6 +51,7 @@ namespace MentorApp.Controllers
             try
             {
                 var newMeeting = await _meetingService.CreateMeeting(newMeetingDto);
+
                 return StatusCode(201, newMeeting);
             }
             catch (HttpResponseException ex)

@@ -11,7 +11,7 @@ namespace MentorApp.Repository
     {
         Task<Meeting> GetMeetingById(int idMeeting);
         Task<List<MeetingAttendence>> GetMeetingByUser(int idUser);
-        Task<List<Meeting>> GetMeetingByProject(int idProject);
+        Task<List<Meeting>> GetMeetingByProject(int idProject, DateTime dateCalendar);
 
         Task<Meeting> CreateMeeting(Meeting newMeeting);
 

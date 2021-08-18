@@ -1,4 +1,5 @@
-﻿using MentorApp.Models;
+﻿using System.Collections.Generic;
+using MentorApp.Models;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
 
@@ -10,6 +11,10 @@ namespace MentorApp.Repository
 
         Task<User> GetProjectPromoterByEmail(string emailUser);
 
+        Task<ProjectPromoter> GetProjectPromoterByIdProjectAndIdUser(int idProject, int idUser);
         Task<ProjectPromoter> CreateProjectPromoter(ProjectPromoter promoter);
+        Task<ProjectPromoter> DeleteProjectPromoter(int idProjectPromoter);
+        Task<List<ProjectPromoter>> GetAdditionalPromoters(int idProject);
+
     }
 }

@@ -9,5 +9,7 @@ namespace MentorApp.Repository
         Task<Project> GetProjectInfoById(int idProject);
         Task<Project> SaveNewProject(Project project);
         Task<List<ProjectStatus>> GetAllProjectStatus();
+
+        Task<Project> UpdateProject(Project projectToUpdate);
     }
 }

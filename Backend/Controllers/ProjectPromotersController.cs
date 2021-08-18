@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
@@ -24,6 +25,12 @@ namespace MentorApp.Controllers
         {
             var projectList = await _projectPromoterService.GetProjectPromoters(idProject);
             return Ok(new Response<ProjectPromotersDTO>(projectList));
+        }
+        [HttpGet("{idProject:int}/email")]
+        public async Task<IActionResult> GetProjectPromotersEmail(int idProject)
+        {
+            var projectPromoterList = await _projectPromoterService.GetAdditionalPromoterEmails(idProject);
+            return Ok(new Response<List<string>>(projectPromoterList));
         }
 
         [HttpPost]

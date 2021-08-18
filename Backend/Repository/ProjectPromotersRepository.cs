@@ -1,8 +1,10 @@
-﻿using MentorApp.Models;
+﻿using System.Collections.Generic;
+using MentorApp.Models;
 using MentorApp.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.Runtime.SharedInterfaces;
 
 namespace MentorApp.Repository
 {
@@ -35,12 +37,35 @@ namespace MentorApp.Repository
                         .FirstOrDefaultAsync();
         }
 
+        public async Task<ProjectPromoter> GetProjectPromoterByIdProjectAndIdUser(int idProject, int idUser)
+        {
+            return await _context.ProjectPromoter
+                .Where(promoter => promoter.Project.Equals(idProject) && promoter.User.Equals(idUser))
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<ProjectPromoter> CreateProjectPromoter(ProjectPromoter promoter)
         {
             var newPromoter = await _context.ProjectPromoter.AddAsync(promoter);
             await _context.SaveChangesAsync();
             return newPromoter.Entity;
 
+        }
+
+        public async Task<ProjectPromoter> DeleteProjectPromoter(int idProjectPromoter)
+        {
+            var toRemove = await _context.ProjectPromoter.FindAsync(idProjectPromoter);
+            _context.ProjectPromoter.Remove(toRemove);
+            await _context.SaveChangesAsync(); 
+            return toRemove;
+        }
+
+        public async Task<List<ProjectPromoter>> GetAdditionalPromoters(int idProject)
+        {
+            return await _context.ProjectPromoter
+                .Where(promoter => promoter.Project.Equals(idProject))
+                .Include(promoter => promoter.UserNavigation)
+                .ToListAsync();
         }
     }
 }
