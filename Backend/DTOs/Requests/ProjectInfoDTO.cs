@@ -10,7 +10,10 @@ namespace MentorApp.DTOs.Requests
         public string Description { get; set; }
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public int Status { get; set; }
         public string StatusName { get; set; }
+        public int? Superviser { get; set; }
+        public string SuperviserEmail { get; set; }
         public string SuperviserFirstName { get; set; }
         public string SuperviserLastName { get; set; }
         public string Icon { get; set; }

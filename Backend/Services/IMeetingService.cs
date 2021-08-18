@@ -12,8 +12,8 @@ namespace MentorApp.Services
     public interface IMeetingService
     {
         Task<MeetingDetailDto> GetMeetingById(int idMeeting);
-        Task<List<MeetingHeadDto>> GetMeetingByUser(int idUser);
-        Task<List<MeetingHeadDto>> GetMeetingByProject(int idProject);
+        Task<List<MeetingHeadDto>> GetMeetingByUser(int idUser, DateTime dateCalendar);
+        Task<List<MeetingHeadDto>> GetMeetingByProject(int idProject, DateTime dateCalendar);
         Task<MeetingDetailDto> CreateMeeting(MeetingRequestDto newMeetingRequestDto);
 
         Task<Meeting> DeleteMeeting(int idMeeting);

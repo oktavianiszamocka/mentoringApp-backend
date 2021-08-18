@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.Models;
@@ -30,17 +31,17 @@ namespace MentorApp.Repository
         public async Task<List<MeetingAttendence>> GetMeetingByUser(int idUser)
         {
             var userMeeting = await _context.MeetingAttendence
-                .Where(attende => attende.User.Equals(idUser))
+                .Where(attende => attende.User.Equals(idUser)  )
                 .Include(meeting => meeting.MeetingNavigation)
                 .ToListAsync();
 
             return userMeeting;
         }
 
-        public async Task<List<Meeting>> GetMeetingByProject(int idProject)
+        public async Task<List<Meeting>> GetMeetingByProject(int idProject, DateTime dateCalendar)
         {
             var projectMeetings = await _context.Meeting
-                .Where(meeting => meeting.Project.Equals(idProject))
+                .Where(meeting => meeting.Project.Equals(idProject) && meeting.MeetingDate.Equals(dateCalendar))
                 .ToListAsync();
             return projectMeetings;
         }

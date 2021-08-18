@@ -39,10 +39,13 @@ namespace MentorApp.Services
             return meetingDto;
         }
 
-        public async Task<List<MeetingHeadDto>> GetMeetingByUser(int idUser)
+        public async Task<List<MeetingHeadDto>> GetMeetingByUser(int idUser, DateTime dateCalendar)
         {
             var userMeetingList = await _meetingRepository.GetMeetingByUser(idUser);
-            var userMeetingHeadDto = userMeetingList.Select(meeting => new MeetingHeadDto
+            var calendarMeeting = userMeetingList
+                .Where(meeting => meeting.MeetingNavigation.MeetingDate.Equals(dateCalendar))
+                .ToList();
+            var userMeetingHeadDto = calendarMeeting.Select(meeting => new MeetingHeadDto
             {
                 IdMeeting = meeting.MeetingNavigation.IdMeeting,
                 Title = meeting.MeetingNavigation.Title,
@@ -54,9 +57,10 @@ namespace MentorApp.Services
             return userMeetingHeadDto;
         }
 
-        public async Task<List<MeetingHeadDto>> GetMeetingByProject(int idProject)
+
+        public async Task<List<MeetingHeadDto>> GetMeetingByProject(int idProject, DateTime dateCalendar)
         {
-            var meetingProjectList = await _meetingRepository.GetMeetingByProject(idProject);
+            var meetingProjectList = await _meetingRepository.GetMeetingByProject(idProject, dateCalendar);
             var meetingHeadDtoList = _mapper.Map<List<MeetingHeadDto>>(meetingProjectList);
             return meetingHeadDtoList;
         }

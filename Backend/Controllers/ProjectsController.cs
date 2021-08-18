@@ -5,6 +5,7 @@ using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Filter;
 using MentorApp.Helpers;
+using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Mvc;
@@ -109,6 +110,13 @@ namespace MentorApp.Controllers
             {
                 return StatusCode(500, ex.Value);
             }
+        }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProject(Project updateProject)
+        {
+            var updatedProject = await _projectService.UpdateProject(updateProject);
+            return StatusCode(200, updatedProject);
         }
     }
 }

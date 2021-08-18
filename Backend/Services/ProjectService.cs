@@ -30,6 +30,11 @@ namespace MentorApp.Services
             return projectStatusDTO;
         }
 
+        public async Task<Project> UpdateProject(Project project)
+        {
+            return await _projectRepository.UpdateProject(project);
+        }
+
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
         {
             var projectInfo = await _projectRepository.GetProjectInfoById(idProject);
@@ -58,7 +63,10 @@ namespace MentorApp.Services
                 Description = projectInfo.Description,
                 StartDate = projectInfo.StartDate,
                 EndDate = projectInfo.EndDate,
+                Status = projectInfo.Status,
                 StatusName = projectInfo.StatusNavigation.Name,
+                Superviser = projectInfo.Superviser,
+                SuperviserEmail =  projectInfo.SuperviserNavigation.Email,
                 SuperviserFirstName = projectInfo.SuperviserNavigation.FirstName,
                 SuperviserLastName = projectInfo.SuperviserNavigation.LastName,
                 Icon = projectInfo.Icon,

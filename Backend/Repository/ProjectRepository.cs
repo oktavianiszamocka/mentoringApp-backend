@@ -22,6 +22,8 @@ namespace MentorApp.Repository
                         .ToListAsync();
         }
 
+
+
         public async Task<Project> GetProjectInfoById(int idProject)
         {
             return await _context.Project
@@ -40,6 +42,20 @@ namespace MentorApp.Repository
             var newProject = await _context.Project.AddAsync(project);
             await _context.SaveChangesAsync();
             return newProject.Entity;
+        }
+
+        public async Task<Project> UpdateProject(Project projectToUpdate)
+        {
+            var projectToUpdateDb = await _context.Project.FindAsync(projectToUpdate.IdProject);
+            projectToUpdateDb.Name = projectToUpdate.Name;
+            projectToUpdateDb.Description = projectToUpdate.Description;
+            projectToUpdateDb.StartDate = projectToUpdate.StartDate;
+            projectToUpdateDb.EndDate = projectToUpdate.EndDate;
+            projectToUpdateDb.Status = projectToUpdate.Status;
+            _context.Project.Update(projectToUpdateDb);
+            await _context.SaveChangesAsync();
+            return projectToUpdateDb;
+
         }
     }
 }

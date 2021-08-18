@@ -93,6 +93,40 @@ namespace MentorApp.Services
             return insertedPromoter;
         }
 
+        public async Task<List<string>> GetAdditionalPromoterEmails(int idProject)
+        {
+            var additionalPromoters = await _projectPromotersRepository.GetAdditionalPromoters(idProject);
+            var additionalPromoterEmails = additionalPromoters
+                .Select(promoter => promoter.UserNavigation.Email).ToList();
+            return additionalPromoterEmails;
+        }
+
+        public async Task<EditProjectPromotersDTO> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
+        {
+            if (editProjectPromotersDto.IsRemovePromoter && editProjectPromotersDto.RemovedPromotersEmail.Count > 0)
+            {
+                foreach (var userEmail in editProjectPromotersDto.RemovedPromotersEmail)
+                {
+                    var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
+                    if (promoterUser == null)
+                    {
+                        throw new HttpResponseException(userEmail + "is not Found in database");
+                    }
+
+                    var projectPromoter =
+                        await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
+                            editProjectPromotersDto.IdProject, promoterUser.IdUser);
+                    await _projectPromotersRepository.DeleteProjectPromoter(projectPromoter.IdProjectPromoter);
+                }
+            }
+
+            if (editProjectPromotersDto.SupervisorEmails.Count > 0)
+            {
+
+            }
+            return editProjectPromotersDto;
+        }
+
         public async Task<Invitation> searchSupervisorUserAndCreateInvitation(String userEmail, int index, int idProject, List<Invitation> invitations)
         {
             var newInvitation = new Invitation();
