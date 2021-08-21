@@ -114,5 +114,12 @@ namespace MentorApp.Controllers
 
             return Ok(authResponse);
         }
+
+        [HttpPost("changePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeDTO passowrdChangeDTO)
+        {
+            var response = await _userService.ChangePassword(passowrdChangeDTO);
+            return Ok(response);
+        }
     }
 }

@@ -75,5 +75,14 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return newCreatedUser;
         }
+
+        public async Task<User> ChangeUserPassword(string email, string hashedPassword)
+        {
+            var user = GetUserByEmail(email).Result;
+            user.Password = hashedPassword;
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }
