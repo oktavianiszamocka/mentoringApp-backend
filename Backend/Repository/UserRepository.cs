@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.Helpers;
 
 namespace MentorApp.Repository
 {
@@ -40,14 +41,17 @@ namespace MentorApp.Repository
         {
             var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username);
             if (user == null)
-                return null;
+            {
+                throw new HttpResponseException("User does not exist! Create account before login");
+            }
+                
 
             var passwordHasher = new PasswordHasher(new HashingOptions() {});
             var passwordVerified = passwordHasher.Check(user.Password, loginRequest.Password);
 
             if (passwordVerified == false)
             {
-                return null;
+                throw new HttpResponseException("Password is wrong. Please fill the correct password!");
             } else
             {
                 return user;

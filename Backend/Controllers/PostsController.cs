@@ -7,6 +7,7 @@ using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -26,7 +27,7 @@ namespace MentorApp.Controllers
             _postService = postService;
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationFilter filter)
         {
@@ -66,6 +67,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
+        [Authorize]
         [HttpGet("general")]
         public async Task<IActionResult> GetGeneral([FromQuery] PaginationFilter filter)
         {
@@ -85,6 +87,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
+        [Authorize]
         [HttpGet("{idPost:int}/comment")]
         public async Task<IActionResult> GetAllCommentsByPostId(int idPost)
         {

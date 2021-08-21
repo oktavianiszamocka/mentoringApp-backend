@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
+using MentorApp.Helpers;
 using MentorApp.Persistence;
 using MentorApp.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -31,42 +32,52 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> Login([FromBody]LoginRequestDTO request)
         {
             //TODO Here we should check the credentials! Here we are just taking the first user.
-            //var user = _context.User.ToList().First();
-            var user = await _userService.Authenticate(request);
 
-            //if (user == null) return NotFound();
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-
-            Claim[] userclaim =
+            try
             {
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Role, "user"),
-                new Claim(ClaimTypes.Role, "admin")
-                //Add additional data here
-            };
+                var user = await _userService.Authenticate(request);
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                //if (user == null) return NotFound();
+                if (user == null)
+                    return BadRequest(new { message = "Username or password is incorrect" });
 
-            var token = new JwtSecurityToken(
-                "https://localhost:5001",
-                "https://localhost:5001",
-                userclaim,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: creds
-            );
+                Claim[] userclaim =
+                {
+                    new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Role, "user"),
+                    new Claim(ClaimTypes.Role, "admin")
+                    //Add additional data here
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    "https://localhost:5001",
+                    "https://localhost:5001",
+                    userclaim,
+                    expires: DateTime.Now.AddMinutes(15),
+                    signingCredentials: creds
+                );
 
 
-            user.RefreshToken = Guid.NewGuid().ToString();
-            user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-            _context.SaveChanges();
+                user.RefreshToken = Guid.NewGuid().ToString();
+                user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
+                _context.SaveChanges();
 
-            return Ok(new
+                return Ok(new
+                {
+                    token = new JwtSecurityTokenHandler().WriteToken(token),
+                    refreshToken = user.RefreshToken,
+                    idUser = user.IdUser
+                });
+
+            }
+            catch (HttpResponseException exception)
             {
-                token = new JwtSecurityTokenHandler().WriteToken(token),
-                refreshToken = user.RefreshToken
-            });
+                return StatusCode(500, exception.Value);
+            }
+           
         }
 
         [HttpPost("{refreshToken}/refresh")]
@@ -110,9 +121,17 @@ namespace MentorApp.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserRegistrationDTO request)
         {
-            var authResponse = await _userService.Register(request);
+            try
+            {
+                var authResponse = await _userService.Register(request);
 
-            return Ok(authResponse);
+                return Ok(authResponse);
+            }
+            catch (HttpResponseException exception)
+            {
+                return StatusCode(500, exception.Value);
+            }
+            
         }
 
         [HttpPost("changePassword")]
