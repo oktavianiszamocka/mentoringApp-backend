@@ -16,5 +16,11 @@ namespace MentorApp.Repository
         Task<ProjectMembers> CreateNewProjectMember(ProjectMembers newMember);
 
         Task<List<MemberRole>> GetMemberRoles();
+
+        Task<Boolean> IsProjectLeaderExistInProject(int idProject);
+
+        Task<ProjectMembers> RemoveProjectMember(int idProjectMember);
+
+        Task<ProjectMembers> UpdateProjectRole(int idProjectMember, int newRole);
     }
 }

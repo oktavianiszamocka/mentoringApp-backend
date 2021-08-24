@@ -47,5 +47,21 @@ namespace MentorApp.Controllers
             }
            
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
+        {
+            try
+            {
+                var updatePromoter = await _projectPromoterService.UpdateProjectPromoter(editProjectPromotersDto);
+                return StatusCode(200);
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+
+
+        }
     }
 }

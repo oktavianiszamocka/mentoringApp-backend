@@ -6,6 +6,7 @@ using MentorApp.Repository;
 using MentorApp.Wrappers;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.S3.Model;
 using MentorApp.DTOs.Requests;
 using MentorApp.Helpers;
 using MentorApp.Models;
@@ -57,13 +58,17 @@ namespace MentorApp.Services
         public async Task<NewSupervisorsProjectDTO> CreateProjectPromoter(NewSupervisorsProjectDTO newSupervisors)
         {
             List<Invitation> invitationsToInsert = new List<Invitation>();
+            var uniqueNewSupervisorEnurable =  newSupervisors.SupervisorEmails.Distinct();
+            var uniqueNewSupervisor = uniqueNewSupervisorEnurable.ToList();
+
+
             if (newSupervisors.SupervisorEmails.Count > 0)
             {
-                for (int i = 0; i < newSupervisors.SupervisorEmails.Count; i++)
+                for (int i = 0; i < uniqueNewSupervisor.Count(); i++)
                 {
-                    if (newSupervisors.SupervisorEmails[i] != "")
+                    if (uniqueNewSupervisor[i] != "")
                     {
-                        await searchSupervisorUserAndCreateInvitation(newSupervisors.SupervisorEmails[i], i + 2,
+                        await searchSupervisorUserAndCreateInvitation(uniqueNewSupervisor[i], i + 2,
                             newSupervisors.IdProject, invitationsToInsert);
                     }
                     
@@ -103,26 +108,59 @@ namespace MentorApp.Services
 
         public async Task<EditProjectPromotersDTO> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
         {
+            
             if (editProjectPromotersDto.IsRemovePromoter && editProjectPromotersDto.RemovedPromotersEmail.Count > 0)
             {
                 foreach (var userEmail in editProjectPromotersDto.RemovedPromotersEmail)
                 {
-                    var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
-                    if (promoterUser == null)
+                    Console.WriteLine(userEmail);
+                    if (userEmail != "")
                     {
-                        throw new HttpResponseException(userEmail + "is not Found in database");
-                    }
+                        var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
+                        if (promoterUser == null)
+                        {
+                            throw new HttpResponseException(userEmail + " is not Found in database");
+                        }
 
-                    var projectPromoter =
-                        await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
-                            editProjectPromotersDto.IdProject, promoterUser.IdUser);
-                    await _projectPromotersRepository.DeleteProjectPromoter(projectPromoter.IdProjectPromoter);
+                        var projectPromoter =
+                            await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
+                                editProjectPromotersDto.IdProject, promoterUser.IdUser);
+                        await _projectPromotersRepository.DeleteProjectPromoter(projectPromoter.IdProjectPromoter);
+                    }
+                   
                 }
             }
 
             if (editProjectPromotersDto.SupervisorEmails.Count > 0)
             {
-
+                Console.WriteLine(editProjectPromotersDto.SupervisorEmails.Count);
+                foreach (var userEmail in editProjectPromotersDto.SupervisorEmails)
+                {
+                    Console.WriteLine(userEmail);
+                    if (userEmail != "")
+                    {
+                        var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
+                        if (promoterUser == null)
+                        {
+                            throw new HttpResponseException(userEmail + "is not Found in database");
+                        }
+                        var projectPromoter =
+                            await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
+                                editProjectPromotersDto.IdProject, promoterUser.IdUser);
+                        if (projectPromoter == null)
+                        {
+                            var invitation = new Invitation
+                            {
+                                Project = editProjectPromotersDto.IdProject,
+                                For_Who = promoterUser.IdUser,
+                                IsMemberInvitation = false,
+                                IsActive = true
+                            };
+                            await _invitationRepository.CreateInvitation(invitation);
+                        }
+                    }
+                        
+                }
             }
             return editProjectPromotersDto;
         }

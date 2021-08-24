@@ -72,7 +72,10 @@ namespace MentorApp.Services
                                     IdUser = member.Member,
                                     FirstName = member.MemberNavigation.FirstName,
                                     LastName = member.MemberNavigation.LastName,
+                                    Email = member.MemberNavigation.Email,
+                                    IdProjectMember = member.IdProjectMember,
                                     Avatar = member.MemberNavigation.Avatar,
+                                    Role = member.MemberRoleNavigation.IdRoleMember,
                                     ProjectRole = member.MemberRoleNavigation.Role,
                                     Major = member.MemberNavigation.Profile.FirstOrDefault().Major,
                                     Semester = member.MemberNavigation.Profile.FirstOrDefault().Semester
@@ -81,27 +84,36 @@ namespace MentorApp.Services
             return projectMembersDTO;
         }
 
+
         public async Task<NewProjectMembersDTO> CreateProjectMembers(NewProjectMembersDTO newProjectMembersDTO)
         {
             List<Invitation> invitationsToInsert = new List<Invitation>();
             Boolean hasProjectLeader = false;
-            if (newProjectMembersDTO.NewMembers.Count == 1)
+          
+        
+            for (int i = 0; i < newProjectMembersDTO.NewMembers.Count; i++)
             {
-                await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[0].MemberEmail, 1, 1,
+                await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[i].MemberEmail, newProjectMembersDTO.NewMembers[i].Role, i + 1,
                     newProjectMembersDTO.IdProject, invitationsToInsert);
-                hasProjectLeader = true;
-            }
-            else
-            {
-                for (int i = 0; i < newProjectMembersDTO.NewMembers.Count; i++)
+                if (newProjectMembersDTO.NewMembers[i].Role.Equals(1))
                 {
-                    await searchStudentAndCreateInvitation(newProjectMembersDTO.NewMembers[i].MemberEmail, newProjectMembersDTO.NewMembers[i].Role, i + 1,
-                        newProjectMembersDTO.IdProject, invitationsToInsert);
-                    if (newProjectMembersDTO.NewMembers[i].Role.Equals(1))
-                    {
-                        hasProjectLeader = true;
-                    }
+                    hasProjectLeader = true;
                 }
+            }
+
+            var projectLeaderExist =
+                _projectMemberRepository.IsProjectLeaderExistInProject(newProjectMembersDTO.IdProject);
+            var projectLeaderInvitation =
+                _invitationRepository.IsProjectMemberLeaderInvitationExist(newProjectMembersDTO.IdProject);
+
+            if (projectLeaderExist.Result || projectLeaderInvitation.Result)
+            {
+                hasProjectLeader = true;
+
+            }
+            if (!hasProjectLeader)
+            {
+                throw new HttpResponseException("Please choose one of project member to be Project Leader");
             }
 
             if (invitationsToInsert.Count > 0 && hasProjectLeader)
@@ -110,10 +122,7 @@ namespace MentorApp.Services
 
             }
 
-            if (!hasProjectLeader)
-            {
-                throw new HttpResponseException("Please choose one of project member to be Project Leader");
-            }
+
             return newProjectMembersDTO;
         }
 
@@ -140,6 +149,28 @@ namespace MentorApp.Services
                 Value = role.IdRoleMember
             }).ToList();
             return rolesDto;
+        }
+
+        public async Task<EditProjectMember> UpdateProjectMember(EditProjectMember editProjectMember)
+        {
+            if (editProjectMember.RemoveProjectMember.Count > 0)
+            {
+                foreach (int idProjectMember in editProjectMember.RemoveProjectMember)
+                {
+                    await _projectMemberRepository.RemoveProjectMember(idProjectMember);
+                }
+            }
+
+            if (editProjectMember.ProjectMemberUpdateWrappers.Count > 0)
+            {
+                foreach (var projectMember in editProjectMember.ProjectMemberUpdateWrappers)
+                {
+                    await _projectMemberRepository.UpdateProjectRole(projectMember.IdProjectMember,
+                        projectMember.IdNewRole);
+                }
+            }
+
+            return editProjectMember;
         }
 
         public async Task<Invitation> searchStudentAndCreateInvitation(String userEmail, int role, int index, int idProject, List<Invitation> invitations)
