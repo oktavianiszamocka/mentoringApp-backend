@@ -15,5 +15,7 @@ namespace MentorApp.Repository
         Task<List<Invitation>> CreateManyInvitations(List<Invitation> newInvitations);
 
         Task<Invitation> UpdateInvitation(Invitation existingInvitation);
+
+        Task<Boolean> IsProjectMemberLeaderInvitationExist(int idProject);
     }
 }

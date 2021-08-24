@@ -29,6 +29,7 @@ namespace MentorApp.Services
                 meetingDto.MeetingAttendee = meeting.MeetingAttendence.Select(attendee => new UserAttendeeWrapper
                 {
                     IdUser = (int) attendee.User,
+                    IdAttendence = attendee.IdAttendence,
                     firstName = attendee.UserNavigation.FirstName,
                     lastName = attendee.UserNavigation.LastName,
                     imageUrl = attendee.UserNavigation.Avatar,

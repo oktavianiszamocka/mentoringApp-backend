@@ -45,6 +45,7 @@ namespace MentorApp.Repository
                         .Include(project => project.MemberNavigation)
                         .ThenInclude(user => user.Profile)
                         .Where(project => project.Project.Equals(IdProject))
+                        .OrderBy(member => member.Role)
                         .ToListAsync();
 
         }
@@ -66,6 +67,37 @@ namespace MentorApp.Repository
         public async Task<List<MemberRole>> GetMemberRoles()
         {
             return await _context.MemberRole.ToListAsync();
+        }
+
+        public async Task<bool> IsProjectLeaderExistInProject(int idProject)
+        {
+            var projectLeader = await _context.ProjectMembers
+                .Where(member => member.Project.Equals(idProject) && member.Role.Equals(1))
+                .FirstOrDefaultAsync();
+
+            if (projectLeader != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<ProjectMembers> RemoveProjectMember(int idProjectMember)
+        {
+            var removeProjectMember = await _context.ProjectMembers.FindAsync(idProjectMember);
+            _context.Remove(removeProjectMember);
+            await _context.SaveChangesAsync();
+            return removeProjectMember;
+        }
+
+        public async Task<ProjectMembers> UpdateProjectRole(int idProjectMember, int newRole)
+        {
+            var updateProjectMember = await _context.ProjectMembers.FindAsync(idProjectMember);
+            updateProjectMember.Role = newRole;
+            _context.ProjectMembers.Update(updateProjectMember);
+            await _context.SaveChangesAsync();
+            return updateProjectMember;
         }
     }
 }

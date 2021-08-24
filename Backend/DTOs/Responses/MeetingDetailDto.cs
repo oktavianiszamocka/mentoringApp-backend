@@ -22,6 +22,7 @@ namespace MentorApp.DTOs.Responses
     public class UserAttendeeWrapper
     {
         public int IdUser { get; set; }
+        public int IdAttendence { get; set; }
         public String firstName { get; set; }
         public String lastName { get; set; }
         public String imageUrl { get; set; }

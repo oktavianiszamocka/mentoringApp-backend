@@ -52,5 +52,18 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return existingInvitationDB;
         }
+
+        public async Task<bool> IsProjectMemberLeaderInvitationExist(int idProject)
+        {
+            var projectLeaderInvitation = await _context.Invitation
+                .Where(invitation => invitation.IsActive && invitation.IsMemberInvitation && invitation.Role.Equals(1))
+                .FirstOrDefaultAsync();
+            if (projectLeaderInvitation != null)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

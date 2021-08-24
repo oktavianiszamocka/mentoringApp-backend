@@ -50,6 +50,21 @@ namespace MentorApp.Controllers
             }
 
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProjectMember(EditProjectMember editProjectMember)
+        {
+            try
+            {
+                var updateProjectMember = await _projectMemberService.UpdateProjectMember(editProjectMember);
+                return StatusCode(200, updateProjectMember);
+
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
     }
 
 }

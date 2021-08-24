@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
 using MentorApp.Models;
+using Task = MentorApp.Models.Task;
 
 namespace MentorApp.Services
 {
@@ -19,5 +20,7 @@ namespace MentorApp.Services
         Task<ProjectMembers> InsertProjectMember(Invitation invitation);
 
         Task<List<DropdownDTO>> GetMemberRoles();
+
+        Task<EditProjectMember> UpdateProjectMember(EditProjectMember editProjectMember);
     }
 }
