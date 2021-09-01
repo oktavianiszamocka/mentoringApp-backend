@@ -80,12 +80,17 @@ namespace MentorApp.Repository
             return newCreatedUser;
         }
 
-        public async Task<User> ChangeUserPassword(string email, string hashedPassword)
+        public async Task<User> ChangeUserPassword(string email, string oldPassword, string newPassword)
         {
+            var passwordHasher = new PasswordHasher(new HashingOptions() { });
             var user = GetUserByEmail(email).Result;
-            user.Password = hashedPassword;
-            _context.User.Update(user);
-            await _context.SaveChangesAsync();
+            if(passwordHasher.Check(user.Password, oldPassword))
+            {
+                var hashedPassword = passwordHasher.Hash(newPassword);
+                user.Password = hashedPassword;
+                _context.User.Update(user);
+                await _context.SaveChangesAsync();
+            }
             return user;
         }
     }

@@ -97,9 +97,7 @@ namespace MentorApp.Services
 
         public async Task<User> ChangePassword(PasswordChangeDTO passwordChangeDTO)
         {
-            var passwordHasher = new PasswordHasher(new HashingOptions() {});
-            var hashedPassword = passwordHasher.Hash(passwordChangeDTO.password);
-            return await _userRepository.ChangeUserPassword(passwordChangeDTO.email, hashedPassword);
+            return await _userRepository.ChangeUserPassword(passwordChangeDTO.email, passwordChangeDTO.oldPassword, passwordChangeDTO.newPassword);
         }
     }
 }

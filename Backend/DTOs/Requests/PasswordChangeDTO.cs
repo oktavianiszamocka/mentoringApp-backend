@@ -8,6 +8,7 @@ namespace MentorApp.DTOs.Requests
     public class PasswordChangeDTO
     {
         public string email;
-        public string password;
+        public string oldPassword;
+        public string newPassword;
     }
 }
