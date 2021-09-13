@@ -51,6 +51,33 @@ namespace MentorApp.Services
             return updatedInvitation;
         }
 
+        public async Task<List<InvitationProjectDTO>> GetInvitationProjectMemberByProject(int idProject)
+        {
+            var invitationList = await _invitationRepository.GetInvitationProjectMemberByProject(idProject);
+
+            var invitationDTOS = invitationList.Select(invitation =>
+                new InvitationProjectDTO
+                {
+                    IdInvitation = invitation.IdInvitation,
+                    IdProject = invitation.Project,
+                    NameUser = invitation.UserNavigation.FirstName + " " + invitation.UserNavigation.LastName,
+                    Role = invitation.Role,
+                    RoleName = invitation.MemberRoleNavigation.Role
+
+                }).ToList();
+
+            return invitationDTOS;
+        }
+
+
+        public async Task<List<String>> GetInvitationProjectPromoterByProject(int idProject)
+        {
+            var invitationList = await _invitationRepository.GetInvitationProjectPromoterByProject(idProject);
+            var invitationDTOS = invitationList.Select(invitation => invitation.UserNavigation.Email).ToList();
+
+            return invitationDTOS;
+        }
+
         public List<InvitationDTO> ConvertToInvitationDtos(List<Invitation> invitations)
         {
             var invitationDtos = invitations
@@ -67,7 +94,8 @@ namespace MentorApp.Services
                     RoleName = (inv.IsMemberInvitation != false) ? inv.MemberRoleNavigation.Role : null,
                     IsMemberInvitation = inv.IsMemberInvitation,
                     IsAccepted = inv.IsMemberInvitation,
-                    IsActive = true
+                    IsActive = true,
+              
 
                 }).ToList();
 

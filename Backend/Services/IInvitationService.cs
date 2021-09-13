@@ -14,5 +14,8 @@ namespace MentorApp.Services
         Task<Invitation> CreateInvitation(Invitation newInvitation);
 
         Task<Invitation> UpdateInvitation(Invitation existingInvitation);
+        Task<List<InvitationProjectDTO>> GetInvitationProjectMemberByProject(int idProject);
+
+        Task<List<String>> GetInvitationProjectPromoterByProject(int idProject);
     }
 }

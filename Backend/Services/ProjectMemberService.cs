@@ -102,16 +102,23 @@ namespace MentorApp.Services
             }
 
             var projectLeaderExist =
-                _projectMemberRepository.IsProjectLeaderExistInProject(newProjectMembersDTO.IdProject);
+                await _projectMemberRepository.IsProjectLeaderExistInProject(newProjectMembersDTO.IdProject);
             var projectLeaderInvitation =
-                _invitationRepository.IsProjectMemberLeaderInvitationExist(newProjectMembersDTO.IdProject);
+               await _invitationRepository.IsProjectMemberLeaderInvitationExist(newProjectMembersDTO.IdProject);
 
-            if (projectLeaderExist.Result || projectLeaderInvitation.Result)
+            if (projectLeaderExist || projectLeaderInvitation)
             {
                 hasProjectLeader = true;
 
             }
-            if (!hasProjectLeader)
+
+            if (!hasProjectLeader && invitationsToInsert.Count == 1)
+            {
+                invitationsToInsert[0].Role = 1;
+                hasProjectLeader = true;
+            }
+
+            if(!hasProjectLeader)
             {
                 throw new HttpResponseException("Please choose one of project member to be Project Leader");
             }
@@ -151,26 +158,19 @@ namespace MentorApp.Services
             return rolesDto;
         }
 
-        public async Task<EditProjectMember> UpdateProjectMember(EditProjectMember editProjectMember)
+        public async Task<ProjectMembers> DeleteProjectMember(int idProjectMember)
         {
-            if (editProjectMember.RemoveProjectMember.Count > 0)
-            {
-                foreach (int idProjectMember in editProjectMember.RemoveProjectMember)
-                {
-                    await _projectMemberRepository.RemoveProjectMember(idProjectMember);
-                }
-            }
+            var projectMemberDeleted = await _projectMemberRepository.RemoveProjectMember(idProjectMember);
+            return projectMemberDeleted;
+        }
 
-            if (editProjectMember.ProjectMemberUpdateWrappers.Count > 0)
-            {
-                foreach (var projectMember in editProjectMember.ProjectMemberUpdateWrappers)
-                {
-                    await _projectMemberRepository.UpdateProjectRole(projectMember.IdProjectMember,
-                        projectMember.IdNewRole);
-                }
-            }
-
-            return editProjectMember;
+        public async Task<ProjectMembers> UpdateProjectMember(ProjectMemberUpdateWrapper editProjectMember)
+        {
+            
+            var projectMember =      await _projectMemberRepository.UpdateProjectRole(editProjectMember.IdProjectMember,
+                        editProjectMember.IdNewRole);
+            
+            return projectMember;
         }
 
         public async Task<Invitation> searchStudentAndCreateInvitation(String userEmail, int role, int index, int idProject, List<Invitation> invitations)
@@ -180,8 +180,8 @@ namespace MentorApp.Services
             var student = await _projectMemberRepository.GetStudentByEmail(userEmail);
             if (student == null)
             {
-                throw new HttpResponseException("Project Member " + index +
-                                                " Email is not found. Please enter correct student email");
+                throw new HttpResponseException(
+                                                userEmail + " is not found. Please enter correct student email");
             }
             else
             {

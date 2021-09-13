@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 using MentorApp.Filter;
 using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
+using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,6 +62,21 @@ namespace MentorApp.Controllers
             var pagedReponse = PaginationHelper.CreatePagedReponse(invitationsWithPaging, validFilter, totalRecords,
                 _uriService, route);
             return Ok(pagedReponse);
+        }
+
+
+        [HttpGet("member/{idProject:int}")]
+        public async Task<IActionResult> GetProjectMemberInvitationListByIdProject(int idProject)
+        {
+            var invitationProjectMemberByProject = await _invitationService.GetInvitationProjectMemberByProject(idProject);
+            return Ok(new Response<List<InvitationProjectDTO>>(invitationProjectMemberByProject));
+        }
+
+        [HttpGet("promotor/{idProject:int}")]
+        public async Task<IActionResult> GetProjectPromotorInvitationListByIdProject(int idProject)
+        {
+            var invitationProjectPromotorByProject = await _invitationService.GetInvitationProjectPromoterByProject(idProject);
+            return Ok(new Response<List<String>>(invitationProjectPromotorByProject));
         }
 
         [HttpPatch]

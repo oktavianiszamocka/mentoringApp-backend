@@ -26,6 +26,7 @@ namespace MentorApp.Controllers
             var projectList = await _projectPromoterService.GetProjectPromoters(idProject);
             return Ok(new Response<ProjectPromotersDTO>(projectList));
         }
+
         [HttpGet("{idProject:int}/email")]
         public async Task<IActionResult> GetProjectPromotersEmail(int idProject)
         {
@@ -45,9 +46,8 @@ namespace MentorApp.Controllers
             {
                 return StatusCode(500, ex.Value);
             }
-           
         }
-
+        /*
         [HttpPatch]
         public async Task<IActionResult> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
         {
@@ -60,8 +60,13 @@ namespace MentorApp.Controllers
             {
                 return StatusCode(500, ex.Value);
             }
-
-
+        }
+        */
+        [HttpDelete("{idProject:int}")]
+        public async Task<IActionResult> DeleteMeeting(int idProject, [FromQuery(Name = "email")] string userEmail)
+        {
+            await _projectPromoterService.DeleteProjectPromoter(idProject, userEmail);
+            return StatusCode(200);
         }
     }
 }
