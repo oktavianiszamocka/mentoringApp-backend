@@ -23,7 +23,7 @@ namespace MentorApp.Repository
                 .Include(invitation => invitation.ProjectNavigation)
                     .ThenInclude(project => project.SuperviserNavigation)
                 .Include(invitation => invitation.MemberRoleNavigation)
-                .OrderBy(invitation => invitation.IdInvitation)
+                .OrderByDescending(invitation => invitation.IdInvitation)
                 .ToListAsync();
         }
 
@@ -56,7 +56,7 @@ namespace MentorApp.Repository
         public async Task<bool> IsProjectMemberLeaderInvitationExist(int idProject)
         {
             var projectLeaderInvitation = await _context.Invitation
-                .Where(invitation => invitation.IsActive && invitation.IsMemberInvitation && invitation.Role.Equals(1))
+                .Where(invitation => invitation.IsActive && invitation.IsMemberInvitation && invitation.Role.Equals(1) && invitation.Project.Equals(idProject))
                 .FirstOrDefaultAsync();
             if (projectLeaderInvitation != null)
             {
@@ -64,6 +64,26 @@ namespace MentorApp.Repository
             }
 
             return false;
+        }
+
+        public async Task<List<Invitation>> GetInvitationProjectMemberByProject(int idProject)
+        {
+            return await _context.Invitation
+                .Include(invitation => invitation.UserNavigation)
+                .Include(invitation => invitation.MemberRoleNavigation)
+                .Where(invitation => invitation.Project.Equals(idProject) && invitation.IsActive &&
+                                     invitation.IsMemberInvitation)
+                .ToListAsync();
+        }
+
+        public async Task<List<Invitation>> GetInvitationProjectPromoterByProject(int idProject)
+        {
+            return await _context.Invitation
+                .Include(invitation => invitation.UserNavigation)
+                .Include(invitation => invitation.MemberRoleNavigation)
+                .Where(invitation => invitation.Project.Equals(idProject) && invitation.IsActive &&
+                                     !invitation.IsMemberInvitation)
+                .ToListAsync();
         }
     }
 }

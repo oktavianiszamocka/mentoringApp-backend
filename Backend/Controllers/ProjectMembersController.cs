@@ -52,7 +52,7 @@ namespace MentorApp.Controllers
         }
 
         [HttpPatch]
-        public async Task<IActionResult> UpdateProjectMember(EditProjectMember editProjectMember)
+        public async Task<IActionResult> UpdateProjectMember(ProjectMemberUpdateWrapper editProjectMember)
         {
             try
             {
@@ -64,6 +64,13 @@ namespace MentorApp.Controllers
             {
                 return StatusCode(500, ex.Value);
             }
+        }
+
+        [HttpDelete("{idProjectMember:int}")]
+        public async Task<IActionResult> DeleteMeeting(int idProjectMember)
+        {
+            await _projectMemberService.DeleteProjectMember(idProjectMember);
+            return StatusCode(200);
         }
     }
 
