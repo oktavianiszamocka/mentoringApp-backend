@@ -50,6 +50,28 @@ namespace MentorApp.Controllers
             }
 
         }
+
+        [HttpPatch]
+        public async Task<IActionResult> UpdateProjectMember(ProjectMemberUpdateWrapper editProjectMember)
+        {
+            try
+            {
+                var updateProjectMember = await _projectMemberService.UpdateProjectMember(editProjectMember);
+                return StatusCode(200, updateProjectMember);
+
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
+        [HttpDelete("{idProjectMember:int}")]
+        public async Task<IActionResult> DeleteMeeting(int idProjectMember)
+        {
+            await _projectMemberService.DeleteProjectMember(idProjectMember);
+            return StatusCode(200);
+        }
     }
 
 }
