@@ -86,6 +86,7 @@ namespace MentorApp.Repository
             _context.User.Update(userProfile);
             await _context.SaveChangesAsync();
             return userProfile;
+        }
 
         public async Task<User> ChangeUserPassword(int idUser, string oldPassword, string newPassword)
         {
