@@ -100,6 +100,8 @@ namespace MentorApp.Services
         {
             return await _userRepository.UpdateUserAvatar(idUser, pictureUrl);
             
+        }
+            
 
         public async Task<User> ChangePassword(PasswordChangeDTO passwordChangeDTO)
         {
