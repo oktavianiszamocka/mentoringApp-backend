@@ -13,5 +13,7 @@ namespace MentorApp.Repository
         Task<User> GetUserByEmail(string email);
         Task<User> CreateNewUser(User newUser, Profile newProfile);
         Task<User> UpdateUserAvatar(int idUser, String pictureUrl);
+        Task<User> ChangeUserPassword(int idUser, string oldPassword, string newPassword);
+
     }
 }

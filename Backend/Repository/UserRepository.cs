@@ -56,10 +56,6 @@ namespace MentorApp.Repository
             {
                 return user;
             }
-
-            /*var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username && u.Password == loginRequest.Password);
-            if(user == null) 
-                return null;*/
         }
 
         public async Task<User> GetUserByEmail(string email)
@@ -90,6 +86,24 @@ namespace MentorApp.Repository
             _context.User.Update(userProfile);
             await _context.SaveChangesAsync();
             return userProfile;
+
+        public async Task<User> ChangeUserPassword(int idUser, string oldPassword, string newPassword)
+        {
+            var passwordHasher = new PasswordHasher(new HashingOptions() { });
+            var user = GetUserById(idUser).Result;
+            if(passwordHasher.Check(user.Password, oldPassword))
+            {
+                var hashedPassword = passwordHasher.Hash(newPassword);
+                user.Password = hashedPassword;
+                _context.User.Update(user);
+                await _context.SaveChangesAsync();
+            } else
+            {
+                return null;
+            }
+
+            return user;
+
         }
     }
 }
