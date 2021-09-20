@@ -86,7 +86,11 @@ namespace MentorApp.Repository
                 user.Password = hashedPassword;
                 _context.User.Update(user);
                 await _context.SaveChangesAsync();
+            } else
+            {
+                return null;
             }
+
             return user;
         }
     }
