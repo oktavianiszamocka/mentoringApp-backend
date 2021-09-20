@@ -11,6 +11,6 @@ namespace MentorApp.Repository
         Task<User> Authenticate(LoginRequestDTO loginRequest);
         Task<User> GetUserByEmail(string email);
         Task<User> CreateNewUser(User newUser, Profile newProfile);
-        Task<User> ChangeUserPassword(string email, string oldPassword, string newPassword);
+        Task<User> ChangeUserPassword(int idUser, string oldPassword, string newPassword);
     }
 }
