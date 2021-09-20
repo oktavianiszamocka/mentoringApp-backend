@@ -134,6 +134,16 @@ namespace MentorApp.Controllers
             
         }
 
+
+
+        [HttpPatch("avatar")]
+        public async Task<IActionResult> UpdateAvatar([FromQuery(Name = "user")] int idUser, [FromQuery(Name = "url")]  String pictureUrl)
+        {
+            var userTarget = await _userService.UpdateUserAvatar(idUser, pictureUrl);
+            return StatusCode(200, userTarget);
+        }
+
+
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeDTO passowrdChangeDTO)
         {
@@ -146,5 +156,6 @@ namespace MentorApp.Controllers
                 return StatusCode(500, ex.Value);
             }
         }
+
     }
 }
