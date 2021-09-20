@@ -56,10 +56,6 @@ namespace MentorApp.Repository
             {
                 return user;
             }
-
-            /*var user = await _context.User.FirstOrDefaultAsync(u => u.Email == loginRequest.Username && u.Password == loginRequest.Password);
-            if(user == null) 
-                return null;*/
         }
 
         public async Task<User> GetUserByEmail(string email)
