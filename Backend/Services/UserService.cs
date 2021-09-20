@@ -94,5 +94,11 @@ namespace MentorApp.Services
             };
 
         }
+
+        public async Task<User> UpdateUserAvatar(int idUser, string pictureUrl)
+        {
+            return await _userRepository.UpdateUserAvatar(idUser, pictureUrl);
+            
+        }
     }
 }

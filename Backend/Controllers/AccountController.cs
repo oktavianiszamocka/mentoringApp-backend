@@ -133,5 +133,14 @@ namespace MentorApp.Controllers
             }
             
         }
+
+
+        [HttpPatch("avatar")]
+        public async Task<IActionResult> UpdateAvatar([FromQuery(Name = "user")] int idUser, [FromQuery(Name = "url")]  String pictureUrl)
+        {
+            var userTarget = await _userService.UpdateUserAvatar(idUser, pictureUrl);
+            return StatusCode(200, userTarget);
+        }
+
     }
 }

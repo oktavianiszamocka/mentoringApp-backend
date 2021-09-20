@@ -1,4 +1,5 @@
-﻿using MentorApp.DTOs.Requests;
+﻿using System;
+using MentorApp.DTOs.Requests;
 using MentorApp.Models;
 using System.Threading.Tasks;
 
@@ -11,5 +12,6 @@ namespace MentorApp.Repository
         Task<User> Authenticate(LoginRequestDTO loginRequest);
         Task<User> GetUserByEmail(string email);
         Task<User> CreateNewUser(User newUser, Profile newProfile);
+        Task<User> UpdateUserAvatar(int idUser, String pictureUrl);
     }
 }

@@ -79,5 +79,17 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return newCreatedUser;
         }
+
+        public async Task<User> UpdateUserAvatar(int idUser, string pictureUrl)
+        {
+            var userProfile = await _context.User
+                .Where(user => user.IdUser.Equals(idUser))
+                .FirstOrDefaultAsync();
+
+            userProfile.Avatar = pictureUrl;
+            _context.User.Update(userProfile);
+            await _context.SaveChangesAsync();
+            return userProfile;
+        }
     }
 }
