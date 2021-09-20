@@ -97,7 +97,7 @@ namespace MentorApp.Services
 
         public async Task<User> ChangePassword(PasswordChangeDTO passwordChangeDTO)
         {
-            return await _userRepository.ChangeUserPassword(passwordChangeDTO.userId, passwordChangeDTO.oldPassword, passwordChangeDTO.newPassword);
+            return await _userRepository.ChangeUserPassword(passwordChangeDTO.idUser, passwordChangeDTO.oldPassword, passwordChangeDTO.newPassword);
         }
     }
 }
