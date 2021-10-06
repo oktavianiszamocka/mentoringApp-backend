@@ -20,12 +20,14 @@ namespace MentorApp.Controllers
         private readonly IConfiguration _configuration;
         private readonly MentorAppContext _context;
         private readonly IUserService _userService;
+        private readonly IMailService _mailService;
 
-        public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService)
+        public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService, IMailService mailService)
         {
             _context = context;
             _configuration = configuration;
             _userService = userService;
+            _mailService = mailService;
         }
 
         [HttpPost("login")]
@@ -145,6 +147,21 @@ namespace MentorApp.Controllers
             {
                 return StatusCode(500, ex.Value);
             }
+        }
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMail([FromForm]MailRequest request)
+        {
+            try
+            {
+                await _mailService.SendEmailAsync(request);
+                return Ok();
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+
         }
     }
 }

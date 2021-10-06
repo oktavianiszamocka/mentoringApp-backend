@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
 using Amazon.S3;
+using MentorApp.Helpers;
 
 namespace MentorApp
 {
@@ -98,6 +99,8 @@ namespace MentorApp
           
           
             services.AddAWSService<IAmazonS3>();
+            services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
+            services.AddTransient<IMailService, MailService>();
 
 
 
