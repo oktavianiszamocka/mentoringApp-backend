@@ -20,7 +20,7 @@ namespace MentorApp.Controllers
         private readonly IConfiguration _configuration;
         private readonly MentorAppContext _context;
         private readonly IUserService _userService;
-
+        
         public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService)
         {
             _context = context;

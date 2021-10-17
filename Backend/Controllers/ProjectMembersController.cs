@@ -36,6 +36,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(roleList));
         }
 
+        //mentor
         [HttpPost]
         public async Task<IActionResult> CreateNewProjectMembers(NewProjectMembersDTO newMembersDTO)
         {
@@ -50,7 +51,7 @@ namespace MentorApp.Controllers
             }
 
         }
-
+        //mentor
         [HttpPatch]
         public async Task<IActionResult> UpdateProjectMember(ProjectMemberUpdateWrapper editProjectMember)
         {
@@ -66,8 +67,9 @@ namespace MentorApp.Controllers
             }
         }
 
+        //mentor
         [HttpDelete("{idProjectMember:int}")]
-        public async Task<IActionResult> DeleteMeeting(int idProjectMember)
+        public async Task<IActionResult> DeleteProjectMember(int idProjectMember)
         {
             await _projectMemberService.DeleteProjectMember(idProjectMember);
             return StatusCode(200);

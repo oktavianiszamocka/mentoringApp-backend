@@ -98,6 +98,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectStatus));
         }
 
+        //mentor
         [HttpPost]
         public async Task<IActionResult> SaveNewProject(NewProjectDTO projectDTO)
         {
@@ -112,6 +113,7 @@ namespace MentorApp.Controllers
             }
         }
 
+        //mentor
         [HttpPatch]
         public async Task<IActionResult> UpdateProject(Project updateProject)
         {

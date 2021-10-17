@@ -25,19 +25,21 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<Milestone>>(milestones));
         }
 
+        //mentor
         [HttpPost]
-        public async Task<IActionResult> SaveNewPersonalNote(Milestone newMilestone)
+        public async Task<IActionResult> SaveNewMilestone(Milestone newMilestone)
         {
             var newMilestoneInserted = await _milestoneService.CreateMilestone(newMilestone);
             return StatusCode(201, newMilestoneInserted);
         }
+        //mentor
         [HttpPatch("update-step")]
         public async Task<IActionResult> UpdateMilestoneToPassed(Milestone milestone)
         {
             var updatedMilestone = await _milestoneService.UpdateMilestoneToPassed(milestone);
             return StatusCode(200, updatedMilestone);
         }
-
+        //mentor
         [HttpPatch]
         public async Task<IActionResult> UpdateMilestone(Milestone milestone)
         {
