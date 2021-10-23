@@ -163,5 +163,19 @@ namespace MentorApp.Controllers
             }
 
         }
+
+        [HttpPost("welcome")]
+        public async Task<IActionResult> SendWelcomeMail([FromForm]WelcomeRequest request)
+        {
+            try
+            {
+                await _mailService.SendWelcomeEmailAsync(request);
+                return Ok();
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
     }
 }
