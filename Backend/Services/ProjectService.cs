@@ -30,6 +30,28 @@ namespace MentorApp.Services
             return projectStatusDTO;
         }
 
+        public async Task<List<DropdownDTO>> GetAllProjectStudies()
+        {
+            var projectStudies = await _projectRepository.GetAllProjectStudies();
+            var projectStudiesDTO = projectStudies.Select(studies => new DropdownDTO
+            {
+                Value = studies.IdProjectStudies,
+                Label = studies.Name
+            }).ToList();
+            return projectStudiesDTO;
+        }
+
+        public async Task<List<DropdownDTO>> GetAllProjectMode()
+        {
+            var projectMode = await _projectRepository.GetAllProjectModes();
+            var projectModesDTO = projectMode.Select(mode => new DropdownDTO
+            {
+                Value = mode.IdProjectMode,
+                Label = mode.Name
+            }).ToList();
+            return projectModesDTO;
+        }
+
         public async Task<Project> UpdateProject(Project project)
         {
             return await _projectRepository.UpdateProject(project);
@@ -64,15 +86,19 @@ namespace MentorApp.Services
                 StartDate = projectInfo.StartDate,
                 EndDate = projectInfo.EndDate,
                 Status = projectInfo.Status,
-                StatusName = projectInfo.StatusNavigation.Name,
+                StatusName =  projectInfo.StatusNavigation.Name ,
+                Studies = projectInfo.Studies,
+                StudiesName = projectInfo.Studies != null ? projectInfo.StudiesNavigation.Name : "-",
+                Mode = projectInfo.Mode,
+                ModeName = projectInfo.Mode != null ?  projectInfo.ModeNavigation.Name : "-",
                 Superviser = projectInfo.Superviser,
                 SuperviserEmail =  projectInfo.SuperviserNavigation.Email,
                 SuperviserFirstName = projectInfo.SuperviserNavigation.FirstName,
                 SuperviserLastName = projectInfo.SuperviserNavigation.LastName,
-                Icon = projectInfo.Icon,
+                Icon = projectInfo.Icon != null ? projectInfo.Icon : null ,
                 projectLeaderFirstName = leaderFirstName,
                 projectLeaderLastName = leaderLastName,
-                UrlLinks = links
+                UrlLinks = links.Count > 0 ? links : null
             };
 
             return projectInfoDTO;
@@ -94,6 +120,8 @@ namespace MentorApp.Services
                 EndDate = project.EndDate,
                 Status = project.Status,
                 Superviser = promoter.IdUser,
+                Studies = project.Studies,
+                Mode = project.Mode
             };
 
             var newProjectInserted = await _projectRepository.SaveNewProject(newproject);

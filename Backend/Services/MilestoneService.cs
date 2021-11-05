@@ -25,6 +25,8 @@ namespace MentorApp.Services
 
         public async Task<Milestone> CreateMilestone(Milestone newMilestone)
         {
+            Milestone lastMilestone = await _milestoneRepository.GetTheLastSequenceOfProjectMilestone(newMilestone.Project);
+            newMilestone.Sequence = lastMilestone.Sequence + 1;
             return await _milestoneRepository.CreateMilestone(newMilestone);
         }
 
