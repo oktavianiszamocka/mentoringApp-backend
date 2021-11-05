@@ -11,5 +11,7 @@ namespace MentorApp.DTOs.Requests
         public DateTime? EndDate { get; set; }
         public string SuperviserEmail { get; set; }
         public int Status { get; set; }
+        public int Studies { get; set; }
+        public int Mode { get; set; }
     }
 }

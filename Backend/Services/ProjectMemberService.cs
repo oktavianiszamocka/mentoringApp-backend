@@ -32,17 +32,31 @@ namespace MentorApp.Services
             return projectDTOList;
         }
 
-        public async Task<List<ProjectWrapper>> GetProjectByNameSearch(int IdUser, String SearchString)
+        public async Task<List<ProjectWrapper>> GetMyProjectFiltered(int IdUser, String SearchString, int? study, int? mode)
         {
-            var projectList = await _projectMemberRepository.GetProjectByNameSearch(IdUser, SearchString);
-            var projectDTOList = GetProjectWrappers(projectList);
-            return projectDTOList;
+            if (SearchString == null)
+            {
+                SearchString = "";
+            }
+       
+            var projectList = await _projectMemberRepository.GetMyProjectFiltered(IdUser, SearchString, study, mode);
+            if (projectList.Count > 0)
+            {
+                var projectDTOList = GetProjectWrappers(projectList);
+                return projectDTOList;
+
+            }
+            else
+            {
+                throw new HttpResponseException("No found. Looks like you have no projects with those filters ");
+            }
+
         }
         public async Task<List<ProjectWrapper>> GetProjectsByIdUser(int IdUser)
         {
             var projectList = await _projectMemberRepository.GetProjectName(IdUser);
             var projectDTOList = GetProjectWrappers(projectList);
-            return projectDTOList;
+            return projectDTOList; 
 
         }
 
@@ -56,7 +70,12 @@ namespace MentorApp.Services
                           Description = project.Description,
                           StartDate = project.StartDate,
                           EndDate = project.EndDate,
-                          SuperviserFullName = project.SuperviserNavigation.FirstName + " " + project.SuperviserNavigation.LastName
+                          Superviser = project.Superviser,
+                          SuperviserFullName = project.SuperviserNavigation.FirstName + " " + project.SuperviserNavigation.LastName,
+                          StatusName = project.StatusNavigation.Name,
+                          StudyName = project.Studies != null ? project.StudiesNavigation.Name : null,
+                          ModeName = project.Mode != null ? project.ModeNavigation.Name : null
+
                       }).ToList();
 
             return projectDTOList;

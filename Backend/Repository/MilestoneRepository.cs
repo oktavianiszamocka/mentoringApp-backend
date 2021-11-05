@@ -39,8 +39,7 @@ namespace MentorApp.Repository
         {
             var milestoneToUpdate = await _context.Milestone.FindAsync(milestone.IdMilestone);
             milestoneToUpdate.Description = milestone.Description;
-            milestoneToUpdate.Sequence = milestone.Sequence;
-
+            
             _context.Milestone.Update(milestoneToUpdate);
             await _context.SaveChangesAsync();
             return milestoneToUpdate;
@@ -53,6 +52,12 @@ namespace MentorApp.Repository
             return newMilestoneInserted.Entity;
         }
 
-
+        public async Task<Milestone> GetTheLastSequenceOfProjectMilestone(int idProject)
+        {
+            return await _context.Milestone
+                .Where(milestone => milestone.Project.Equals(idProject))
+                .OrderByDescending(mil => mil.Sequence)
+                .FirstAsync();
+        }
     }
 }

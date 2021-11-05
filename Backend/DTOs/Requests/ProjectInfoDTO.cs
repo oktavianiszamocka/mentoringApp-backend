@@ -12,6 +12,11 @@ namespace MentorApp.DTOs.Requests
         public DateTime? EndDate { get; set; }
         public int Status { get; set; }
         public string StatusName { get; set; }
+        public int? Studies { get; set; }
+
+        public string StudiesName { get; set; }
+        public int? Mode { get; set; }
+        public string ModeName { get; set; }
         public int? Superviser { get; set; }
         public string SuperviserEmail { get; set; }
         public string SuperviserFirstName { get; set; }

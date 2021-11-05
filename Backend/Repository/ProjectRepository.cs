@@ -22,12 +22,23 @@ namespace MentorApp.Repository
                         .ToListAsync();
         }
 
+        public async Task<List<ProjectStudies>> GetAllProjectStudies()
+        {
+            return await _context.ProjectStudies.ToListAsync();
+        }
+
+        public async Task<List<ProjectMode>> GetAllProjectModes()
+        {
+            return await _context.ProjectModes.ToListAsync();
+        }
 
 
         public async Task<Project> GetProjectInfoById(int idProject)
         {
             return await _context.Project
                          .Include(project => project.StatusNavigation)
+                         .Include(project => project.StudiesNavigation)
+                         .Include(project => project.ModeNavigation)
                          .Include(project => project.SuperviserNavigation)
                          .Include(project => project.ProjectMembers)
                          .Include(project => project.Url)
@@ -52,6 +63,8 @@ namespace MentorApp.Repository
             projectToUpdateDb.StartDate = projectToUpdate.StartDate;
             projectToUpdateDb.EndDate = projectToUpdate.EndDate;
             projectToUpdateDb.Status = projectToUpdate.Status;
+            projectToUpdateDb.Studies = projectToUpdate.Studies;
+            projectToUpdateDb.Mode = projectToUpdate.Mode;
             _context.Project.Update(projectToUpdateDb);
             await _context.SaveChangesAsync();
             return projectToUpdateDb;

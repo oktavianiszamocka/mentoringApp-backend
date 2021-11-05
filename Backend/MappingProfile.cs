@@ -1,6 +1,7 @@
 ﻿using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Models;
+using MentorApp.Wrappers;
 
 namespace MentorApp
 {

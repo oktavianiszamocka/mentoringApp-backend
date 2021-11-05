@@ -44,6 +44,8 @@ namespace MentorApp.Persistence
         public virtual DbSet<UrlType> UrlType { get; set; }
 
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<ProjectStudies> ProjectStudies { get; set; }
+        public virtual DbSet<ProjectMode> ProjectModes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -363,6 +365,19 @@ namespace MentorApp.Persistence
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Project_Project_Status");
 
+                entity.HasOne(d => d.StudiesNavigation)
+                    .WithMany(p => p.Project)
+                    .HasForeignKey(d => d.Studies)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Project_Project_Studies");
+
+
+                entity.HasOne(d => d.ModeNavigation)
+                    .WithMany(p => p.Project)
+                    .HasForeignKey(d => d.Mode)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Project_Project_Mode");
+
                 entity.HasOne(d => d.SuperviserNavigation)
                     .WithMany(p => p.Project)
                     .HasForeignKey(d => d.Superviser)
@@ -499,6 +514,29 @@ namespace MentorApp.Persistence
                     .HasMaxLength(255);
             });
 
+            modelBuilder.Entity<ProjectStudies>(entity =>
+            {
+                entity.HasKey(e => e.IdProjectStudies)
+                    .HasName("Project_Studies_pk");
+
+                entity.ToTable("Project_Studies");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(200);
+            });
+
+            modelBuilder.Entity<ProjectMode>(entity =>
+            {
+                entity.HasKey(e => e.IdProjectMode)
+                    .HasName("Project_Mode_pk");
+
+                entity.ToTable("Project_Mode");
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(200);
+            });
             modelBuilder.Entity<UrlType>(entity =>
             {
                 entity.HasKey(e => e.IdUrlType)
