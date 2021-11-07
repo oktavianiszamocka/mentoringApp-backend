@@ -1,8 +1,11 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MentorApp.Helpers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,10 +16,12 @@ namespace MentorApp.Services
 {
     public class MailService : IMailService
     {
-        private readonly MailSettings _mailSettings;
-        public MailService(IOptions<MailSettings> mailSettings)
+        private readonly Helpers.MailSettings _mailSettings;
+        private readonly IConfiguration _configuration;
+        public MailService(IOptions<Helpers.MailSettings> mailSettings, IConfiguration configuration)
         {
             _mailSettings = mailSettings.Value;
+            _configuration = configuration;
         }
 
         public async Task SendEmailAsync(MailRequest mailRequest)
@@ -70,6 +75,29 @@ namespace MentorApp.Services
             smtp.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await smtp.SendAsync(email);
             smtp.Disconnect(true);
+        }
+
+        public async Task SendResetPasswordEmailAsync()
+        {
+            //var apiKey = _configuration["API_KEY"];
+            var apiKey = "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";
+            var client = new SendGridClient(apiKey);
+
+            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+            var to = new EmailAddress("pjatk.mentoring@gmail.com");
+            var subject = "Reseting the password";
+            var text = "Reset text";
+            var html = "<h1>reset in html</h1>";
+
+            var message = MailHelper.CreateSingleEmail(
+                from,
+                to,
+                subject,
+                text,
+                html
+            );
+
+            var response = await client.SendEmailAsync(message);
         }
 
     }

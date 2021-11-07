@@ -183,5 +183,19 @@ namespace MentorApp.Controllers
                 return StatusCode(500, ex.Value);
             }
         }
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> SendResetPassword()
+        {
+            try
+            {
+                await _mailService.SendResetPasswordEmailAsync();
+                return Ok();
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
     }
 }
