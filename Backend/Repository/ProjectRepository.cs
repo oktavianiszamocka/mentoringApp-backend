@@ -27,6 +27,11 @@ namespace MentorApp.Repository
             return await _context.ProjectStudies.ToListAsync();
         }
 
+        public async Task<List<UrlType>> GetAllUrlType()
+        {
+            return await _context.UrlType.ToListAsync();
+        }
+
         public async Task<List<ProjectMode>> GetAllProjectModes()
         {
             return await _context.ProjectModes.ToListAsync();
@@ -69,6 +74,15 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return projectToUpdateDb;
 
+        }
+
+        public async Task<Project> UpdateIcon(int idProject, string iconUrl)
+        {
+            var project = await _context.Project.Where(pro => pro.IdProject.Equals(idProject)).FirstOrDefaultAsync();
+            project.Icon = iconUrl;
+            _context.Project.Update(project);
+            await _context.SaveChangesAsync();
+            return project;
         }
     }
 }

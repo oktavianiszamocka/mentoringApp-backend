@@ -52,9 +52,25 @@ namespace MentorApp.Services
             return projectModesDTO;
         }
 
+        public async Task<List<DropdownDTO>> GetAllUrlType()
+        {
+            var urlTypes = await _projectRepository.GetAllUrlType();
+            var urlTypeDropdown = urlTypes.Select(type => new DropdownDTO
+            {
+                Value = type.IdUrlType,
+                Label = type.UrlName
+            }).ToList();
+            return urlTypeDropdown;
+        }
+
         public async Task<Project> UpdateProject(Project project)
         {
             return await _projectRepository.UpdateProject(project);
+        }
+
+        public async Task<Project> UpdateIcon(int idProject, string iconUrl)
+        {
+            return await _projectRepository.UpdateIcon(idProject, iconUrl);
         }
 
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
@@ -120,9 +136,17 @@ namespace MentorApp.Services
                 EndDate = project.EndDate,
                 Status = project.Status,
                 Superviser = promoter.IdUser,
-                Studies = project.Studies,
-                Mode = project.Mode
+           
             };
+            if (project.Studies != 0)
+            {
+                newproject.Studies = project.Studies;
+            }
+
+            if (project.Mode != 0)
+            {
+                newproject.Mode = project.Mode;
+            }
 
             var newProjectInserted = await _projectRepository.SaveNewProject(newproject);
             return newProjectInserted;

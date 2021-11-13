@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
@@ -143,5 +144,13 @@ namespace MentorApp.Controllers
             var updatedProject = await _projectService.UpdateProject(updateProject);
             return StatusCode(200, updatedProject);
         }
+        //mentor
+        [HttpPatch("project-icon")]
+        public async Task<IActionResult> UpdateIcon([FromQuery(Name = "project")]int idProject, [FromQuery(Name = "icon")]  String pictureUrl)
+        {
+            var pro = await _projectService.UpdateIcon(idProject, pictureUrl);
+            return StatusCode(200, pro);
+        }
+
     }
 }
