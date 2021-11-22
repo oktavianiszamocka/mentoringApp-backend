@@ -80,7 +80,7 @@ namespace MentorApp.Services
         public async Task SendResetPasswordEmailAsync()
         {
             //var apiKey = _configuration["API_KEY"];
-            var apiKey = "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";
+            var apiKey = "";
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
