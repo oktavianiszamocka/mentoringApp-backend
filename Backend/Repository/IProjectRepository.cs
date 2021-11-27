@@ -12,10 +12,13 @@ namespace MentorApp.Repository
         Task<List<ProjectStatus>> GetAllProjectStatus();
         Task<List<ProjectStudies>> GetAllProjectStudies();
         Task<List<UrlType>> GetAllUrlType();
+        Task<List<Models.Url>> GetAllProjectUrls(int idProject);
         Task<List<ProjectMode>> GetAllProjectModes();
 
         Task<Project> UpdateProject(Project projectToUpdate);
         Task<Project> UpdateIcon(int idProject, String iconUrl);
 
+        Task<Url> SaveNewProjectUrl(Url newUrl);
+        Task<List<Url>> DeleteOldUrl(int idProject);
     }
 }

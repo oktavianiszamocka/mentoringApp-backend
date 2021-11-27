@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using MentorApp.DTOs.Responses;
+using MentorApp.Models;
 
 namespace MentorApp.DTOs.Requests
 {
@@ -24,6 +26,6 @@ namespace MentorApp.DTOs.Requests
         public string Icon { get; set; }
         public string projectLeaderFirstName { get; set; }
         public string projectLeaderLastName { get; set; }
-        public List<string> UrlLinks { get; set; }
+        public List<UrlDTO> UrlLinks { get; set; }
     }
 }

@@ -15,7 +15,8 @@ namespace MentorApp.Services
         Task<List<DropdownDTO>> GetAllProjectStudies();
         Task<List<DropdownDTO>> GetAllProjectMode();
         Task<List<DropdownDTO>> GetAllUrlType();
-
+        Task<List<Models.Url>> GetAllProjectUrls(int idProject);
+        Task<List<Models.Url>> SaveNewProjectUrl(List<Models.Url> newUrls);
         Task<Project> UpdateProject(Project project);
         Task<Project> UpdateIcon(int idProject, String iconUrl);
     }

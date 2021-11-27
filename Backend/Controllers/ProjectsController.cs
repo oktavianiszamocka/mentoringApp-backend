@@ -121,6 +121,20 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectModes));
         }
 
+        [HttpGet("url-types")]
+        public async Task<IActionResult> GetUrlTypes()
+        {
+            var allProjectUrlTypes = await _projectService.GetAllUrlType();
+            return Ok(new Response<List<DropdownDTO>>(allProjectUrlTypes));
+        }
+
+        [HttpGet("project-urls/{idProject:int}")]
+        public async Task<IActionResult> GetProjectUrls(int idProject)
+        {
+            var allProjectUrls = await _projectService.GetAllProjectUrls(idProject);
+            return Ok(new Response<List<Url>>(allProjectUrls));
+        }
+
 
         //mentor
         [HttpPost]
@@ -152,5 +166,11 @@ namespace MentorApp.Controllers
             return StatusCode(200, pro);
         }
 
+        [HttpPatch("project-urls")]
+        public async Task<IActionResult> UpdateProjectUrls( List<Models.Url> projectUrls)
+        {
+            var pro = await _projectService.SaveNewProjectUrl( projectUrls);
+            return StatusCode(200, pro);
+        }
     }
 }
