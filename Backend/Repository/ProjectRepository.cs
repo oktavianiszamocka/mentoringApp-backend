@@ -27,11 +27,29 @@ namespace MentorApp.Repository
             return await _context.ProjectStudies.ToListAsync();
         }
 
+        public async Task<List<UrlType>> GetAllUrlType()
+        {
+            return await _context.UrlType.ToListAsync();
+        }
+
+        public async Task<List<Url>> GetAllProjectUrls(int idProject)
+        {
+            return await _context.Url.Where(pro => pro.Project.Equals(idProject)).ToListAsync();
+        }
+
+        public async Task<Url> SaveNewProjectUrl(Url newUrl)
+        {
+            var newProjectUrl = await _context.Url.AddAsync(newUrl);
+            await _context.SaveChangesAsync();
+            return newProjectUrl.Entity;
+        }
+
+       
+
         public async Task<List<ProjectMode>> GetAllProjectModes()
         {
             return await _context.ProjectModes.ToListAsync();
         }
-
 
         public async Task<Project> GetProjectInfoById(int idProject)
         {
@@ -69,6 +87,23 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return projectToUpdateDb;
 
+        }
+
+        public async Task<Project> UpdateIcon(int idProject, string iconUrl)
+        {
+            var project = await _context.Project.Where(pro => pro.IdProject.Equals(idProject)).FirstOrDefaultAsync();
+            project.Icon = iconUrl;
+            _context.Project.Update(project);
+            await _context.SaveChangesAsync();
+            return project;
+        }
+
+        public async Task<List<Url>> DeleteOldUrl(int idProject)
+        {
+            var urlProjects = await _context.Url.Where(url => url.Project.Equals(idProject)).ToListAsync();
+            _context.Url.RemoveRange(urlProjects);
+            await _context.SaveChangesAsync();
+            return urlProjects;
         }
     }
 }

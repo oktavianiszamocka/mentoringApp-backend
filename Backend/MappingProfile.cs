@@ -15,7 +15,7 @@ namespace MentorApp
             CreateMap<Models.Meeting, MeetingDetailDto>();
             CreateMap<Models.Meeting, MeetingHeadDto>();
             CreateMap<MeetingRequestDto, Models.Meeting>();
-
+            CreateMap<Models.Url, UrlDTO>();
 
         }
     }
