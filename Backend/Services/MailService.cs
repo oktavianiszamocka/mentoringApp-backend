@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MentorApp.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -16,6 +17,8 @@ namespace MentorApp.Services
 {
     public class MailService : IMailService
     {
+        //private readonly UserManager<IdentityUser> userManager;
+        //UserName, Password and Email
         private readonly Helpers.MailSettings _mailSettings;
         private readonly IConfiguration _configuration;
         public MailService(IOptions<Helpers.MailSettings> mailSettings, IConfiguration configuration)
@@ -79,8 +82,9 @@ namespace MentorApp.Services
 
         public async Task SendResetPasswordEmailAsync()
         {
-            //var apiKey = _configuration["API_KEY"];
-            var apiKey = "";
+            var token = Guid.NewGuid().ToString();
+            var apiKey = _configuration["API_KEY"];
+            //var apiKey = "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";
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
@@ -96,6 +100,7 @@ namespace MentorApp.Services
                 text,
                 html
             );
+            Console.Write(token);
 
             var response = await client.SendEmailAsync(message);
         }
