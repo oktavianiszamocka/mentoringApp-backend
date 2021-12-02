@@ -27,6 +27,8 @@ namespace MentorApp.Models
         public int? Superviser { get; set; }
         public string Icon { get; set; }
         public int Status { get; set; }
+        public int? Studies { get; set; }
+        public int? Mode { get; set; }
 
         public virtual ProjectStatus StatusNavigation { get; set; }
         public virtual User SuperviserNavigation { get; set; }
@@ -40,5 +42,7 @@ namespace MentorApp.Models
         public virtual ICollection<Task> Task { get; set; }
         public virtual ICollection<Url> Url { get; set; }
         public virtual ICollection<Invitation> Invitation { get; set; }
+        public virtual ProjectStudies StudiesNavigation { get; set; }
+        public virtual ProjectMode ModeNavigation { get; set; }
     }
 }

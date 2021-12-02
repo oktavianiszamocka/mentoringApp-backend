@@ -5,6 +5,7 @@ using MentorApp.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using MentorApp.DTOs.Responses;
 
 namespace MentorApp.Services
@@ -13,10 +14,12 @@ namespace MentorApp.Services
     {
         private readonly IProjectRepository _projectRepository;
         private readonly IProjectPromotersRepository _projectPromotersRepository;
-        public ProjectService(IProjectRepository projectRepository, IProjectPromotersRepository projectPromotersRepository)
+        private readonly IMapper _mapper;
+        public ProjectService(IProjectRepository projectRepository, IProjectPromotersRepository projectPromotersRepository,IMapper mapper )
         {
             _projectRepository = projectRepository;
             _projectPromotersRepository = projectPromotersRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<DropdownDTO>> GetAllProjectStatus()
@@ -30,9 +33,73 @@ namespace MentorApp.Services
             return projectStatusDTO;
         }
 
+        public async Task<List<DropdownDTO>> GetAllProjectStudies()
+        {
+            var projectStudies = await _projectRepository.GetAllProjectStudies();
+            var projectStudiesDTO = projectStudies.Select(studies => new DropdownDTO
+            {
+                Value = studies.IdProjectStudies,
+                Label = studies.Name
+            }).ToList();
+            return projectStudiesDTO;
+        }
+
+        public async Task<List<DropdownDTO>> GetAllProjectMode()
+        {
+            var projectMode = await _projectRepository.GetAllProjectModes();
+            var projectModesDTO = projectMode.Select(mode => new DropdownDTO
+            {
+                Value = mode.IdProjectMode,
+                Label = mode.Name
+            }).ToList();
+            return projectModesDTO;
+        }
+
+        public async Task<List<DropdownDTO>> GetAllUrlType()
+        {
+            var urlTypes = await _projectRepository.GetAllUrlType();
+            var urlTypeDropdown = urlTypes.Select(type => new DropdownDTO
+            {
+                Value = type.IdUrlType,
+                Label = type.UrlName
+            }).ToList();
+            return urlTypeDropdown;
+        }
+
+        public async Task<List<Url>> GetAllProjectUrls(int idProject)
+        {
+            return await _projectRepository.GetAllProjectUrls(idProject);
+        }
+
+        public async Task<List<Url>> SaveNewProjectUrl(List<Url> newUrls)
+        {
+            var idProject = newUrls[0].Project;
+            List<Url> oldUrls = await this.GetAllProjectUrls(idProject);
+
+            if (oldUrls.Count > 0)
+            {
+                await _projectRepository.DeleteOldUrl(idProject);
+            }
+
+
+            List<Url> newInsertedUrls = new List<Url>();
+            
+            foreach (var newUrl in newUrls)
+            {
+                newInsertedUrls.Add( await _projectRepository.SaveNewProjectUrl(newUrl));
+            }
+
+            return newInsertedUrls;
+        }
+
         public async Task<Project> UpdateProject(Project project)
         {
             return await _projectRepository.UpdateProject(project);
+        }
+
+        public async Task<Project> UpdateIcon(int idProject, string iconUrl)
+        {
+            return await _projectRepository.UpdateIcon(idProject, iconUrl);
         }
 
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
@@ -50,11 +117,15 @@ namespace MentorApp.Services
                 }
             }
 
-            List<string> links = new List<string>();
-            foreach (Url u in projectInfo.Url)
+            List<UrlDTO> urlDtos = new List<UrlDTO>();
+
+            if (projectInfo.Url.Count > 0)
             {
-                links.Add(u.Link);
+                urlDtos = _mapper.Map<List<UrlDTO>>(projectInfo.Url);
+
             }
+          
+
 
             var projectInfoDTO = new ProjectInfoDTO
             {
@@ -64,15 +135,19 @@ namespace MentorApp.Services
                 StartDate = projectInfo.StartDate,
                 EndDate = projectInfo.EndDate,
                 Status = projectInfo.Status,
-                StatusName = projectInfo.StatusNavigation.Name,
+                StatusName =  projectInfo.StatusNavigation.Name ,
+                Studies = projectInfo.Studies,
+                StudiesName = projectInfo.Studies != null ? projectInfo.StudiesNavigation.Name : "-",
+                Mode = projectInfo.Mode,
+                ModeName = projectInfo.Mode != null ?  projectInfo.ModeNavigation.Name : "-",
                 Superviser = projectInfo.Superviser,
                 SuperviserEmail =  projectInfo.SuperviserNavigation.Email,
                 SuperviserFirstName = projectInfo.SuperviserNavigation.FirstName,
                 SuperviserLastName = projectInfo.SuperviserNavigation.LastName,
-                Icon = projectInfo.Icon,
+                Icon = projectInfo.Icon != null ? projectInfo.Icon : null ,
                 projectLeaderFirstName = leaderFirstName,
                 projectLeaderLastName = leaderLastName,
-                UrlLinks = links
+                UrlLinks = urlDtos.Count > 0 ? urlDtos : null
             };
 
             return projectInfoDTO;
@@ -94,7 +169,17 @@ namespace MentorApp.Services
                 EndDate = project.EndDate,
                 Status = project.Status,
                 Superviser = promoter.IdUser,
+           
             };
+            if (project.Studies != 0)
+            {
+                newproject.Studies = project.Studies;
+            }
+
+            if (project.Mode != 0)
+            {
+                newproject.Mode = project.Mode;
+            }
 
             var newProjectInserted = await _projectRepository.SaveNewProject(newproject);
             return newProjectInserted;
