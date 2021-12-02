@@ -35,6 +35,7 @@ namespace MentorApp.Models
         public string RefreshToken { get; set; }
         public DateTime? RefreshTokenExpDate { get; set; }
         public int Role { get; set; }
+        public string ResetToken { get; set; }
 
         public virtual Role RoleNavigation { get; set; }
         public virtual ICollection<Comment> Comment { get; set; }

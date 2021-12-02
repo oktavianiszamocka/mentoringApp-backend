@@ -702,6 +702,7 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.RefreshToken).HasMaxLength(500);
 
                 entity.Property(e => e.RefreshTokenExpDate).HasColumnType("datetime");
+                entity.Property(e => e.ResetToken).HasMaxLength(200);
 
                 entity.Property(e => e.Salt)
                     .IsRequired()
