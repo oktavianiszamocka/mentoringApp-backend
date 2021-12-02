@@ -20,34 +20,45 @@ namespace MentorApp.Controllers
         private readonly IConfiguration _configuration;
         private readonly MentorAppContext _context;
         private readonly IUserService _userService;
-        
-        public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService)
+        private readonly IMailService _mailService;
+
+        public AccountController(MentorAppContext context, IConfiguration configuration, IUserService userService, IMailService mailService)
         {
             _context = context;
             _configuration = configuration;
             _userService = userService;
+            _mailService = mailService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody]LoginRequestDTO request)
         {
-            //TODO Here we should check the credentials! Here we are just taking the first user.
-
             try
             {
                 var user = await _userService.Authenticate(request);
 
-                //if (user == null) return NotFound();
                 if (user == null)
                     return BadRequest(new { message = "Username or password is incorrect" });
 
-                Claim[] userclaim =
+/*                Claim[] userclaim =
                 {
-                    new Claim(ClaimTypes.Name, user.FirstName),
-                    new Claim(ClaimTypes.Role, "user"),
-                    new Claim(ClaimTypes.Role, "admin")
+                    //new Claim(ClaimTypes.Name, user.FirstName),
+                    new Claim(ClaimTypes.Role, "mentor")
                     //Add additional data here
-                };
+                };*/
+
+
+                Claim[] userclaim = new Claim[1];
+                if(user.Role == 3)
+                {
+                    userclaim[0] = new Claim(ClaimTypes.Role, "mentor");
+                } else if(user.Role == 1)
+                {
+                    userclaim[0] = new Claim(ClaimTypes.Role, "admin");
+                } else
+                {
+                    userclaim[0] = new Claim(ClaimTypes.Role, "student");
+                }
 
                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -73,7 +84,7 @@ namespace MentorApp.Controllers
                 });
 
             }
-            catch (HttpResponseException exception)
+            catch(HttpResponseException exception)
             {
                 return StatusCode(500, exception.Value);
             }
@@ -90,10 +101,7 @@ namespace MentorApp.Controllers
 
             Claim[] userclaim =
             {
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Role, "user"),
-                new Claim(ClaimTypes.Role, "admin")
-                //Add additional data here
+                new Claim(ClaimTypes.Role, "mentor")
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
@@ -152,6 +160,50 @@ namespace MentorApp.Controllers
                 var response = await _userService.ChangePassword(passowrdChangeDTO);
                 return Ok(response);
             } catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
+
+        [HttpPost("send")]
+        public async Task<IActionResult> SendMail([FromForm]MailRequest request)
+        {
+            try
+            {
+                await _mailService.SendEmailAsync(request);
+                return Ok();
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+
+        }
+
+        [HttpPost("welcome")]
+        public async Task<IActionResult> SendWelcomeMail([FromForm]WelcomeRequest request)
+        {
+            try
+            {
+                await _mailService.SendWelcomeEmailAsync(request);
+                return Ok();
+            }
+            catch(HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> SendResetPassword()
+        {
+            try
+            {
+                await _mailService.SendResetPasswordEmailAsync();
+                return Ok();
+            }
+            catch(HttpResponseException ex)
             {
                 return StatusCode(500, ex.Value);
             }

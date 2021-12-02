@@ -22,19 +22,19 @@ namespace MentorApp.Tests
             return "This data is secret";
         }
 
-        [Authorize(Roles = "admin")]
-        [HttpGet("secret-data-for-admin")]
+        [Authorize(Roles = "student")]
+        [HttpGet("secret-data-for-student")]
         public string SecretDataForAdmin()
         {
-            return "This data is secret and only for admins";
+            return "This data is secret and only for students";
         }
 
         //check
-        [Authorize(Roles = "admin2")]
-        [HttpGet("secret-data-for-admin2")]
+        [Authorize(Roles = "mentor")]
+        [HttpGet("secret-data-for-mentor")]
         public string SecretDataForAdmin2()
         {
-            return "This data is secret and only for admins2";
+            return "This data is secret and only for mentor";
         }
     }
 }
