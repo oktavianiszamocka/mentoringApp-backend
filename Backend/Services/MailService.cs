@@ -90,7 +90,12 @@ namespace MentorApp.Services
             var to = new EmailAddress("pjatk.mentoring@gmail.com");
             var subject = "Reseting the password";
             var text = "Reset text";
-            var html = "<h1>reset in html</h1>";
+
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeMailTemplate.html";
+            StreamReader str = new StreamReader(FilePath);
+            string MailText = str.ReadToEnd();
+            str.Close();
+            var html = MailText;
 
             var message = MailHelper.CreateSingleEmail(
                 from,
@@ -99,7 +104,6 @@ namespace MentorApp.Services
                 text,
                 html
             );
-            Console.Write(token);
 
             var response = await client.SendEmailAsync(message);
         }
