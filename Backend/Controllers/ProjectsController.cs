@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Requests;
@@ -42,7 +43,7 @@ namespace MentorApp.Controllers
         {
             var route = Request.Path.Value;
             var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
-            var projectList = await _projectMemberService.GetProjectsByIdUser(idUser);
+            var projectList = await _projectMemberService.GetMyProjectFiltered(idUser, "", null, null);
             var projectsListWithPaging = projectList
                 .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
                 .Take(validFilter.PageSize)
@@ -58,22 +59,30 @@ namespace MentorApp.Controllers
 
         [HttpGet("user-projects/{idUser:int}/search")]
         public async Task<IActionResult> GetUserProjectsBySearchName([FromQuery] PaginationFilter filter, int idUser,
-            [FromQuery(Name = "projectName")] string SearchName)
+            [FromQuery(Name = "projectName")] string SearchName, [FromQuery(Name = "study")] int? study, [FromQuery(Name = "mode")] int mode)
         {
-            var route = Request.Path.Value;
-            var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
-            var projectList = await _projectMemberService.GetProjectByNameSearch(idUser, SearchName);
-            var projectsListWithPaging = projectList
-                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                .Take(validFilter.PageSize)
-                .ToList();
+            try
+            { 
+                var route = Request.Path.Value;
+                var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
+                var projectList = await _projectMemberService.GetMyProjectFiltered(idUser, SearchName, study, mode);
+                var projectsListWithPaging = projectList
+                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                    .Take(validFilter.PageSize)
+                    .ToList();
 
-            var totalRecords = projectList.Count();
+                var totalRecords = projectList.Count();
 
-            var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
-                _uriService, route);
+                var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
+                    _uriService, route);
 
-            return Ok(pagedResponse);
+                return Ok(pagedResponse);
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+
         }
 
 
@@ -98,6 +107,36 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectStatus));
         }
 
+        [HttpGet("studies")]
+        public async Task<IActionResult> GetAllProjectStudies()
+        {
+            var allProjectStudies = await _projectService.GetAllProjectStudies();
+            return Ok(new Response<List<DropdownDTO>>(allProjectStudies));
+        }
+
+        [HttpGet("mode")]
+        public async Task<IActionResult> GetAllProjectModes()
+        {
+            var allProjectModes = await _projectService.GetAllProjectMode();
+            return Ok(new Response<List<DropdownDTO>>(allProjectModes));
+        }
+
+        [HttpGet("url-types")]
+        public async Task<IActionResult> GetUrlTypes()
+        {
+            var allProjectUrlTypes = await _projectService.GetAllUrlType();
+            return Ok(new Response<List<DropdownDTO>>(allProjectUrlTypes));
+        }
+
+        [HttpGet("project-urls/{idProject:int}")]
+        public async Task<IActionResult> GetProjectUrls(int idProject)
+        {
+            var allProjectUrls = await _projectService.GetAllProjectUrls(idProject);
+            return Ok(new Response<List<Url>>(allProjectUrls));
+        }
+
+
+        //mentor
         [HttpPost]
         public async Task<IActionResult> SaveNewProject(NewProjectDTO projectDTO)
         {
@@ -112,11 +151,26 @@ namespace MentorApp.Controllers
             }
         }
 
+        //mentor
         [HttpPatch]
         public async Task<IActionResult> UpdateProject(Project updateProject)
         {
             var updatedProject = await _projectService.UpdateProject(updateProject);
             return StatusCode(200, updatedProject);
+        }
+        //mentor
+        [HttpPatch("project-icon")]
+        public async Task<IActionResult> UpdateIcon([FromQuery(Name = "project")]int idProject, [FromQuery(Name = "icon")]  String pictureUrl)
+        {
+            var pro = await _projectService.UpdateIcon(idProject, pictureUrl);
+            return StatusCode(200, pro);
+        }
+
+        [HttpPatch("project-urls")]
+        public async Task<IActionResult> UpdateProjectUrls( List<Models.Url> projectUrls)
+        {
+            var pro = await _projectService.SaveNewProjectUrl( projectUrls);
+            return StatusCode(200, pro);
         }
     }
 }

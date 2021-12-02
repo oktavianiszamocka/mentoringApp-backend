@@ -64,7 +64,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
-
+        //mentor
         [HttpGet("member/{idProject:int}")]
         public async Task<IActionResult> GetProjectMemberInvitationListByIdProject(int idProject)
         {
@@ -72,6 +72,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<InvitationProjectDTO>>(invitationProjectMemberByProject));
         }
 
+        //mentor
         [HttpGet("promotor/{idProject:int}")]
         public async Task<IActionResult> GetProjectPromotorInvitationListByIdProject(int idProject)
         {

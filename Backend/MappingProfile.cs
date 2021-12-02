@@ -1,6 +1,7 @@
 ﻿using MentorApp.DTOs.Requests;
 using MentorApp.DTOs.Responses;
 using MentorApp.Models;
+using MentorApp.Wrappers;
 
 namespace MentorApp
 {
@@ -14,7 +15,7 @@ namespace MentorApp
             CreateMap<Models.Meeting, MeetingDetailDto>();
             CreateMap<Models.Meeting, MeetingHeadDto>();
             CreateMap<MeetingRequestDto, Models.Meeting>();
-
+            CreateMap<Models.Url, UrlDTO>();
 
         }
     }

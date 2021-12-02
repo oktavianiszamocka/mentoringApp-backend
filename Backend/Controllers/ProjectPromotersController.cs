@@ -34,6 +34,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<string>>(projectPromoterList));
         }
 
+        //mentor
         [HttpPost]
         public async Task<IActionResult> CreateNewProjectPromoter(NewSupervisorsProjectDTO newSupervisorsProject)
         {
@@ -47,21 +48,9 @@ namespace MentorApp.Controllers
                 return StatusCode(500, ex.Value);
             }
         }
-        /*
-        [HttpPatch]
-        public async Task<IActionResult> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
-        {
-            try
-            {
-                var updatePromoter = await _projectPromoterService.UpdateProjectPromoter(editProjectPromotersDto);
-                return StatusCode(200);
-            }
-            catch (HttpResponseException ex)
-            {
-                return StatusCode(500, ex.Value);
-            }
-        }
-        */
+
+        //mentor
+
         [HttpDelete("{idProject:int}")]
         public async Task<IActionResult> DeleteMeeting(int idProject, [FromQuery(Name = "email")] string userEmail)
         {

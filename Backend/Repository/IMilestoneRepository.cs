@@ -11,5 +11,6 @@ namespace MentorApp.Repository
         Task<Milestone> UpdateMilestone(Milestone milestone);
 
         Task<Milestone> CreateMilestone(Milestone newMilestone);
+        Task<Milestone> GetTheLastSequenceOfProjectMilestone(int idProject);
     }
 }
