@@ -112,5 +112,11 @@ namespace MentorApp.Services
             }
             return await _userRepository.ChangeUserPassword(passwordChangeDTO.idUser, passwordChangeDTO.oldPassword, passwordChangeDTO.newPassword);
         }
+
+        public async Task<bool> IsUserMentor(int idUser)
+        {
+            var user = await _userRepository.GetUserById(idUser);
+            return user.Role.Equals(3);
+        }
     }
 }
