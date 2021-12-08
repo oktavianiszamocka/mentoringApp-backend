@@ -80,7 +80,8 @@ namespace MentorApp.Controllers
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     refreshToken = user.RefreshToken,
-                    idUser = user.IdUser
+                    idUser = user.IdUser,
+                    role = user.Role
                 });
 
             }

@@ -21,6 +21,7 @@ namespace MentorApp.Controllers
         private readonly IProjectMemberService _projectMemberService;
         private readonly IProjectService _projectService;
         private readonly IUriService _uriService;
+       
 
 
         public ProjectsController(IProjectMemberService projectMemberService, IUriService uriService,
@@ -29,6 +30,7 @@ namespace MentorApp.Controllers
             _projectMemberService = projectMemberService;
             _uriService = uriService;
             _projectService = projectService;
+           
         }
 
         [HttpGet("{idUser:int}")]
@@ -41,20 +43,30 @@ namespace MentorApp.Controllers
         [HttpGet("user-projects/{idUser:int}")]
         public async Task<IActionResult> GetUserProjects([FromQuery] PaginationFilter filter, int idUser)
         {
-            var route = Request.Path.Value;
-            var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
-            var projectList = await _projectMemberService.GetMyProjectFiltered(idUser, "", null, null);
-            var projectsListWithPaging = projectList
-                .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
-                .Take(validFilter.PageSize)
-                .ToList();
+            try
+            {
+                var route = Request.Path.Value;
+                var validFilter = new PaginationFilter(filter.PageNumber, DefaultPageSize);
+                
+                var  projectList = await _projectMemberService.GetMyProjectFiltered(idUser, "", null, null);
+                
+                
+                var projectsListWithPaging = projectList
+                    .Skip((validFilter.PageNumber - 1) * validFilter.PageSize)
+                    .Take(validFilter.PageSize)
+                    .ToList();
 
-            var totalRecords = projectList.Count();
+                var totalRecords = projectList.Count();
 
-            var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
-                _uriService, route);
+                var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
+                    _uriService, route);
 
-            return Ok(pagedResponse);
+                return Ok(pagedResponse);
+            }
+            catch (HttpResponseException exception)
+            {
+                return StatusCode(500, exception.Value);
+            }
         }
 
         [HttpGet("user-projects/{idUser:int}/search")]

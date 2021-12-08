@@ -17,9 +17,9 @@ namespace MentorApp.Repository
             _context = context;
         }
 
-        public async Task<List<Project>> GetMyProjectFiltered(int IdUser, string SearchString, int? study, int? mode)
+        public async Task<List<Project>> GetMyProjectFiltered(int IdUser)
         {
-            var myProjects = await _context.ProjectMembers
+            return await _context.ProjectMembers
                     .Include(project => project.ProjectNavigation)
                     .Include(project => project.ProjectNavigation.StatusNavigation)
                     .Include(project => project.ProjectNavigation.SuperviserNavigation)
@@ -29,25 +29,6 @@ namespace MentorApp.Repository
                     .Select(project => project.ProjectNavigation)
                     .ToListAsync();
 
-            List<Project> filtredProjects = myProjects;
-            if (study != null && study != 0)
-            {
-                filtredProjects = filtredProjects.Where(project => project.Studies.Equals(study)).ToList();
-             
-            }
-
-            if (mode != null && mode != 0)
-            { 
-                filtredProjects  = filtredProjects.Where(project => project.Mode.Equals(mode)).ToList();
-               
-            }
-
-            if ( !String.IsNullOrEmpty(SearchString) )
-            {
-                filtredProjects  = filtredProjects.Where(project => project.Name.Contains(SearchString)).ToList();
-            }
-                    
-            return filtredProjects;
         }
 
 
