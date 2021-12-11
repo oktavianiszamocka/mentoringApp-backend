@@ -45,6 +45,20 @@ namespace MentorApp.Services
             return messageOverviewDto;
         }
 
+        public async Task<List<ReceiverListDTO>> GetReceiverList()
+        {
+            var receiverList = await _messageRepository.GetReceiversList();
+
+            var receivers = receiverList.Select(user => new ReceiverListDTO
+            {
+                IdReceiver = user.IdUser,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            }).ToList();
+
+            return receivers;
+
+        }
         public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender)
         {
             var messageList = await _messageRepository.GetAllMessagesOfSender(idReceiver, idSender);

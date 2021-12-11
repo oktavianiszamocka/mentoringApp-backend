@@ -26,8 +26,13 @@ namespace MentorApp.Repository
                 .OrderByDescending(msg => msg.CreatedOn)
                 .ToListAsync();
         }
+    
+        public async Task<List<User>> GetReceiversList()
+        {
+            return await _context.User.ToListAsync();
+        }
 
-        public async Task<List<Message>> GetAllMessagesOfSender(int idReceiver, int idSender)
+            public async Task<List<Message>> GetAllMessagesOfSender(int idReceiver, int idSender)
         {
             return await _context.Message
                 .Where(msg =>( msg.Receiver.Equals(idReceiver) && msg.Sender.Equals(idSender)) || msg.Sender.Equals(idReceiver) && msg.Receiver.Equals(idSender))
