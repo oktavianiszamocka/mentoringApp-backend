@@ -41,6 +41,15 @@ namespace MentorApp.Controllers
         }
 
 
+
+        [HttpGet("receiverList")]
+        public async Task<IActionResult> GetReceiverList()
+        {
+            var receiverList = await _messageService.GetReceiverList();
+
+            return Ok(new Response<List<ReceiverListDTO>>(receiverList));
+        }
+
         [HttpGet("{receiverId:int}")]
         public async Task<IActionResult> GetMessageByReceiverId(int receiverId)
         {
