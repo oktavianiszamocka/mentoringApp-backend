@@ -4,6 +4,7 @@ using MentorApp.DTOs.Responses;
 using MentorApp.Models;
 using MentorApp.Repository;
 using System.Threading.Tasks;
+using EllipticCurve.Utils;
 
 namespace MentorApp.Services
 {
@@ -11,12 +12,14 @@ namespace MentorApp.Services
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
-        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper)
+        public ProfileService(IProfileRepository profileRepository, IUserRepository userRepository, IMapper mapper, IUserService userService)
         {
             _profileRepository = profileRepository;
             _userRepository = userRepository;
             _mapper = mapper;
+            _userService = userService;
         }
         public async Task<ProfileDTO> GetUserProfile(int IdUser)
         {
@@ -26,15 +29,21 @@ namespace MentorApp.Services
             profileDTO.FirstName = userProfile.UserNavigation.FirstName;
             profileDTO.LastName = userProfile.UserNavigation.LastName;
             profileDTO.Email = userProfile.UserNavigation.Email;
-            profileDTO.Avatar = userProfile.UserNavigation.Avatar;
-            profileDTO.Skills = userProfile.Skills.Split(",");
+            profileDTO.Avatar = userProfile.UserNavigation.Avatar != null ? userProfile.UserNavigation.Avatar : "";
+            profileDTO.Skills = userProfile.Skills != null ? userProfile.Skills.Split(",") : null;
+            profileDTO.IsMentor = await _userService.IsUserMentor(IdUser);
 
             return profileDTO;
         }
 
         public async Task<Models.Profile> UpdateUserProfile(EditProfileDTO ProfileDTO)
         {
-            var formatedSkillsToString = string.Join(",", ProfileDTO.Skills);
+            string formatedSkillsToString = "";
+            if (ProfileDTO.Skills != null)
+            {
+                formatedSkillsToString = string.Join(",", ProfileDTO.Skills);
+            }
+            
 
             var profile = new Models.Profile
             {
@@ -45,7 +54,8 @@ namespace MentorApp.Services
                 Major = ProfileDTO.Major,
                 Skills = formatedSkillsToString,
                 Experiences = ProfileDTO.Experiences,
-                Semester = ProfileDTO.Semester
+                Semester = ProfileDTO.Semester,
+                Title = ProfileDTO.Title
             };
 
             profile = await _profileRepository.UpdateUserProfile(profile);

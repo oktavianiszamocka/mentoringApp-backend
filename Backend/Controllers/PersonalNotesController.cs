@@ -4,6 +4,7 @@ using MentorApp.Filter;
 using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -22,6 +23,7 @@ namespace MentorApp.Controllers
             _uriService = uriService;
         }
 
+        [Authorize]
         [HttpGet("{idUser:int}")]
         public async Task<IActionResult> GetPersonalNoteList(int idUser, [FromQuery] PaginationFilter filter)
         {
@@ -40,6 +42,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> SaveNewPersonalNote(PersonalNote note)
         {
@@ -47,6 +50,7 @@ namespace MentorApp.Controllers
             return StatusCode(201, note);
         }
 
+        [Authorize]
         [HttpDelete("{idNote:int}")]
         public async Task<IActionResult> DeletePersonalNote(int idNote)
         {
@@ -54,6 +58,7 @@ namespace MentorApp.Controllers
             return StatusCode(200);
         }
 
+        [Authorize]
         [HttpPatch]
         public async Task<IActionResult> UpdatePersonalNote(PersonalNote note)
         {

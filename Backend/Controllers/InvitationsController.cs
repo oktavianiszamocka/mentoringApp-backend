@@ -8,6 +8,7 @@ using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +29,7 @@ namespace MentorApp.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("{idUser:int}")]
         public async Task<IActionResult> GetShortInvitations(int idUser, [FromQuery] PaginationFilter filter)
         {
@@ -46,6 +48,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
+        [Authorize]
         [HttpGet("full/{idUser:int}")]
         public async Task<IActionResult> GetAllInvitations(int idUser, [FromQuery] PaginationFilter filter)
         {
@@ -64,7 +67,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
-        //mentor
+        [Authorize(Roles = "mentor")]
         [HttpGet("member/{idProject:int}")]
         public async Task<IActionResult> GetProjectMemberInvitationListByIdProject(int idProject)
         {
@@ -72,7 +75,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<InvitationProjectDTO>>(invitationProjectMemberByProject));
         }
 
-        //mentor
+        [Authorize(Roles = "mentor")]
         [HttpGet("promotor/{idProject:int}")]
         public async Task<IActionResult> GetProjectPromotorInvitationListByIdProject(int idProject)
         {
@@ -80,6 +83,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<String>>(invitationProjectPromotorByProject));
         }
 
+        [Authorize]
         [HttpPatch]
         public async Task<IActionResult> UpdateInvitations(Invitation invitationToUpdate)
         {
