@@ -5,6 +5,7 @@ using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -20,6 +21,7 @@ namespace MentorApp.Controllers
             _projectPromoterService = projectPromoterService;
         }
 
+        [Authorize]
         [HttpGet("{idProject:int}")]
         public async Task<IActionResult> GetProjectPromoters(int idProject)
         {
@@ -27,6 +29,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<ProjectPromotersDTO>(projectList));
         }
 
+        [Authorize]
         [HttpGet("{idProject:int}/email")]
         public async Task<IActionResult> GetProjectPromotersEmail(int idProject)
         {
@@ -34,7 +37,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<string>>(projectPromoterList));
         }
 
-        //mentor
+        [Authorize(Roles = "mentor")]
         [HttpPost]
         public async Task<IActionResult> CreateNewProjectPromoter(NewSupervisorsProjectDTO newSupervisorsProject)
         {
@@ -49,8 +52,7 @@ namespace MentorApp.Controllers
             }
         }
 
-        //mentor
-
+        [Authorize(Roles = "mentor")]
         [HttpDelete("{idProject:int}")]
         public async Task<IActionResult> DeleteMeeting(int idProject, [FromQuery(Name = "email")] string userEmail)
         {

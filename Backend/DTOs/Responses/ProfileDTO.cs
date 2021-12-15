@@ -11,11 +11,13 @@ namespace MentorApp.DTOs.Responses
         public string Major { get; set; }
         public string[] Skills { get; set; }
         public string Experiences { get; set; }
+        public string Title { get; set; }
         public int? Semester { get; set; }
         public int User { get; set; }
         public string Email { get; set; }
         public string LastName { get; set; }
         public string FirstName { get; set; }
         public string Avatar { get; set; }
+        public Boolean IsMentor { get; set; }
     }
 }

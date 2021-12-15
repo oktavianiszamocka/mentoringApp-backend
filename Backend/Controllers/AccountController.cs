@@ -8,6 +8,7 @@ using MentorApp.DTOs.Requests;
 using MentorApp.Helpers;
 using MentorApp.Persistence;
 using MentorApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -144,7 +145,7 @@ namespace MentorApp.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPatch("avatar")]
         public async Task<IActionResult> UpdateAvatar([FromQuery(Name = "user")] int idUser, [FromQuery(Name = "url")]  String pictureUrl)
         {
@@ -152,7 +153,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, userTarget);
         }
 
-
+        [Authorize]
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeDTO passowrdChangeDTO)
         {

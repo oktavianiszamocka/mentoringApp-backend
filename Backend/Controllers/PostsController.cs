@@ -48,6 +48,7 @@ namespace MentorApp.Controllers
             return Ok(pagedReponse);
         }
 
+        [Authorize]
         [HttpGet("project/{idProject:int}")]
         public async Task<IActionResult> GetPostByProject([FromQuery] PaginationFilter filter, int idProject)
         {
@@ -95,6 +96,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<CommentWrapper>>(postCommentList));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreatePost(NewPostDTO newPost)
         {
@@ -102,6 +104,7 @@ namespace MentorApp.Controllers
             return StatusCode(201, newPostSaved);
         }
 
+        [Authorize]
         [HttpPatch]
         public async Task<IActionResult> UpdatePost(EditPostDTO newPostDTO)
         {
@@ -109,6 +112,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, newPostDTO);
         }
 
+        [Authorize]
         [HttpDelete("{idPost:int}")]
         public async Task<IActionResult> DeletePost(int idPost)
         {
@@ -116,6 +120,7 @@ namespace MentorApp.Controllers
             return StatusCode(200);
         }
 
+        [Authorize]
         [HttpPost("comment")]
         public async Task<IActionResult> CreateComment(Comment comment)
         {
@@ -123,6 +128,7 @@ namespace MentorApp.Controllers
             return StatusCode(201, comment);
         }
 
+        [Authorize]
         [HttpDelete("comment/{idComment:int}")]
         public async Task<IActionResult> DeleteComment(int idComment)
         {
@@ -130,7 +136,7 @@ namespace MentorApp.Controllers
             return StatusCode(200);
         }
 
-
+        [Authorize]
         [HttpPatch("comment")]
         public async Task<IActionResult> UpdateComment(Comment newComment)
         {

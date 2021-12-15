@@ -75,6 +75,7 @@ namespace MentorApp.Services
                 Semester = request.Semester,
                 Phone = request.Phone,
                 DateOfBirth = request.DateOfBirth,
+                Title = request.Title,
                 User = 0
             };
 

@@ -7,6 +7,7 @@ using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,7 @@ namespace MentorApp.Controllers
             _taskService = taskService;
         }
 
+        [Authorize]
         [HttpGet("{idProject:int}")]
         public async Task<IActionResult> GetProjectTasks(int idProject)
         {
@@ -30,6 +32,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<TaskOverviewDTO>>(tasks));
         }
 
+        [Authorize]
         [HttpGet("detail/{idTask:int}")]
         public async Task<IActionResult> GetTaskById(int idTask)
         {
@@ -37,6 +40,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<TaskDto>(task));
         }
 
+        [Authorize]
         [HttpGet("status")]
         public async Task<IActionResult> GetTaskStatus()
         {
@@ -44,6 +48,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(taskStatus));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateNewTask(TaskRequestDTO newTask)
         {
@@ -58,6 +63,7 @@ namespace MentorApp.Controllers
             }
         }
 
+        [Authorize]
         [HttpPatch("update-status")]
         public async Task<IActionResult> UpdateTaskStatus(Models.Task taskToUpdate)
         {
@@ -65,6 +71,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, updatedTask);
         }
 
+        [Authorize]
         [HttpPatch]
         public async Task<IActionResult> UpdateTask(TaskRequestDTO taskToUpdate)
         {
@@ -72,6 +79,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, updatedTask);
         }
 
+        [Authorize]
         [HttpDelete("{idTask:int}")]
         public async Task<IActionResult> DeleteTask(int idTask)
         {

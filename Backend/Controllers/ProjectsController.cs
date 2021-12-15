@@ -9,6 +9,7 @@ using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -33,6 +34,7 @@ namespace MentorApp.Controllers
            
         }
 
+        [Authorize]
         [HttpGet("{idUser:int}")]
         public async Task<IActionResult> GetUserProjectsName(int idUser)
         {
@@ -40,6 +42,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<ProjectDTO>>(projectList));
         }
 
+        [Authorize]
         [HttpGet("user-projects/{idUser:int}")]
         public async Task<IActionResult> GetUserProjects([FromQuery] PaginationFilter filter, int idUser)
         {
@@ -69,6 +72,7 @@ namespace MentorApp.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("user-projects/{idUser:int}/search")]
         public async Task<IActionResult> GetUserProjectsBySearchName([FromQuery] PaginationFilter filter, int idUser,
             [FromQuery(Name = "projectName")] string SearchName, [FromQuery(Name = "study")] int? study, [FromQuery(Name = "mode")] int mode)
@@ -97,7 +101,7 @@ namespace MentorApp.Controllers
 
         }
 
-
+        [Authorize]
         [HttpGet("members/{idProject:int}")]
         public async Task<IActionResult> GetProjectMembers(int idProject)
         {
@@ -105,6 +109,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
 
+        [Authorize]
         [HttpGet("project-info/{idProject:int}")]
         public async Task<IActionResult> GetProjectsInfo(int idProject)
         {
@@ -112,6 +117,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<ProjectInfoDTO>(project));
         }
 
+        [Authorize]
         [HttpGet("status")]
         public async Task<IActionResult> GetAllProjectStatus()
         {
@@ -119,6 +125,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectStatus));
         }
 
+        [Authorize]
         [HttpGet("studies")]
         public async Task<IActionResult> GetAllProjectStudies()
         {
@@ -126,6 +133,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectStudies));
         }
 
+        [Authorize]
         [HttpGet("mode")]
         public async Task<IActionResult> GetAllProjectModes()
         {
@@ -133,6 +141,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectModes));
         }
 
+        [Authorize]
         [HttpGet("url-types")]
         public async Task<IActionResult> GetUrlTypes()
         {
@@ -140,6 +149,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(allProjectUrlTypes));
         }
 
+        [Authorize]
         [HttpGet("project-urls/{idProject:int}")]
         public async Task<IActionResult> GetProjectUrls(int idProject)
         {
@@ -148,7 +158,7 @@ namespace MentorApp.Controllers
         }
 
 
-        //mentor
+        [Authorize(Roles = "mentor")]
         [HttpPost]
         public async Task<IActionResult> SaveNewProject(NewProjectDTO projectDTO)
         {
@@ -163,14 +173,15 @@ namespace MentorApp.Controllers
             }
         }
 
-        //mentor
+        [Authorize(Roles = "mentor")]
         [HttpPatch]
         public async Task<IActionResult> UpdateProject(Project updateProject)
         {
             var updatedProject = await _projectService.UpdateProject(updateProject);
             return StatusCode(200, updatedProject);
         }
-        //mentor
+
+        [Authorize(Roles = "mentor")]
         [HttpPatch("project-icon")]
         public async Task<IActionResult> UpdateIcon([FromQuery(Name = "project")]int idProject, [FromQuery(Name = "icon")]  String pictureUrl)
         {
@@ -178,6 +189,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, pro);
         }
 
+        [Authorize(Roles = "mentor")]
         [HttpPatch("project-urls")]
         public async Task<IActionResult> UpdateProjectUrls( List<Models.Url> projectUrls)
         {

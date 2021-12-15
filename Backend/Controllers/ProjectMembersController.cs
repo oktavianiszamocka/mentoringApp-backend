@@ -6,6 +6,7 @@ using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MentorApp.Controllers
@@ -21,7 +22,7 @@ namespace MentorApp.Controllers
             _projectMemberService = projectMemberService;
         }
 
-
+        [Authorize]
         [HttpGet("{idProject:int}")]
         public async Task<IActionResult> GetProjectMembers(int idProject)
         {
@@ -29,6 +30,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<ProjectMemberDTO>>(projectMemberList));
         }
 
+        [Authorize]
         [HttpGet("roles")]
         public async Task<IActionResult> GetMemberRoles()
         {
@@ -36,7 +38,8 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<DropdownDTO>>(roleList));
         }
 
-        //mentor
+
+        [Authorize(Roles = "mentor")]
         [HttpPost]
         public async Task<IActionResult> CreateNewProjectMembers(NewProjectMembersDTO newMembersDTO)
         {
@@ -51,7 +54,8 @@ namespace MentorApp.Controllers
             }
 
         }
-        //mentor
+
+        [Authorize(Roles = "mentor")]
         [HttpPatch]
         public async Task<IActionResult> UpdateProjectMember(ProjectMemberUpdateWrapper editProjectMember)
         {
@@ -67,7 +71,8 @@ namespace MentorApp.Controllers
             }
         }
 
-        //mentor
+
+        [Authorize(Roles = "mentor")]
         [HttpDelete("{idProjectMember:int}")]
         public async Task<IActionResult> DeleteProjectMember(int idProjectMember)
         {
