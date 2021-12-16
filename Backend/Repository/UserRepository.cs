@@ -106,5 +106,14 @@ namespace MentorApp.Repository
             return user;
 
         }
+
+        public async Task<User> SavePasswordResetToken(string token, string userEmail)
+        {
+            var user = await GetUserByEmail(userEmail);
+            user.ResetToken = token;
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
     }
 }

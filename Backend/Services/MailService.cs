@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
 using MentorApp.Helpers;
+using MentorApp.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -19,12 +20,14 @@ namespace MentorApp.Services
     {
         //private readonly UserManager<IdentityUser> userManager;
         //UserName, Password and Email
+        private readonly IUserRepository _userRepository;
         private readonly Helpers.MailSettings _mailSettings;
         private readonly IConfiguration _configuration;
-        public MailService(IOptions<Helpers.MailSettings> mailSettings, IConfiguration configuration)
+        public MailService(IOptions<Helpers.MailSettings> mailSettings, IConfiguration configuration, IUserRepository userRepository)
         {
             _mailSettings = mailSettings.Value;
             _configuration = configuration;
+            _userRepository = userRepository;
         }
 
         public async Task SendEmailAsync(MailRequest mailRequest)
@@ -61,7 +64,7 @@ namespace MentorApp.Services
 
         public async Task SendWelcomeEmailAsync(WelcomeRequest request)
         {
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeMailTemplate.html";
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\ResetMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
@@ -82,6 +85,8 @@ namespace MentorApp.Services
 
         public async Task SendResetPasswordEmailAsync()
         {
+            var email = "ochaco@gmail.com";
+            var userName = "Okta";
             var token = Guid.NewGuid().ToString();
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
@@ -91,10 +96,12 @@ namespace MentorApp.Services
             var subject = "Reseting the password";
             var text = "Reset text";
 
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\WelcomeMailTemplate.html";
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\ResetMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();
+            MailText = MailText.Replace("**resetTokenString**", token);
+            MailText = MailText.Replace("**username**", userName);
             var html = MailText;
 
             var message = MailHelper.CreateSingleEmail(
@@ -105,7 +112,8 @@ namespace MentorApp.Services
                 html
             );
 
-            var response = await client.SendEmailAsync(message);
+            await _userRepository.SavePasswordResetToken(token, email);
+            await client.SendEmailAsync(message);
         }
 
     }
