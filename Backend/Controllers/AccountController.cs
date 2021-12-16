@@ -99,10 +99,19 @@ namespace MentorApp.Controllers
 
             //TODO Here we should additionally check if the refresh token hasn't expired!
 
-            Claim[] userclaim =
+            Claim[] userclaim = new Claim[1];
+            if (user.Role == 3)
             {
-                new Claim(ClaimTypes.Role, "mentor")
-            };
+                userclaim[0] = new Claim(ClaimTypes.Role, "mentor");
+            }
+            else if (user.Role == 1)
+            {
+                userclaim[0] = new Claim(ClaimTypes.Role, "admin");
+            }
+            else
+            {
+                userclaim[0] = new Claim(ClaimTypes.Role, "student");
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["SecretKey"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
