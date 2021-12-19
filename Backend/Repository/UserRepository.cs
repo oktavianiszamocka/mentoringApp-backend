@@ -64,6 +64,13 @@ namespace MentorApp.Repository
                         .Where(user => user.Email.Equals(email))
                         .FirstOrDefaultAsync();
         }
+        public async Task<User> GetUserByResetToken(string resetToken)
+        {
+            return await _context.User
+                        .Where(user => user.ResetToken.Equals(resetToken))
+                        .FirstOrDefaultAsync();
+        }
+
 
         public async Task<User> CreateNewUser(User newUser, Profile newProfile)
         {
@@ -115,5 +122,14 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return user;
         }
+
+        public async Task<User> SetNewPassword(string newPassword, User user)
+        {
+            user.Password = newPassword;
+            user.ResetToken = null;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
     }
 }
