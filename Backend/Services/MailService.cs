@@ -2,6 +2,7 @@
 using MailKit.Security;
 using MentorApp.Helpers;
 using MentorApp.Repository;
+using MentorApp.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
@@ -124,7 +125,11 @@ namespace MentorApp.Services
             {
                 throw new HttpResponseException("Incorrect reset token");
             }
-            await _userRepository.SetNewPassword(newPassword, user);
+
+            var passwordHasher = new PasswordHasher(new HashingOptions() {});
+            var hashedPassword = passwordHasher.Hash(newPassword);
+
+            await _userRepository.SetNewPassword(hashedPassword, user);
         }
 
 
