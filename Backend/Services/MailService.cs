@@ -86,36 +86,44 @@ namespace MentorApp.Services
 
         public async Task SendResetPasswordEmailAsync(string email)
         {
-            //var email = "ochaco@gmail.com";
-            var userName = "Okta";
-            var token = Guid.NewGuid().ToString();
-            var apiKey = _configuration["API_KEY"];
-            var client = new SendGridClient(apiKey);
+            var targetUser = await _userRepository.GetUserByEmail(email);
+            if (targetUser == null)
+            {
+                throw new HttpResponseException("No users with " + email + " were found!");
+            }
+            else
+            {
+                var userName = targetUser.FirstName;
+                var token = Guid.NewGuid().ToString();
+                var apiKey = _configuration["API_KEY"];
+                var client = new SendGridClient(apiKey);
 
-            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-            //"pjatk.mentoring@gmail.com"
-            var to = new EmailAddress(email);
-            var subject = "Reseting the password";
-            var text = "Reset text";
+                var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+                //"pjatk.mentoring@gmail.com"
+                var to = new EmailAddress(email);
+                var subject = "Reseting the password";
+                var text = "Reset text";
 
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\ResetMailTemplate.html";
-            StreamReader str = new StreamReader(FilePath);
-            string MailText = str.ReadToEnd();
-            str.Close();
-            MailText = MailText.Replace("**resetTokenString**", token);
-            MailText = MailText.Replace("**username**", userName);
-            var html = MailText;
+                string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\ResetMailTemplate.html";
+                StreamReader str = new StreamReader(FilePath);
+                string MailText = str.ReadToEnd();
+                str.Close();
+                MailText = MailText.Replace("**resetTokenString**", token);
+                MailText = MailText.Replace("**username**", userName);
+                var html = MailText;
 
-            var message = MailHelper.CreateSingleEmail(
-                from,
-                to,
-                subject,
-                text,
-                html
-            );
+                var message = MailHelper.CreateSingleEmail(
+                    from,
+                    to,
+                    subject,
+                    text,
+                    html
+                );
 
-            await _userRepository.SavePasswordResetToken(token, email);
-            await client.SendEmailAsync(message);
+                await _userRepository.SavePasswordResetToken(token, email);
+                await client.SendEmailAsync(message);
+            }
+            
         }
 
         public async Task ResetPasswordWithTokenAsync(string newPassword, string resetToken)
