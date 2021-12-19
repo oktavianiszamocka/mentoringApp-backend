@@ -204,7 +204,7 @@ namespace MentorApp.Controllers
             }
         }
 
-        [HttpPost("reset")]
+        [HttpPost("sendReset")]
         public async Task<IActionResult> SendResetPassword([FromBody] ResetPasswordDTO resetData)
         {
             try
@@ -217,6 +217,21 @@ namespace MentorApp.Controllers
                 return StatusCode(500, ex.Value);
             }
         }
+
+        [HttpPost("resetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO resetData)
+        {
+            try
+            {
+                await _mailService.ResetPasswordWithTokenAsync(resetData.newPassword, resetData.resetToken);
+                return Ok();
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
 
     }
 }

@@ -117,5 +117,16 @@ namespace MentorApp.Services
             await client.SendEmailAsync(message);
         }
 
+        public async Task ResetPasswordWithTokenAsync(string newPassword, string resetToken)
+        {
+            Models.User user = await _userRepository.GetUserByResetToken(resetToken);
+            if (user == null)
+            {
+                throw new HttpResponseException("Incorrect reset token");
+            }
+            await _userRepository.SetNewPassword(newPassword, user);
+        }
+
+
     }
 }

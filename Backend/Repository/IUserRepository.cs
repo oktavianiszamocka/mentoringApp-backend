@@ -15,6 +15,8 @@ namespace MentorApp.Repository
         Task<User> UpdateUserAvatar(int idUser, String pictureUrl);
         Task<User> ChangeUserPassword(int idUser, string oldPassword, string newPassword);
         Task<User> SavePasswordResetToken(string token, string userEmail);
+        Task<User> GetUserByResetToken(string resetToken);
+        Task<User> SetNewPassword(string newPassword, User user);
 
     }
 }

@@ -8,5 +8,8 @@ namespace MentorApp.DTOs.Requests
     public class ResetPasswordDTO
     {
         public string email { get; set; }
+        public string resetToken { get; set; }
+        public string newPassword { get; set; }
     }
+
 }
