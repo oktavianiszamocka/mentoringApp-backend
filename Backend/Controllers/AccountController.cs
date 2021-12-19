@@ -75,7 +75,8 @@ namespace MentorApp.Controllers
 
                 user.RefreshToken = Guid.NewGuid().ToString();
                 user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-                _context.SaveChanges();
+                _context.User.Update(user);
+                await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
@@ -94,7 +95,7 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost("{refreshToken}/refresh")]
-        public IActionResult RefreshToken([FromRoute] string refreshToken)
+        public async Task<IActionResult> RefreshToken([FromRoute] string refreshToken)
         {
             var user = _context.User.SingleOrDefault(m => m.RefreshToken == refreshToken);
             if (user == null) return NotFound("Refresh token not found");
@@ -127,8 +128,11 @@ namespace MentorApp.Controllers
             );
 
             user.RefreshToken = Guid.NewGuid().ToString();
+            
             user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-            _context.SaveChanges();
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+            Console.WriteLine(DateTime.Now + user.RefreshToken);
 
             return Ok(new
             {
