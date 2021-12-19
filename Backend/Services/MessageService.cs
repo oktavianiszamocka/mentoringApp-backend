@@ -34,6 +34,7 @@ namespace MentorApp.Services
             {
                 SenderId = x.Key,
                 Message = x.Value.Message1,
+                LastMessage = x.Value.CreatedOn,
                 SenderUser = new UserWrapper
                 {
                     IdUser = x.Value.Sender,
@@ -45,9 +46,9 @@ namespace MentorApp.Services
             return messageOverviewDto;
         }
 
-        public async Task<List<ReceiverListDTO>> GetReceiverList()
+        public async Task<List<ReceiverListDTO>> GetReceiverList(String search)
         {
-            var receiverList = await _messageRepository.GetReceiversList();
+            var receiverList = await _messageRepository.GetReceiversList(search);
 
             var receivers = receiverList.Select(user => new ReceiverListDTO
             {

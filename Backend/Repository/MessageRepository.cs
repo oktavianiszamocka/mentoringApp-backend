@@ -27,9 +27,12 @@ namespace MentorApp.Repository
                 .ToListAsync();
         }
     
-        public async Task<List<User>> GetReceiversList()
+        public async Task<List<User>> GetReceiversList(String search)
         {
-            return await _context.User.ToListAsync();
+            return await _context.User
+                .Where(user => user.FirstName.Contains(search) || user.LastName.Contains(search))
+                .Take(10)
+                .ToListAsync();
         }
 
             public async Task<List<Message>> GetAllMessagesOfSender(int idReceiver, int idSender)
