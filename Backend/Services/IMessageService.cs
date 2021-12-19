@@ -13,6 +13,6 @@ namespace MentorApp.Services
         Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender);
         Task<Message> CreateNewMessage(Message message);
         Task<Message> DeleteMessage(int idMessage);
-        Task<List<ReceiverListDTO>> GetReceiverList();
+        Task<List<ReceiverListDTO>> GetReceiverList(String search);
     }
 }

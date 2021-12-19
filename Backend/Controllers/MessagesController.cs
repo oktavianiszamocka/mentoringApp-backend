@@ -34,9 +34,9 @@ namespace MentorApp.Controllers
 
         [Authorize]
         [HttpGet("receiverList")]
-        public async Task<IActionResult> GetReceiverList()
+        public async Task<IActionResult> GetReceiverList([FromQuery(Name = "search")] string search)
         {
-            var receiverList = await _messageService.GetReceiverList();
+            var receiverList = await _messageService.GetReceiverList(search);
 
             return Ok(new Response<List<ReceiverListDTO>>(receiverList));
         }

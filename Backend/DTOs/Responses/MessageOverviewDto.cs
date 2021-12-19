@@ -10,6 +10,7 @@ namespace MentorApp.DTOs.Responses
     {
         public int SenderId { get; set; }
         public String Message { get; set; }
+        public DateTime LastMessage { get; set; }
         public UserWrapper SenderUser { get; set; }
     }
 
