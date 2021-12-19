@@ -205,11 +205,11 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost("reset")]
-        public async Task<IActionResult> SendResetPassword()
+        public async Task<IActionResult> SendResetPassword([FromBody] string email)
         {
             try
             {
-                await _mailService.SendResetPasswordEmailAsync();
+                await _mailService.SendResetPasswordEmailAsync(email);
                 return Ok();
             }
             catch(HttpResponseException ex)

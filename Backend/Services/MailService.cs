@@ -83,16 +83,17 @@ namespace MentorApp.Services
             smtp.Disconnect(true);
         }
 
-        public async Task SendResetPasswordEmailAsync()
+        public async Task SendResetPasswordEmailAsync(string email)
         {
-            var email = "ochaco@gmail.com";
+            //var email = "ochaco@gmail.com";
             var userName = "Okta";
             var token = Guid.NewGuid().ToString();
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-            var to = new EmailAddress("pjatk.mentoring@gmail.com");
+            //"pjatk.mentoring@gmail.com"
+            var to = new EmailAddress(email);
             var subject = "Reseting the password";
             var text = "Reset text";
 

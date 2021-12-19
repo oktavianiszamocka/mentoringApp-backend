@@ -10,6 +10,6 @@ namespace MentorApp.Services
     {
         Task SendEmailAsync(MailRequest mailRequest);
         Task SendWelcomeEmailAsync(WelcomeRequest request);
-        Task SendResetPasswordEmailAsync();
+        Task SendResetPasswordEmailAsync(string email);
     }
 }
