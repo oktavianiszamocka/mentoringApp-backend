@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Repository;
 using MentorApp.Wrappers;
@@ -63,32 +64,41 @@ namespace MentorApp.Services
         public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender)
         {
             var messageList = await _messageRepository.GetAllMessagesOfSender(idReceiver, idSender);
-            var messageDetailDto=  new MessageDetailDto
+            if (messageList.Count > 0)
             {
-                SenderUser = new UserWrapper
+                var messageDetailDto = new MessageDetailDto
                 {
-                    IdUser = messageList.FirstOrDefault().Sender,
-                    firstName = messageList.FirstOrDefault().SenderNavigation.FirstName,
-                    lastName = messageList.FirstOrDefault().SenderNavigation.LastName,
-                    imageUrl = messageList.FirstOrDefault().SenderNavigation.Avatar
-                },
-                ReceiverUser = new UserWrapper
-                {
-                    IdUser = messageList.FirstOrDefault().Receiver,
-                    firstName = messageList.FirstOrDefault().ReceiverNavigation.FirstName,
-                    lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName,
-                    imageUrl = messageList.FirstOrDefault().ReceiverNavigation.Avatar
-                },
-                Messages = messageList.Select(msg => new MessageDto
-                {
-                    IdMessage = msg.IdMessage,
-                    Sender = msg.Sender,
-                    Receiver = msg.Receiver,
-                    Message1 = msg.Message1,
-                    CreatedOn = msg.CreatedOn
-                }).ToList()
-            };
-            return messageDetailDto;
+                    SenderUser = new UserWrapper
+                    {
+                        IdUser = messageList.FirstOrDefault().Sender,
+                        firstName = messageList.FirstOrDefault().SenderNavigation.FirstName,
+                        lastName = messageList.FirstOrDefault().SenderNavigation.LastName,
+                        imageUrl = messageList.FirstOrDefault().SenderNavigation.Avatar
+                    },
+                    ReceiverUser = new UserWrapper
+                    {
+                        IdUser = messageList.FirstOrDefault().Receiver,
+                        firstName = messageList.FirstOrDefault().ReceiverNavigation.FirstName,
+                        lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName,
+                        imageUrl = messageList.FirstOrDefault().ReceiverNavigation.Avatar
+                    },
+                    Messages = messageList.Select(msg => new MessageDto
+                    {
+                        IdMessage = msg.IdMessage,
+                        Sender = msg.Sender,
+                        Receiver = msg.Receiver,
+                        Message1 = msg.Message1,
+                        CreatedOn = msg.CreatedOn
+                    }).ToList()
+                };
+                return messageDetailDto;
+            }
+            else
+            {
+
+                throw new HttpResponseException("No message founds");
+            }
+           
         }
 
         public async Task<Message> CreateNewMessage(Message message)
