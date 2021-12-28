@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Persistence;
 using MentorApp.Services;
@@ -27,8 +28,15 @@ namespace MentorApp.Controllers
         [HttpGet("detail")]
         public async Task<IActionResult> GetMessageByReceiverAndSender([FromQuery(Name = "receiver")] int receiverId, [FromQuery(Name = "sender")] int senderId)
         {
-            var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
-            return Ok(new Response<MessageDetailDto>(msgDetail));
+            try
+            {
+                var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
+                return Ok(new Response<MessageDetailDto>(msgDetail));
+            }
+            catch (HttpResponseException exception)
+            {
+                return StatusCode(500, exception.Value);
+            }
 
         }
 
