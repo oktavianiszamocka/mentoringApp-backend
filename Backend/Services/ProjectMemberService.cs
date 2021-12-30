@@ -19,10 +19,13 @@ namespace MentorApp.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IMailService _mailService;
         private readonly IProjectRepository _projectRepository;
-        
-        public ProjectMemberService(IProjectMemberRepository projectMemberRepository, IMapper mapper, IInvitationRepository invitationRepository, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
+        private readonly IProjectPromotersRepository _projectPromotersRepository;
+
+
+        public ProjectMemberService(IProjectMemberRepository projectMemberRepository, IProjectPromotersRepository projectPromotersRepository, IUserService userService, IMapper mapper, IInvitationRepository invitationRepository, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
         {
             _projectMemberRepository = projectMemberRepository;
             _mapper = mapper;
@@ -30,6 +33,8 @@ namespace MentorApp.Services
             _mailService = mailService;
             _userRepository = userRepository;
             _projectRepository = projectRepository;
+            _userService = userService;
+            _projectPromotersRepository = projectPromotersRepository;
         }
 
         public async Task<List<ProjectDTO>> GetProjectsNameByIdUser(int IdUser)
