@@ -31,6 +31,7 @@ namespace MentorApp.Repository
             existingProfile.Skills = Profile.Skills;
             existingProfile.Experiences = Profile.Experiences;
             existingProfile.Semester = Profile.Semester;
+            existingProfile.Title = Profile.Title;
             _context.Profile.Update(existingProfile);
             await _context.SaveChangesAsync();
             return Profile;

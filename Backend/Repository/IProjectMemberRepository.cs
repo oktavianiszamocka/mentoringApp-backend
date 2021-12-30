@@ -9,7 +9,7 @@ namespace MentorApp.Repository
     public interface IProjectMemberRepository
     {
         Task<List<Project>> GetProjectName(int IdUser);
-        Task<List<Project>> GetMyProjectFiltered(int IdUser, String SearchString, int? study, int? mode);
+        Task<List<Project>> GetMyProjectFiltered(int IdUser);
         Task<List<ProjectMembers>> GetProjectMembers(int IdProject);
         Task<User> GetStudentByEmail(string emailUser);
 

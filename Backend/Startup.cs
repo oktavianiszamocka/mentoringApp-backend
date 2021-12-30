@@ -96,8 +96,9 @@ namespace MentorApp
             services.AddTransient<IMeetingService, MeetingService>();
 
             services.AddTransient<IUploadService, UploadService>();
-          
-          
+            services.AddTransient<IMeetingNotesService, MeetingNotesService>();
+            services.AddTransient<IMeetingNotesRepository, MeetingNotesRepository>();
+
             services.AddAWSService<IAmazonS3>();
             services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
             services.AddTransient<IMailService, MailService>();

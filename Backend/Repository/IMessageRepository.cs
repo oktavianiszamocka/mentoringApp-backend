@@ -12,5 +12,6 @@ namespace MentorApp.Repository
         Task<List<Message>> GetAllMessagesOfSender(int idReceiver, int idSender);
         Task<Message> CreateNewMessage(Message message);
         Task<Message> DeleteMessage(int idMessage);
+        Task<List<User>> GetReceiversList(String search);
     }
 }

@@ -15,6 +15,7 @@ namespace MentorApp.Repository
         Task<List<Models.Url>> GetAllProjectUrls(int idProject);
         Task<List<ProjectMode>> GetAllProjectModes();
 
+        Task<List<Project>> GetProjectBySuperviser(int idUser);
         Task<Project> UpdateProject(Project projectToUpdate);
         Task<Project> UpdateIcon(int idProject, String iconUrl);
 

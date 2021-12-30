@@ -75,6 +75,7 @@ namespace MentorApp.Services
                 Semester = request.Semester,
                 Phone = request.Phone,
                 DateOfBirth = request.DateOfBirth,
+                Title = request.Title,
                 User = 0
             };
 
@@ -111,6 +112,12 @@ namespace MentorApp.Services
                 throw new HttpResponseException("Incorrect old password, try again");
             }
             return await _userRepository.ChangeUserPassword(passwordChangeDTO.idUser, passwordChangeDTO.oldPassword, passwordChangeDTO.newPassword);
+        }
+
+        public async Task<bool> IsUserMentor(int idUser)
+        {
+            var user = await _userRepository.GetUserById(idUser);
+            return user.Role.Equals(3);
         }
     }
 }

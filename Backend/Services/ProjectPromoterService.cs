@@ -94,8 +94,7 @@ namespace MentorApp.Services
             }
 
             if(invitationsToInsert.Count > 0)
-            {
-                Console.WriteLine(invitationsPromotorProjectEmails.Count + invitationsToInsert.Count);
+            { 
                 if ((invitationsPromotorProjectEmails.Count + invitationsToInsert.Count) > MAX_PROMOTOR_NUMBER)
                 {
                     
