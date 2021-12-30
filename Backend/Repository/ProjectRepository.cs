@@ -51,6 +51,18 @@ namespace MentorApp.Repository
             return await _context.ProjectModes.ToListAsync();
         }
 
+        public async Task<List<Project>> GetProjectBySuperviser(int idUser)
+        {
+            return await _context.Project
+                .Where(project => project.Superviser.Equals(idUser))
+                .Include(project => project.StatusNavigation)
+                .Include(project => project.SuperviserNavigation)
+                .Include(project => project.ModeNavigation)
+                .Include(project => project.StudiesNavigation)
+                .ToListAsync();
+
+        }
+
         public async Task<Project> GetProjectInfoById(int idProject)
         {
             return await _context.Project

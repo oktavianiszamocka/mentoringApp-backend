@@ -179,7 +179,7 @@ namespace MentorApp.Services
             var subject = "Invitation";
             var text = "Invitation text";
 
-            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationProjectMailTemplate.html";
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationMeetingMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
             string MailText = str.ReadToEnd();
             str.Close();

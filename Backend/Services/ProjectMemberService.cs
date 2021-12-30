@@ -19,9 +19,13 @@ namespace MentorApp.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
+        private readonly IUserService _userService;
         private readonly IMailService _mailService;
         private readonly IProjectRepository _projectRepository;
-        public ProjectMemberService(IProjectMemberRepository projectMemberRepository, IMapper mapper, IInvitationRepository invitationRepository, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
+        private readonly IProjectPromotersRepository _projectPromotersRepository;
+
+
+        public ProjectMemberService(IProjectMemberRepository projectMemberRepository, IProjectPromotersRepository projectPromotersRepository, IUserService userService, IMapper mapper, IInvitationRepository invitationRepository, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
         {
             _projectMemberRepository = projectMemberRepository;
             _mapper = mapper;
@@ -29,6 +33,8 @@ namespace MentorApp.Services
             _mailService = mailService;
             _userRepository = userRepository;
             _projectRepository = projectRepository;
+            _userService = userService;
+            _projectPromotersRepository = projectPromotersRepository;
         }
 
         public async Task<List<ProjectDTO>> GetProjectsNameByIdUser(int IdUser)
@@ -40,21 +46,52 @@ namespace MentorApp.Services
 
         public async Task<List<ProjectWrapper>> GetMyProjectFiltered(int IdUser, String SearchString, int? study, int? mode)
         {
+            Boolean isUserMentor = await _userService.IsUserMentor(IdUser);
+            List<Project> projectList = new List<Project>();
+
+            if (isUserMentor)
+            {
+                projectList = await _projectPromotersRepository.GetPromotorProjects(IdUser);
+                projectList.AddRange(await _projectRepository.GetProjectBySuperviser(IdUser));
+                
+            }
+            else
+            {
+                projectList = await _projectMemberRepository.GetMyProjectFiltered(IdUser);
+            }
+
             if (SearchString == null)
             {
                 SearchString = "";
             }
-       
-            var projectList = await _projectMemberRepository.GetMyProjectFiltered(IdUser, SearchString, study, mode);
+
             if (projectList.Count > 0)
             {
-                var projectDTOList = GetProjectWrappers(projectList);
+                List<Project> filtredProjects = projectList;
+                if (study != null && study != 0)
+                {
+                    filtredProjects = filtredProjects.Where(project => project.Studies.Equals(study)).ToList();
+
+                }
+
+                if (mode != null && mode != 0)
+                {
+                    filtredProjects = filtredProjects.Where(project => project.Mode.Equals(mode)).ToList();
+
+                }
+
+                if (!String.IsNullOrEmpty(SearchString))
+                {
+                    filtredProjects = filtredProjects.Where(project => project.Name.Contains(SearchString)).ToList();
+                }
+
+                var projectDTOList = GetProjectWrappers(filtredProjects);
                 return projectDTOList;
 
             }
             else
             {
-                throw new HttpResponseException("No found. Looks like you have no projects with those filters ");
+                throw new HttpResponseException("Sorry! No project found");
             }
 
         }

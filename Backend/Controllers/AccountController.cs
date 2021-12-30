@@ -8,6 +8,7 @@ using MentorApp.DTOs.Requests;
 using MentorApp.Helpers;
 using MentorApp.Persistence;
 using MentorApp.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -74,13 +75,15 @@ namespace MentorApp.Controllers
 
                 user.RefreshToken = Guid.NewGuid().ToString();
                 user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-                _context.SaveChanges();
+                _context.User.Update(user);
+                await _context.SaveChangesAsync();
 
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
                     refreshToken = user.RefreshToken,
-                    idUser = user.IdUser
+                    idUser = user.IdUser,
+                    role = user.Role
                 });
 
             }
@@ -92,7 +95,7 @@ namespace MentorApp.Controllers
         }
 
         [HttpPost("{refreshToken}/refresh")]
-        public IActionResult RefreshToken([FromRoute] string refreshToken)
+        public async Task<IActionResult> RefreshToken([FromRoute] string refreshToken)
         {
             var user = _context.User.SingleOrDefault(m => m.RefreshToken == refreshToken);
             if (user == null) return NotFound("Refresh token not found");
@@ -125,8 +128,11 @@ namespace MentorApp.Controllers
             );
 
             user.RefreshToken = Guid.NewGuid().ToString();
+            
             user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
-            _context.SaveChanges();
+            _context.User.Update(user);
+            await _context.SaveChangesAsync();
+            Console.WriteLine(DateTime.Now + user.RefreshToken);
 
             return Ok(new
             {
@@ -152,7 +158,7 @@ namespace MentorApp.Controllers
         }
 
 
-
+        [Authorize]
         [HttpPatch("avatar")]
         public async Task<IActionResult> UpdateAvatar([FromQuery(Name = "user")] int idUser, [FromQuery(Name = "url")]  String pictureUrl)
         {
@@ -160,7 +166,7 @@ namespace MentorApp.Controllers
             return StatusCode(200, userTarget);
         }
 
-
+        [Authorize]
         [HttpPost("changePassword")]
         public async Task<IActionResult> ChangePassword([FromBody] PasswordChangeDTO passowrdChangeDTO)
         {

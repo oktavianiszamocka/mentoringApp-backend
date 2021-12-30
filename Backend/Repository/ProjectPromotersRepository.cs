@@ -30,6 +30,24 @@ namespace MentorApp.Repository
 
         }
 
+        public async Task<List<Project>> GetPromotorProjects(int idUser)
+        {
+            var myProject = await _context.ProjectPromoter
+                .Where(project => project.User.Equals(idUser))
+                .Include(project => project.ProjectNavigation)
+                .Include(project => project.ProjectNavigation.StatusNavigation)
+                .Include(project => project.ProjectNavigation.SuperviserNavigation)
+                .Include(project => project.ProjectNavigation.ModeNavigation)
+                .Include(project => project.ProjectNavigation.StudiesNavigation)
+                .Select(project => project.ProjectNavigation)
+                .ToListAsync();
+
+            return myProject;
+
+
+        }
+
+
         public async Task<User> GetProjectPromoterByEmail(string emailUser)
         {
             return await _context.User

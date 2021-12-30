@@ -2,10 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using MentorApp.DTOs.Responses;
+using MentorApp.Helpers;
 using MentorApp.Models;
 using MentorApp.Persistence;
 using MentorApp.Services;
 using MentorApp.Wrappers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,25 +24,32 @@ namespace MentorApp.Controllers
             _messageService = messageService;
         }
 
-        /*
-        [HttpPost]
-        public async Task<IActionResult> CreatePost(Message message)
-        {
-            _context.Message.Add(message);
-            await _context.SaveChangesAsync();
-            return StatusCode(201, message);
-        }
-        */
-
+        [Authorize]
         [HttpGet("detail")]
         public async Task<IActionResult> GetMessageByReceiverAndSender([FromQuery(Name = "receiver")] int receiverId, [FromQuery(Name = "sender")] int senderId)
         {
-            var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
-            return Ok(new Response<MessageDetailDto>(msgDetail));
+            try
+            {
+                var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
+                return Ok(new Response<MessageDetailDto>(msgDetail));
+            }
+            catch (HttpResponseException exception)
+            {
+                return StatusCode(500, exception.Value);
+            }
 
         }
 
+        [Authorize]
+        [HttpGet("receiverList")]
+        public async Task<IActionResult> GetReceiverList([FromQuery(Name = "search")] string search)
+        {
+            var receiverList = await _messageService.GetReceiverList(search);
 
+            return Ok(new Response<List<ReceiverListDTO>>(receiverList));
+        }
+
+        [Authorize]
         [HttpGet("{receiverId:int}")]
         public async Task<IActionResult> GetMessageByReceiverId(int receiverId)
         {
@@ -49,6 +58,7 @@ namespace MentorApp.Controllers
             return Ok(new Response<List<MessageOverviewDto>>(messageOverview));
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> CreateMessage(Message message)
         {
@@ -56,6 +66,7 @@ namespace MentorApp.Controllers
             return StatusCode(201, message);
         }
 
+        [Authorize]
         [HttpDelete("{idMessage:int}")]
         public async Task<IActionResult> DeleteMessage(int idMessage)
         {

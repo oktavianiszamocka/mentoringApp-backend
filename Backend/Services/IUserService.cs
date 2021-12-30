@@ -15,5 +15,6 @@ namespace MentorApp.Services
         Task<AuthenticationResult> Register(UserRegistrationDTO request);
         Task<User> UpdateUserAvatar(int idUser, String pictureUrl);
         Task<User> ChangePassword(PasswordChangeDTO passwordChangeDTO);
+        Task<Boolean> IsUserMentor(int idUser);
     }
 }

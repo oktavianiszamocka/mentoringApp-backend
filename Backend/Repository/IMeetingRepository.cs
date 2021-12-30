@@ -24,6 +24,7 @@ namespace MentorApp.Repository
         Task<MeetingAttendence> CreateMeetingAttendence(MeetingAttendence meetingAttendence);
 
         Task<MeetingAttendence> GetMeetingAttendeeByIdUserAndIdMeeting(int idUser, int idMeeting);
+       
 
 
 
