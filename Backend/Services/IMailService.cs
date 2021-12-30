@@ -14,5 +14,6 @@ namespace MentorApp.Services
         Task ResetPasswordWithTokenAsync(string newPassword, string resetToken);
         Task InviteToProject(String userName, String email, String projectName);
         Task InviteToMeeting(String userName, String email, String meetingName);
+        Task AssignTaskEmail(String userName, String email, String taskName)
     }
 }
