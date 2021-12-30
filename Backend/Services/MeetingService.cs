@@ -14,11 +14,15 @@ namespace MentorApp.Services
     {
         private readonly IMeetingRepository _meetingRepository;
         private readonly IMapper _mapper;
+        private readonly IUserRepository _userRepository;
+        private readonly IMailService _mailService;
 
-        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper)
+        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository)
         {
             _meetingRepository = meetingRepository;
             _mapper = mapper;
+            _mailService = mailService;
+            _userRepository = userRepository;
         }
         public async Task<MeetingDetailDto> GetMeetingById(int idMeeting)
         {
@@ -80,6 +84,8 @@ namespace MentorApp.Services
                         Meeting = insertedMeeting.IdMeeting
                     };
                     await _meetingRepository.CreateMeetingAttendence(newAttendee);
+                    var user = await _userRepository.GetUserById(userId);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, newMeetingRequestDto.Title);
                 }
 
             }
@@ -114,6 +120,8 @@ namespace MentorApp.Services
                         Meeting = meetingRequestDto.IdMeeting
                     };
                     await _meetingRepository.CreateMeetingAttendence(newMeetingAttende);
+                    var user = await _userRepository.GetUserById(idAttendee);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, meetingRequestDto.Title);
                 }
             }
 

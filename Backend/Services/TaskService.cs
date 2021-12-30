@@ -17,12 +17,16 @@ namespace MentorApp.Services
     public class TaskService : ITaskService
     {
         private readonly ITaskRepository _taskRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IMailService _mailService;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
+            _mailService = mailService;
+            _userRepository = userRepository;
         }
         public async Task<List<TaskOverviewDTO>> GetTasksByProject(int idProject)
         {
@@ -119,14 +123,16 @@ namespace MentorApp.Services
             var newCreatedTask = await _taskRepository.CreateNewTask(newTask);
             if (newTaskRequestDto.AssignedUsers.Count > 0)
             {
-                foreach (var user in newTaskRequestDto.AssignedUsers)
+                foreach (var userId in newTaskRequestDto.AssignedUsers)
                 {
                     var newTaskAssign = new TaskAssigning
                     {
                         Task = newCreatedTask.IdTask,
-                        User = user
+                        User = userId
                     };
                     await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
+                    var user = await _userRepository.GetUserById(userId);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, newTaskRequestDto.Title);
 
                 }
             }
@@ -145,15 +151,16 @@ namespace MentorApp.Services
             var taskUpdateDB = await _taskRepository.UpdateTask(taskUpdate);
             if (taskToUpdateDTO.IsAddNewAssignee && taskToUpdateDTO.AssignedUsersToAdd.Count > 0)
             {
-                foreach (var user in taskToUpdateDTO.AssignedUsersToAdd)
+                foreach (var userId in taskToUpdateDTO.AssignedUsersToAdd)
                 {
                     var newTaskAssign = new TaskAssigning
                     {
                         Task = taskToUpdateDTO.IdTask,
-                        User = user
+                        User = userId
                     };
                     await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
-
+                    var user = await _userRepository.GetUserById(userId);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, taskToUpdateDTO.Title);
                 }
             }
 
