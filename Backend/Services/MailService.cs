@@ -169,7 +169,7 @@ namespace MentorApp.Services
             await client.SendEmailAsync(message);
         }
 
-        public async Task InviteToMeeting(String userName, String email, String meetingName)
+        public async Task InviteToMeeting(String userName, String email, String meetingName, String projectName)
         {
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
@@ -184,7 +184,8 @@ namespace MentorApp.Services
             string MailText = str.ReadToEnd();
             str.Close();
             MailText = MailText.Replace("**username**", userName);
-            MailText = MailText.Replace("**projectName**", meetingName);
+            MailText = MailText.Replace("**meetingName**", meetingName);
+            MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
 
             var message = MailHelper.CreateSingleEmail(
@@ -198,7 +199,7 @@ namespace MentorApp.Services
             await client.SendEmailAsync(message);
         }
 
-        public async Task AssignTaskEmail(String userName, String email, String taskName)
+        public async Task AssignTaskEmail(String userName, String email, String taskName, String projectName)
         {
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
@@ -214,6 +215,7 @@ namespace MentorApp.Services
             str.Close();
             MailText = MailText.Replace("**username**", userName);
             MailText = MailText.Replace("**taskName**", taskName);
+            MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
 
             var message = MailHelper.CreateSingleEmail(

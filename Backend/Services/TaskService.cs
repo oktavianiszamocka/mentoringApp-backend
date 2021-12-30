@@ -20,13 +20,15 @@ namespace MentorApp.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IMailService _mailService;
+        private readonly IProjectRepository _projectRepository;
 
-        public TaskService(ITaskRepository taskRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository)
+        public TaskService(ITaskRepository taskRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
         {
             _taskRepository = taskRepository;
             _mapper = mapper;
             _mailService = mailService;
             _userRepository = userRepository;
+            _projectRepository = projectRepository;
         }
         public async Task<List<TaskOverviewDTO>> GetTasksByProject(int idProject)
         {
@@ -131,8 +133,9 @@ namespace MentorApp.Services
                         User = userId
                     };
                     await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
+                    var project = await _projectRepository.GetProjectInfoById(newTaskRequestDto.Project);
                     var user = await _userRepository.GetUserById(userId);
-                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, newTaskRequestDto.Title);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, newTaskRequestDto.Title, project.Name);
 
                 }
             }
@@ -160,7 +163,8 @@ namespace MentorApp.Services
                     };
                     await _taskRepository.CreateNewTaskAssigning(newTaskAssign);
                     var user = await _userRepository.GetUserById(userId);
-                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, taskToUpdateDTO.Title);
+                    var project = await _projectRepository.GetProjectInfoById(taskToUpdateDTO.Project);
+                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, taskToUpdateDTO.Title, project.Name);
                 }
             }
 

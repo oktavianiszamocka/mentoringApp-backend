@@ -13,7 +13,7 @@ namespace MentorApp.Services
         Task SendResetPasswordEmailAsync(string email);
         Task ResetPasswordWithTokenAsync(string newPassword, string resetToken);
         Task InviteToProject(String userName, String email, String projectName);
-        Task InviteToMeeting(String userName, String email, String meetingName);
-        Task AssignTaskEmail(String userName, String email, String taskName);
+        Task InviteToMeeting(String userName, String email, String meetingName, String projectName);
+        Task AssignTaskEmail(String userName, String email, String taskName, String projectName);
     }
 }

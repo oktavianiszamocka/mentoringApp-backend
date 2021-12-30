@@ -16,13 +16,15 @@ namespace MentorApp.Services
         private readonly IMapper _mapper;
         private readonly IUserRepository _userRepository;
         private readonly IMailService _mailService;
+        private readonly IProjectRepository _projectRepository;
 
-        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository)
+        public MeetingService(IMeetingRepository meetingRepository, IMapper mapper, IMailService mailService, IUserRepository userRepository, IProjectRepository projectRepository)
         {
             _meetingRepository = meetingRepository;
             _mapper = mapper;
             _mailService = mailService;
             _userRepository = userRepository;
+            _projectRepository = projectRepository;
         }
         public async Task<MeetingDetailDto> GetMeetingById(int idMeeting)
         {
@@ -84,8 +86,9 @@ namespace MentorApp.Services
                         Meeting = insertedMeeting.IdMeeting
                     };
                     await _meetingRepository.CreateMeetingAttendence(newAttendee);
+                    var project = await _projectRepository.GetProjectInfoById(newMeetingRequestDto.Project);
                     var user = await _userRepository.GetUserById(userId);
-                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, newMeetingRequestDto.Title);
+                    await _mailService.InviteToMeeting(user.FirstName, user.Email, newMeetingRequestDto.Title, project.Name);
                 }
 
             }
@@ -120,8 +123,9 @@ namespace MentorApp.Services
                         Meeting = meetingRequestDto.IdMeeting
                     };
                     await _meetingRepository.CreateMeetingAttendence(newMeetingAttende);
+                    var project = await _projectRepository.GetProjectInfoById(meetingRequestDto.Project);
                     var user = await _userRepository.GetUserById(idAttendee);
-                    await _mailService.AssignTaskEmail(user.FirstName, user.Email, meetingRequestDto.Title);
+                    await _mailService.InviteToMeeting(user.FirstName, user.Email, meetingRequestDto.Title, project.Name);
                 }
             }
 
