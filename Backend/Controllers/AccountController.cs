@@ -232,6 +232,20 @@ namespace MentorApp.Controllers
             }
         }
 
+        [HttpPost("projectInvite")]
+        public async Task<IActionResult> sendEmailInvitationToProject([FromBody] InvitationToProjectDTO invitationData)
+        {
+            try
+            {
+                await _mailService.InviteToProject(invitationData.userName, invitationData.email, invitationData.projectName);
+                return Ok();
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
 
     }
 }
