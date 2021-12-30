@@ -246,6 +246,20 @@ namespace MentorApp.Controllers
             }
         }
 
+        [HttpPost("meetingInvite")]
+        public async Task<IActionResult> sendEmailInvitationToMeeting([FromBody] InvitationToMeetingDTO invitationData)
+        {
+            try
+            {
+                await _mailService.InviteToMeeting(invitationData.userName, invitationData.email, invitationData.meetingName);
+                return Ok();
+            }
+            catch (HttpResponseException ex)
+            {
+                return StatusCode(500, ex.Value);
+            }
+        }
+
 
     }
 }

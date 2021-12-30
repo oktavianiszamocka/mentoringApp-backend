@@ -168,5 +168,34 @@ namespace MentorApp.Services
 
             await client.SendEmailAsync(message);
         }
+
+        public async Task InviteToMeeting(String userName, String email, String meetingName)
+        {
+            var apiKey = _configuration["API_KEY"];
+            var client = new SendGridClient(apiKey);
+
+            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+            var to = new EmailAddress(email);
+            var subject = "Invitation";
+            var text = "Invitation text";
+
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationProjectMailTemplate.html";
+            StreamReader str = new StreamReader(FilePath);
+            string MailText = str.ReadToEnd();
+            str.Close();
+            MailText = MailText.Replace("**username**", userName);
+            MailText = MailText.Replace("**projectName**", meetingName);
+            var html = MailText;
+
+            var message = MailHelper.CreateSingleEmail(
+                from,
+                to,
+                subject,
+                text,
+                html
+            );
+
+            await client.SendEmailAsync(message);
+        }
     }
 }
