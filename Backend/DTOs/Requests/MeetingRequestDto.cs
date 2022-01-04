@@ -12,7 +12,7 @@ namespace MentorApp.DTOs.Requests
         public DateTime? MeetingDate { get; set; }
         public string Location { get; set; }
         public string Description { get; set; }
-        public int? Project { get; set; }
+        public int Project { get; set; }
         public TimeSpan? StartTime { get; set; }
         public TimeSpan? EndTime { get; set; }
         public List<int> AttendeeUsers { get; set; }
