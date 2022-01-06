@@ -17,7 +17,6 @@ namespace MentorApp.Models
             Post = new HashSet<Post>();
             Profile = new HashSet<Profile>();
             Project = new HashSet<Project>();
-            ProjectHistory = new HashSet<ProjectHistory>();
             ProjectMembers = new HashSet<ProjectMembers>();
             ProjectPromoter = new HashSet<ProjectPromoter>();
             Task = new HashSet<Task>();
@@ -48,7 +47,6 @@ namespace MentorApp.Models
         public virtual ICollection<Post> Post { get; set; }
         public virtual ICollection<Profile> Profile { get; set; }
         public virtual ICollection<Project> Project { get; set; }
-        public virtual ICollection<ProjectHistory> ProjectHistory { get; set; }
         public virtual ICollection<ProjectMembers> ProjectMembers { get; set; }
         public virtual ICollection<ProjectPromoter> ProjectPromoter { get; set; }
         public virtual ICollection<Task> Task { get; set; }

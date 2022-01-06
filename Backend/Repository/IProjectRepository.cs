@@ -21,5 +21,6 @@ namespace MentorApp.Repository
 
         Task<Url> SaveNewProjectUrl(Url newUrl);
         Task<List<Url>> DeleteOldUrl(int idProject);
+        Task<Project> DeleteProject(int idProject);
     }
 }

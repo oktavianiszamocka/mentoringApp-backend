@@ -9,9 +9,7 @@ namespace MentorApp.Models
         {
             Meeting = new HashSet<Meeting>();
             Milestone = new HashSet<Milestone>();
-            Phase = new HashSet<Phase>();
             Post = new HashSet<Post>();
-            ProjectHistory = new HashSet<ProjectHistory>();
             ProjectMembers = new HashSet<ProjectMembers>();
             ProjectPromoter = new HashSet<ProjectPromoter>();
             Task = new HashSet<Task>();
@@ -34,9 +32,7 @@ namespace MentorApp.Models
         public virtual User SuperviserNavigation { get; set; }
         public virtual ICollection<Meeting> Meeting { get; set; }
         public virtual ICollection<Milestone> Milestone { get; set; }
-        public virtual ICollection<Phase> Phase { get; set; }
         public virtual ICollection<Post> Post { get; set; }
-        public virtual ICollection<ProjectHistory> ProjectHistory { get; set; }
         public virtual ICollection<ProjectMembers> ProjectMembers { get; set; }
         public virtual ICollection<ProjectPromoter> ProjectPromoter { get; set; }
         public virtual ICollection<Task> Task { get; set; }

@@ -106,12 +106,6 @@ namespace MentorApp.Services
 
         public async Task<Post> DeletePost(int IdPost)
         {
-            var allPostTagsOfPost = await _postRepository.GetAllPostTagByPostId(IdPost);
-            foreach (PostTag postTag in allPostTagsOfPost)
-            {
-                await _postRepository.DeletePostTag(postTag.IdPostTag);
-            }
-
             return await _postRepository.DeletePost(IdPost);
         }
 
