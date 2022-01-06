@@ -11,6 +11,7 @@ using MentorApp.Services;
 using MentorApp.Wrappers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Task = System.Threading.Tasks.Task;
 
 namespace MentorApp.Controllers
 {
@@ -195,6 +196,14 @@ namespace MentorApp.Controllers
         {
             var pro = await _projectService.SaveNewProjectUrl( projectUrls);
             return StatusCode(200, pro);
+        }
+
+        [Authorize(Roles = "mentor")]
+        [HttpDelete("{idProject:int}")]
+        public async Task<IActionResult> DeleteProject(int idProject)
+        {
+            await _projectService.DeleteProject(idProject);
+            return StatusCode(200);
         }
     }
 }

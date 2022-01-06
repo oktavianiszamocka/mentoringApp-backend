@@ -102,6 +102,11 @@ namespace MentorApp.Services
             return await _projectRepository.UpdateIcon(idProject, iconUrl);
         }
 
+        public async Task<Project> DeleteProject(int idProject)
+        {
+            return await _projectRepository.DeleteProject(idProject);
+        }
+
         public async Task<ProjectInfoDTO> GetProjectInfoById(int idProject)
         {
             var projectInfo = await _projectRepository.GetProjectInfoById(idProject);

@@ -26,12 +26,10 @@ namespace MentorApp.Persistence
         public virtual DbSet<Note> Note { get; set; }
         public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<PersonalNote> PersonalNote { get; set; }
-        public virtual DbSet<Phase> Phase { get; set; }
         public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<PostTag> PostTag { get; set; }
         public virtual DbSet<Profile> Profile { get; set; }
         public virtual DbSet<Project> Project { get; set; }
-        public virtual DbSet<ProjectHistory> ProjectHistory { get; set; }
         public virtual DbSet<ProjectMembers> ProjectMembers { get; set; }
         public virtual DbSet<ProjectPromoter> ProjectPromoter { get; set; }
         public virtual DbSet<ProjectStatus> ProjectStatus { get; set; }
@@ -251,25 +249,6 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Personal_Note_User");
             });
 
-            modelBuilder.Entity<Phase>(entity =>
-            {
-                entity.HasKey(e => e.IdPhase)
-                    .HasName("Phase_pk");
-
-                entity.Property(e => e.EndDate).HasColumnType("date");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(500);
-
-                entity.Property(e => e.StartDate).HasColumnType("date");
-
-                entity.HasOne(d => d.ProjectNavigation)
-                    .WithMany(p => p.Phase)
-                    .HasForeignKey(d => d.Project)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Step_Project");
-            });
 
             modelBuilder.Entity<Post>(entity =>
             {
@@ -384,33 +363,6 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Project_User");
             });
 
-            modelBuilder.Entity<ProjectHistory>(entity =>
-            {
-                entity.HasKey(e => e.IdHistory)
-                    .HasName("Project_History_pk");
-
-                entity.ToTable("Project_History");
-
-                entity.Property(e => e.Change)
-                    .IsRequired()
-                    .HasMaxLength(1000);
-
-                entity.Property(e => e.Date).HasColumnType("date");
-
-                entity.Property(e => e.WhoChange).HasColumnName("Who_Change");
-
-                entity.HasOne(d => d.ProjectNavigation)
-                    .WithMany(p => p.ProjectHistory)
-                    .HasForeignKey(d => d.Project)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Project_History_Project");
-
-                entity.HasOne(d => d.WhoChangeNavigation)
-                    .WithMany(p => p.ProjectHistory)
-                    .HasForeignKey(d => d.WhoChange)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Project_History_User");
-            });
 
             modelBuilder.Entity<ProjectMembers>(entity =>
             {

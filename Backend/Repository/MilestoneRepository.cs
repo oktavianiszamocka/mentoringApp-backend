@@ -57,7 +57,7 @@ namespace MentorApp.Repository
             return await _context.Milestone
                 .Where(milestone => milestone.Project.Equals(idProject))
                 .OrderByDescending(mil => mil.Sequence)
-                .FirstAsync();
+                .FirstOrDefaultAsync();
         }
     }
 }

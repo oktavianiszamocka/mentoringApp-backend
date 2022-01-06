@@ -117,5 +117,13 @@ namespace MentorApp.Repository
             await _context.SaveChangesAsync();
             return urlProjects;
         }
+
+        public async Task<Project> DeleteProject(int idProject)
+        {
+            var project = await _context.Project.FindAsync(idProject);
+            _context.Project.Remove(project);
+            await _context.SaveChangesAsync();
+            return project;
+        }
     }
 }

@@ -19,5 +19,6 @@ namespace MentorApp.Services
         Task<List<Models.Url>> SaveNewProjectUrl(List<Models.Url> newUrls);
         Task<Project> UpdateProject(Project project);
         Task<Project> UpdateIcon(int idProject, String iconUrl);
+        Task<Project> DeleteProject(int idProject);
     }
 }
