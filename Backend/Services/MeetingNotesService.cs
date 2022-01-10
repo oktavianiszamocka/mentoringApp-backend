@@ -4,16 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp.Services
 {
     public class MeetingNotesService : IMeetingNotesService
     {
         private readonly IMeetingNotesRepository _meetingNotesRepository;
+        private readonly IMapper _mapper;
 
-        public MeetingNotesService(IMeetingNotesRepository meetingNotesRepository)
+        public MeetingNotesService(IMeetingNotesRepository meetingNotesRepository, IMapper mapper)
         {
             _meetingNotesRepository = meetingNotesRepository;
+            _mapper = mapper;
         }
 
         public async Task<Note> CreateNewMeetingNote(Note note)
@@ -26,9 +30,18 @@ namespace MentorApp.Services
             return await _meetingNotesRepository.DeleteMeetingNote(idNote);
         }
 
-        public async Task<List<Note>> GetAllNotesOfMeeting(int idMeeting)
+        public async Task<List<MeetingNoteResponseDTO>> GetAllNotesOfMeeting(int idMeeting)
         {
-            return await _meetingNotesRepository.GetAllNotesOfMeeting(idMeeting);
+            var meetingNotes = await _meetingNotesRepository.GetAllNotesOfMeeting(idMeeting);
+            if (meetingNotes.Count > 0)
+            {
+                var meetingNotesDtos = _mapper.Map<List<MeetingNoteResponseDTO>>(meetingNotes);
+                
+                return meetingNotesDtos;
+            }
+
+            return new List<MeetingNoteResponseDTO>();
+
         }
 
         public async Task<Note> UpdateMeetingNote(Note note)
