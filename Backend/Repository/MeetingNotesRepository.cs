@@ -21,6 +21,7 @@ namespace MentorApp.Repository
         {
             return await _context.Note
                         .Where(note => note.Meeting.Equals(idMeeting))
+                        .Include(note => note.AuthorNavigation)
                         .OrderBy(note => note.CreatedOn)
                         .ToListAsync();
         }

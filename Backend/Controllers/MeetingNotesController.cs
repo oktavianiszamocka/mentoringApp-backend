@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MentorApp.DTOs.Responses;
 
 namespace MentorApp.Controllers
 {
@@ -24,7 +25,7 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> GetAllNotesOfMeeting(int idMeeting)
         {
             var notes = await _meetingNotesService.GetAllNotesOfMeeting(idMeeting);
-            return Ok(new Response<List<Note>>(notes));
+            return Ok(new Response<List<MeetingNoteResponseDTO>>(notes));
         }
 
 

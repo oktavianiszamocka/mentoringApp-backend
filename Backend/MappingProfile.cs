@@ -16,7 +16,9 @@ namespace MentorApp
             CreateMap<Models.Meeting, MeetingHeadDto>();
             CreateMap<MeetingRequestDto, Models.Meeting>();
             CreateMap<Models.Url, UrlDTO>();
-
+            CreateMap<Note, MeetingNoteResponseDTO>()
+                .ForMember( dto => dto.AuthorFirstName, note => note.MapFrom(note => note.AuthorNavigation.FirstName))
+                .ForMember(dto => dto.AuthorLastName, note => note.MapFrom(note => note.AuthorNavigation.LastName));
         }
     }
 }
