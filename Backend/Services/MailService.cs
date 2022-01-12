@@ -19,8 +19,6 @@ namespace MentorApp.Services
 {
     public class MailService : IMailService
     {
-        //private readonly UserManager<IdentityUser> userManager;
-        //UserName, Password and Email
         private readonly IUserRepository _userRepository;
         private readonly Helpers.MailSettings _mailSettings;
         private readonly IConfiguration _configuration;
@@ -112,16 +110,8 @@ namespace MentorApp.Services
             else
             {
                 var userName = targetUser.FirstName;
-                
                 var token = Guid.NewGuid().ToString();
 
-                /*
-                var apiKey = _configuration["API_KEY"];
-                var client = new SendGridClient(apiKey);
-
-                var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-                //"pjatk.mentoring@gmail.com"
-                */
                 var to = new EmailAddress(email);
                 var subject = "Reseting the password";
                 var text = "You are currently requesting to reset your password. To reset your password, click the button below";
@@ -134,17 +124,7 @@ namespace MentorApp.Services
                 MailText = MailText.Replace("**username**", userName);
                 var html = MailText;
 
-                /*
-                var message = MailHelper.CreateSingleEmail(
-                    from,
-                    to,
-                    subject,
-                    text,
-                    html
-                );
-                */
                 await _userRepository.SavePasswordResetToken(token, email);
-                //await client.SendEmailAsync(message);
                 await this.sendEmail(subject, text, html, to);
             }
             
@@ -166,12 +146,6 @@ namespace MentorApp.Services
 
         public async Task InviteToProject(String userName, String email, String projectName)
         {
-            /*
-            var apiKey = _configuration["API_KEY"];
-            var client = new SendGridClient(apiKey);
-
-            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-            */
             var to = new EmailAddress(email);
             var subject = "Invitation";
             var text = "You have been invited to the project: " + projectName;
@@ -183,28 +157,13 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**username**", userName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-            /*
-            var message = MailHelper.CreateSingleEmail(
-                from,
-                to,
-                subject,
-                text,
-                html
-            );
-            
-            await client.SendEmailAsync(message);
-            */
+
             await this.sendEmail(subject, text, html, to);
         }
 
         public async Task InviteToMeeting(String userName, String email, String meetingName, String projectName)
         {
-            /*
-            var apiKey = _configuration["API_KEY"];
-            var client = new SendGridClient(apiKey);
-
-            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-            */
+            
             var to = new EmailAddress(email);
             var subject = "Invitation to Project Meeting";
             var text = "You have been invited to the meeting: " + meetingName + " in the project " +  projectName;
@@ -217,28 +176,13 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**meetingName**", meetingName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-            /*
-            var message = MailHelper.CreateSingleEmail(
-                from,
-                to,
-                subject,
-                text,
-                html
-            );
 
-            await client.SendEmailAsync(message);
-            */
             await this.sendEmail(subject, text, html, to);
         }
 
         public async Task AssignTaskEmail(String userName, String email, String taskName, String projectName)
         {
-            /*
-            var apiKey = _configuration["API_KEY"];
-            var client = new SendGridClient(apiKey);
 
-            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
-            */
             var to = new EmailAddress(email);
             
             var subject = "Project Task";
@@ -252,17 +196,7 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**taskName**", taskName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-            /*
-            var message = MailHelper.CreateSingleEmail(
-                from,
-                to,
-                subject,
-                text,
-                html
-            );
 
-            await client.SendEmailAsync(message);
-            */
             await this.sendEmail(subject, text, html, to);
         }
 
