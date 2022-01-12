@@ -84,6 +84,24 @@ namespace MentorApp.Services
             smtp.Disconnect(true);
         }
 
+        public async Task sendEmail(string subject, string text, string html, EmailAddress to)
+        {
+            var apiKey = _configuration["API_KEY"];
+            var client = new SendGridClient(apiKey);
+
+            var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+
+            var message = MailHelper.CreateSingleEmail(
+                from,
+                to,
+                subject,
+                text,
+                html
+            );
+
+            await client.SendEmailAsync(message);
+        }
+
         public async Task SendResetPasswordEmailAsync(string email)
         {
             var targetUser = await _userRepository.GetUserByEmail(email);
@@ -94,15 +112,19 @@ namespace MentorApp.Services
             else
             {
                 var userName = targetUser.FirstName;
+                
                 var token = Guid.NewGuid().ToString();
+
+                /*
                 var apiKey = _configuration["API_KEY"];
                 var client = new SendGridClient(apiKey);
 
                 var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
                 //"pjatk.mentoring@gmail.com"
+                */
                 var to = new EmailAddress(email);
                 var subject = "Reseting the password";
-                var text = "Reset text";
+                var text = "You are currently requesting to reset your password. To reset your password, click the button below";
 
                 string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\ResetMailTemplate.html";
                 StreamReader str = new StreamReader(FilePath);
@@ -112,6 +134,7 @@ namespace MentorApp.Services
                 MailText = MailText.Replace("**username**", userName);
                 var html = MailText;
 
+                /*
                 var message = MailHelper.CreateSingleEmail(
                     from,
                     to,
@@ -119,9 +142,10 @@ namespace MentorApp.Services
                     text,
                     html
                 );
-
+                */
                 await _userRepository.SavePasswordResetToken(token, email);
-                await client.SendEmailAsync(message);
+                //await client.SendEmailAsync(message);
+                await this.sendEmail(subject, text, html, to);
             }
             
         }
@@ -142,13 +166,15 @@ namespace MentorApp.Services
 
         public async Task InviteToProject(String userName, String email, String projectName)
         {
+            /*
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+            */
             var to = new EmailAddress(email);
             var subject = "Invitation";
-            var text = "Invitation text";
+            var text = "You have been invited to the project: " + projectName;
 
             string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationProjectMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
@@ -157,7 +183,7 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**username**", userName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-
+            /*
             var message = MailHelper.CreateSingleEmail(
                 from,
                 to,
@@ -165,19 +191,23 @@ namespace MentorApp.Services
                 text,
                 html
             );
-
+            
             await client.SendEmailAsync(message);
+            */
+            await this.sendEmail(subject, text, html, to);
         }
 
         public async Task InviteToMeeting(String userName, String email, String meetingName, String projectName)
         {
+            /*
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+            */
             var to = new EmailAddress(email);
-            var subject = "Invitation";
-            var text = "Invitation text";
+            var subject = "Invitation to Project Meeting";
+            var text = "You have been invited to the meeting: " + meetingName + " in the project " +  projectName;
 
             string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationMeetingMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
@@ -187,7 +217,7 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**meetingName**", meetingName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-
+            /*
             var message = MailHelper.CreateSingleEmail(
                 from,
                 to,
@@ -197,17 +227,22 @@ namespace MentorApp.Services
             );
 
             await client.SendEmailAsync(message);
+            */
+            await this.sendEmail(subject, text, html, to);
         }
 
         public async Task AssignTaskEmail(String userName, String email, String taskName, String projectName)
         {
+            /*
             var apiKey = _configuration["API_KEY"];
             var client = new SendGridClient(apiKey);
 
             var from = new EmailAddress("s16434@pjwstk.edu.pl", "PJATK Mentor");
+            */
             var to = new EmailAddress(email);
-            var subject = "Invitation";
-            var text = "Invitation text";
+            
+            var subject = "Project Task";
+            var text = "You have a new task assigned: " + taskName + " in the project " + projectName;
 
             string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\AssignTaskMailTemplate.html";
             StreamReader str = new StreamReader(FilePath);
@@ -217,7 +252,7 @@ namespace MentorApp.Services
             MailText = MailText.Replace("**taskName**", taskName);
             MailText = MailText.Replace("**projectName**", projectName);
             var html = MailText;
-
+            /*
             var message = MailHelper.CreateSingleEmail(
                 from,
                 to,
@@ -227,7 +262,34 @@ namespace MentorApp.Services
             );
 
             await client.SendEmailAsync(message);
+            */
+            await this.sendEmail(subject, text, html, to);
         }
 
+        public async Task InvitationResponse(string userName, string email, string invitationForWho, string projectName,
+            string invitationRole, string response)
+        {
+            var to = new EmailAddress(email);
+            var subject = "Invitation Response";
+            var text = " Your invitation to  " + invitationForWho +  " into " + projectName + " as " + invitationRole + " is being " + response;
+
+            string FilePath = Directory.GetCurrentDirectory() + "\\Templates\\InvitationResponseProjectMailTemplate.html";
+            StreamReader str = new StreamReader(FilePath);
+            string MailText = str.ReadToEnd();
+            str.Close();
+            MailText = MailText.Replace("**username**", userName);
+
+            MailText = MailText.Replace("**target_user_name**", invitationForWho);
+            MailText = MailText.Replace("**project_name**", projectName);
+
+            MailText = MailText.Replace("**project_role**", invitationRole);
+            MailText = MailText.Replace("**response_user**", response);
+
+            var html = MailText;
+
+            await this.sendEmail(subject, text, html, to);
+        }
+
+ 
     }
 }

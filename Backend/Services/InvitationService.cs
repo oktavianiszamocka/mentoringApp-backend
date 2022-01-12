@@ -13,12 +13,20 @@ namespace MentorApp.Services
         private readonly IInvitationRepository _invitationRepository;
         private readonly IProjectPromoterService _projectPromoterService;
         private readonly IProjectMemberService _projectMemberService;
+        private readonly IMailService _mailService;
+        private readonly IProjectRepository _projectRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IProjectMemberRepository _projectMemberRepository;
 
-        public InvitationService(IInvitationRepository invitationRepository, IProjectPromoterService projectPromoterService, IProjectMemberService projectMemberService)
+        public InvitationService(IInvitationRepository invitationRepository, IProjectPromoterService projectPromoterService, IProjectMemberService projectMemberService, IMailService mailService, IProjectRepository projectRepository, IUserRepository userRepository, IProjectMemberRepository projectMemberRepository)
         {
             _invitationRepository = invitationRepository;
             _projectPromoterService = projectPromoterService;
             _projectMemberService = projectMemberService;
+            _mailService = mailService;
+            _projectRepository = projectRepository;
+            _userRepository = userRepository;
+            _projectMemberRepository = projectMemberRepository;
         }
         public async Task<List<InvitationDTO>> GetInvitationByUser(int idUser)
         {
@@ -35,17 +43,36 @@ namespace MentorApp.Services
         public async Task<Invitation> UpdateInvitation(Invitation existingInvitation)
         {
             var updatedInvitation = await _invitationRepository.UpdateInvitation(existingInvitation);
+
+            var project =   await _projectRepository.GetProjectInfoById(updatedInvitation.Project);
+
+            var projectSuperviser = await _userRepository.GetUserById((int) project.Superviser);
+            var targetUser = await _userRepository.GetUserById(updatedInvitation.For_Who);
+            var roleName = updatedInvitation.IsMemberInvitation
+                ? _projectMemberRepository.GetMemberRoles().Result
+                    .Where(role => role.IdRoleMember.Equals(updatedInvitation.Role))
+                    .Select(role => new string(role.Role)).First()
+                : "Additional Superviser";
+
             if (updatedInvitation.IsAccepted)
             {
                 if (updatedInvitation.IsMemberInvitation)
                 {
                     await _projectMemberService.InsertProjectMember(updatedInvitation);
+
                 }
                 else
                 {
                     await _projectPromoterService.InsertProjectPromoter(updatedInvitation);
+                  
                 }
-
+                await _mailService.InvitationResponse(projectSuperviser.FirstName, projectSuperviser.Email,
+                    targetUser.FirstName + " " + targetUser.LastName, project.Name, roleName, "Accepted");
+            }
+            else
+            {
+                await _mailService.InvitationResponse(projectSuperviser.FirstName, projectSuperviser.Email,
+                    targetUser.FirstName + " " + targetUser.LastName, project.Name, roleName, "Rejected");
             }
            
             return updatedInvitation;

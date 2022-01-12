@@ -15,5 +15,7 @@ namespace MentorApp.Services
         Task InviteToProject(String userName, String email, String projectName);
         Task InviteToMeeting(String userName, String email, String meetingName, String projectName);
         Task AssignTaskEmail(String userName, String email, String taskName, String projectName);
+
+        Task InvitationResponse(String userName, String email, String invitationForWho, String projectName, String invitationRole, String response);
     }
 }
