@@ -12,7 +12,6 @@ namespace MentorApp.DTOs.Requests
         public DateTime DateOfPublication { get; set; }
         public int Writer { get; set; }
         public int? Project { get; set; }
-        public string Attachment { get; set; }
         public List<string> Tags { get; set; }
     }
 }

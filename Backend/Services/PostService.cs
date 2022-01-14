@@ -78,8 +78,6 @@ namespace MentorApp.Services
                 IdPost = newPost.IdPost,
                 Title = newPost.Title,
                 Content = newPost.Content,
-                Attachment = newPost.Attachment
-
             };
             post = await _postRepository.UpdatePost(post);
 
@@ -156,7 +154,6 @@ namespace MentorApp.Services
                 DateOfPublication = newPost.DateOfPublication,
                 Writer = newPost.Writer,
                 Project = newPost.Project,
-                Attachment = newPost.Attachment
 
             };
 

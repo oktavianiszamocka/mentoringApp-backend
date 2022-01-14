@@ -15,7 +15,6 @@ namespace MentorApp.DTOs.Responses
         public string AuthorLastName { get; set; }
         public string Note1 { get; set; }
         public int Meeting { get; set; }
-        public string Attachments { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime LastModified { get; set; }
     }
