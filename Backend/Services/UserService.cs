@@ -65,8 +65,6 @@ namespace MentorApp.Services
                 Role = request.Role,
                 Email = request.Email,
                 Password = hashedPassword,
-                //TODO set the salt
-                Salt = "qwerty"
             };
             var newProfile = new Profile
             {
