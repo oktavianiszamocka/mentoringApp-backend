@@ -24,7 +24,6 @@ namespace MentorApp.Persistence
         public virtual DbSet<MemberRole> MemberRole { get; set; }
         public virtual DbSet<Milestone> Milestone { get; set; }
         public virtual DbSet<Note> Note { get; set; }
-        public virtual DbSet<Notification> Notification { get; set; }
         public virtual DbSet<PersonalNote> PersonalNote { get; set; }
         public virtual DbSet<Post> Post { get; set; }
         public virtual DbSet<PostTag> PostTag { get; set; }
@@ -92,7 +91,6 @@ namespace MentorApp.Persistence
                 entity.Property(e => e.Description).HasMaxLength(1000);
 
                 entity.Property(e => e.Location)
-                    .IsRequired()
                     .HasMaxLength(500);
 
                 entity.Property(e => e.Title)
@@ -131,8 +129,6 @@ namespace MentorApp.Persistence
             {
                 entity.HasKey(e => e.IdMessage)
                     .HasName("Message_pk");
-
-                entity.Property(e => e.Attachment).HasMaxLength(255);
 
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
@@ -180,8 +176,6 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdNote)
                     .HasName("Note_pk");
 
-                entity.Property(e => e.Attachments).HasMaxLength(255);
-
                 entity.Property(e => e.CreatedOn).HasColumnType("datetime");
 
                 entity.Property(e => e.LastModified).HasColumnType("datetime");
@@ -207,24 +201,6 @@ namespace MentorApp.Persistence
                     .HasConstraintName("Note_Meeting");
             });
 
-            modelBuilder.Entity<Notification>(entity =>
-            {
-                entity.HasKey(e => e.IdNotification)
-                    .HasName("Notification_pk");
-
-                entity.Property(e => e.CreatedOn).HasColumnType("datetime");
-
-                entity.Property(e => e.Notification1)
-                    .IsRequired()
-                    .HasColumnName("Notification")
-                    .HasMaxLength(255);
-
-                entity.HasOne(d => d.UserNavigation)
-                    .WithMany(p => p.Notification)
-                    .HasForeignKey(d => d.User)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Notification_User");
-            });
 
             modelBuilder.Entity<PersonalNote>(entity =>
             {
@@ -255,7 +231,6 @@ namespace MentorApp.Persistence
                 entity.HasKey(e => e.IdPost)
                     .HasName("Post_pk");
 
-                entity.Property(e => e.Attachment).HasMaxLength(255);
 
                 entity.Property(e => e.Content)
                     .IsRequired()

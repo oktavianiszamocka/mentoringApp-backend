@@ -12,7 +12,6 @@ namespace MentorApp.Models
             MessageReceiverNavigation = new HashSet<Message>();
             MessageSenderNavigation = new HashSet<Message>();
             Note = new HashSet<Note>();
-            Notification = new HashSet<Notification>();
             PersonalNote = new HashSet<PersonalNote>();
             Post = new HashSet<Post>();
             Profile = new HashSet<Profile>();
@@ -42,7 +41,6 @@ namespace MentorApp.Models
         public virtual ICollection<Message> MessageReceiverNavigation { get; set; }
         public virtual ICollection<Message> MessageSenderNavigation { get; set; }
         public virtual ICollection<Note> Note { get; set; }
-        public virtual ICollection<Notification> Notification { get; set; }
         public virtual ICollection<PersonalNote> PersonalNote { get; set; }
         public virtual ICollection<Post> Post { get; set; }
         public virtual ICollection<Profile> Profile { get; set; }
