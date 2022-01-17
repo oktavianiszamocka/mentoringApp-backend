@@ -98,9 +98,10 @@ namespace MentorApp.Controllers
         public async Task<IActionResult> RefreshToken([FromRoute] string refreshToken)
         {
             var user = _context.User.SingleOrDefault(m => m.RefreshToken == refreshToken);
-            if (user == null) return NotFound("Refresh token not found");
+            if(user == null) return NotFound("Refresh token not found");
 
             //TODO Here we should additionally check if the refresh token hasn't expired!
+            if(user.RefreshTokenExpDate < DateTime.Now) return NotFound("Refresh token expired");
 
             Claim[] userclaim = new Claim[1];
             if (user.Role == 3)
