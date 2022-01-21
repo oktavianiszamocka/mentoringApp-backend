@@ -13,10 +13,13 @@ namespace MentorApp.Services
     public class MessageService : IMessageService
     {
         private readonly IMessageRepository _messageRepository;
+        private readonly IUserRepository _userRepository;
 
-        public MessageService(IMessageRepository messageRepository)
+
+        public MessageService(IMessageRepository messageRepository, IUserRepository userRepository)
         {
             _messageRepository = messageRepository;
+            _userRepository = userRepository;
         }
         public async Task<List<MessageOverviewDto>> GetAllMessageOfUser(int idUser)
         {
@@ -25,26 +28,47 @@ namespace MentorApp.Services
 
             foreach (var messageItem in messageList)
             {
-                if (!messageMap.ContainsKey(messageItem.Sender))
+                if (messageItem.Sender.Equals(idUser))
                 {
-                    messageMap.Add(messageItem.Sender, messageItem);
+                    if (!messageMap.ContainsKey(messageItem.Receiver))
+                    {
+                        messageMap.Add(messageItem.Receiver, messageItem);
+                    }
+
                 }
+                else
+                {
+                    if (!messageMap.ContainsKey(messageItem.Sender))
+                    {
+                        messageMap.Add(messageItem.Sender, messageItem);
+                    }
+                }
+                
             }
 
-            var messageOverviewDto = messageMap.Select(x => new MessageOverviewDto
+            var messageDTOMap = new SortedDictionary<int, MessageOverviewDto>();
+            foreach (var userId in messageMap.Keys)
             {
-                SenderId = x.Key,
-                Message = x.Value.Message1,
-                LastMessage = x.Value.CreatedOn,
-                SenderUser = new UserWrapper
+                var userTarget = await _userRepository.GetUserById(userId);
+                var msg = messageMap[userId];
+                messageDTOMap.Add(userId, new MessageOverviewDto
                 {
-                    IdUser = x.Value.Sender,
-                    firstName = x.Value.SenderNavigation.FirstName,
-                    lastName = x.Value.SenderNavigation.LastName,
-                    imageUrl = x.Value.SenderNavigation.Avatar
-                }
-            }).ToList();
-            return messageOverviewDto;
+                    SenderId = userId,
+                    Message = msg.Message1,
+                    LastMessage = msg.CreatedOn,
+                    SenderUser = new UserWrapper
+                    {
+                        IdUser = userId,
+                        firstName = userTarget.FirstName,
+                        lastName = userTarget.LastName,
+                        imageUrl = userTarget.Avatar
+                    }
+
+                });
+            }
+
+            return  messageDTOMap.Values.ToList();
+
         }
 
         public async Task<List<ReceiverListDTO>> GetReceiverList(String search)
