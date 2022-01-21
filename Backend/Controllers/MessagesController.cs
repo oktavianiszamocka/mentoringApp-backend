@@ -26,11 +26,11 @@ namespace MentorApp.Controllers
 
         [Authorize]
         [HttpGet("detail")]
-        public async Task<IActionResult> GetMessageByReceiverAndSender([FromQuery(Name = "receiver")] int receiverId, [FromQuery(Name = "sender")] int senderId)
+        public async Task<IActionResult> GetMessageByReceiverAndSender([FromQuery(Name = "receiver")] int receiverId, [FromQuery(Name = "sender")] int senderId, [FromQuery(Name = "current-user")] int currentUser)
         {
             try
             {
-                var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId);
+                var msgDetail = await _messageService.GetAllMessagesOfSender(receiverId, senderId, currentUser);
                 return Ok(new Response<MessageDetailDto>(msgDetail));
             }
             catch (HttpResponseException exception)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.Runtime.SharedInterfaces;
 using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
 using MentorApp.Models;
@@ -85,26 +86,29 @@ namespace MentorApp.Services
             return receivers;
 
         }
-        public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender)
+        public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender, int currentUser)
         {
             var messageList = await _messageRepository.GetAllMessagesOfSender(idReceiver, idSender);
+            var senderUser = await _userRepository.GetUserById(currentUser);
+            var receiverUser = await _userRepository.GetUserById(idReceiver);
+
             if (messageList.Count > 0)
             {
                 var messageDetailDto = new MessageDetailDto
                 {
                     SenderUser = new UserWrapper
                     {
-                        IdUser = messageList.FirstOrDefault().Sender,
-                        firstName = messageList.FirstOrDefault().SenderNavigation.FirstName,
-                        lastName = messageList.FirstOrDefault().SenderNavigation.LastName,
-                        imageUrl = messageList.FirstOrDefault().SenderNavigation.Avatar
+                        IdUser = senderUser.IdUser,
+                        firstName = senderUser.FirstName,
+                        lastName = senderUser.LastName,
+                        imageUrl = senderUser.Avatar
                     },
                     ReceiverUser = new UserWrapper
                     {
-                        IdUser = messageList.FirstOrDefault().Receiver,
-                        firstName = messageList.FirstOrDefault().ReceiverNavigation.FirstName,
-                        lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName,
-                        imageUrl = messageList.FirstOrDefault().ReceiverNavigation.Avatar
+                        IdUser = receiverUser.IdUser,
+                        firstName = receiverUser.FirstName,
+                        lastName = receiverUser.LastName,
+                        imageUrl = receiverUser.Avatar
                     },
                     Messages = messageList.Select(msg => new MessageDto
                     {
