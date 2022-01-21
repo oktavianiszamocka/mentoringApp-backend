@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Amazon.Runtime.SharedInterfaces;
 using MentorApp.DTOs.Responses;
 using MentorApp.Helpers;
 using MentorApp.Models;
@@ -13,10 +14,13 @@ namespace MentorApp.Services
     public class MessageService : IMessageService
     {
         private readonly IMessageRepository _messageRepository;
+        private readonly IUserRepository _userRepository;
 
-        public MessageService(IMessageRepository messageRepository)
+
+        public MessageService(IMessageRepository messageRepository, IUserRepository userRepository)
         {
             _messageRepository = messageRepository;
+            _userRepository = userRepository;
         }
         public async Task<List<MessageOverviewDto>> GetAllMessageOfUser(int idUser)
         {
@@ -25,26 +29,47 @@ namespace MentorApp.Services
 
             foreach (var messageItem in messageList)
             {
-                if (!messageMap.ContainsKey(messageItem.Sender))
+                if (messageItem.Sender.Equals(idUser))
                 {
-                    messageMap.Add(messageItem.Sender, messageItem);
+                    if (!messageMap.ContainsKey(messageItem.Receiver))
+                    {
+                        messageMap.Add(messageItem.Receiver, messageItem);
+                    }
+
                 }
+                else
+                {
+                    if (!messageMap.ContainsKey(messageItem.Sender))
+                    {
+                        messageMap.Add(messageItem.Sender, messageItem);
+                    }
+                }
+                
             }
 
-            var messageOverviewDto = messageMap.Select(x => new MessageOverviewDto
+            var messageDTOMap = new SortedDictionary<int, MessageOverviewDto>();
+            foreach (var userId in messageMap.Keys)
             {
-                SenderId = x.Key,
-                Message = x.Value.Message1,
-                LastMessage = x.Value.CreatedOn,
-                SenderUser = new UserWrapper
+                var userTarget = await _userRepository.GetUserById(userId);
+                var msg = messageMap[userId];
+                messageDTOMap.Add(userId, new MessageOverviewDto
                 {
-                    IdUser = x.Value.Sender,
-                    firstName = x.Value.SenderNavigation.FirstName,
-                    lastName = x.Value.SenderNavigation.LastName,
-                    imageUrl = x.Value.SenderNavigation.Avatar
-                }
-            }).ToList();
-            return messageOverviewDto;
+                    SenderId = userId,
+                    Message = msg.Message1,
+                    LastMessage = msg.CreatedOn,
+                    SenderUser = new UserWrapper
+                    {
+                        IdUser = userId,
+                        firstName = userTarget.FirstName,
+                        lastName = userTarget.LastName,
+                        imageUrl = userTarget.Avatar
+                    }
+
+                });
+            }
+
+            return  messageDTOMap.Values.ToList();
+
         }
 
         public async Task<List<ReceiverListDTO>> GetReceiverList(String search)
@@ -61,26 +86,29 @@ namespace MentorApp.Services
             return receivers;
 
         }
-        public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender)
+        public async Task<MessageDetailDto> GetAllMessagesOfSender(int idReceiver, int idSender, int currentUser)
         {
             var messageList = await _messageRepository.GetAllMessagesOfSender(idReceiver, idSender);
+            var senderUser = await _userRepository.GetUserById(currentUser);
+            var receiverUser = await _userRepository.GetUserById(idReceiver);
+
             if (messageList.Count > 0)
             {
                 var messageDetailDto = new MessageDetailDto
                 {
                     SenderUser = new UserWrapper
                     {
-                        IdUser = messageList.FirstOrDefault().Sender,
-                        firstName = messageList.FirstOrDefault().SenderNavigation.FirstName,
-                        lastName = messageList.FirstOrDefault().SenderNavigation.LastName,
-                        imageUrl = messageList.FirstOrDefault().SenderNavigation.Avatar
+                        IdUser = senderUser.IdUser,
+                        firstName = senderUser.FirstName,
+                        lastName = senderUser.LastName,
+                        imageUrl = senderUser.Avatar
                     },
                     ReceiverUser = new UserWrapper
                     {
-                        IdUser = messageList.FirstOrDefault().Receiver,
-                        firstName = messageList.FirstOrDefault().ReceiverNavigation.FirstName,
-                        lastName = messageList.FirstOrDefault().ReceiverNavigation.LastName,
-                        imageUrl = messageList.FirstOrDefault().ReceiverNavigation.Avatar
+                        IdUser = receiverUser.IdUser,
+                        firstName = receiverUser.FirstName,
+                        lastName = receiverUser.LastName,
+                        imageUrl = receiverUser.Avatar
                     },
                     Messages = messageList.Select(msg => new MessageDto
                     {
