@@ -179,7 +179,7 @@ namespace MentorApp.Services
                                        
 
                                     },
-                                    hasMoreThanOneComment = post.Comment.Count() > 1 ? true : false,
+                                    hasMoreThanOneComment = post.Comment.Count() > 1,
                                     NewestComment = post.Comment.OrderByDescending(comment => comment.CreatedOn).Select(comment => new CommentWrapper
                                     {
                                         IdComment = comment.IdComment,

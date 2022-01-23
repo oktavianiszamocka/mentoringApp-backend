@@ -60,7 +60,7 @@ namespace MentorApp.Controllers
                     .Take(validFilter.PageSize)
                     .ToList();
 
-                var totalRecords = projectList.Count();
+                var totalRecords = projectList.Count;
 
                 var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
                     _uriService, route);
@@ -88,7 +88,7 @@ namespace MentorApp.Controllers
                     .Take(validFilter.PageSize)
                     .ToList();
 
-                var totalRecords = projectList.Count();
+                var totalRecords = projectList.Count;
 
                 var pagedResponse = PaginationHelper.CreatePagedReponse(projectsListWithPaging, validFilter, totalRecords,
                     _uriService, route);

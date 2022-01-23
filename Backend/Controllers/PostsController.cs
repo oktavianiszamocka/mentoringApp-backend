@@ -16,7 +16,6 @@ namespace MentorApp.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
-        private const int DefaultPageSize = 10;
         private readonly IPostService _postService;
         private readonly IUriService _uriService;
 

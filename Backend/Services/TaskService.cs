@@ -151,7 +151,7 @@ namespace MentorApp.Services
         public async Task<TaskDto> UpdateTask(TaskRequestDTO taskToUpdateDTO)
         {
             var taskUpdate = _mapper.Map<Models.Task>(taskToUpdateDTO);
-            var taskUpdateDB = await _taskRepository.UpdateTask(taskUpdate);
+            await _taskRepository.UpdateTask(taskUpdate);
             if (taskToUpdateDTO.IsAddNewAssignee && taskToUpdateDTO.AssignedUsersToAdd.Count > 0)
             {
                 foreach (var userId in taskToUpdateDTO.AssignedUsersToAdd)

@@ -73,10 +73,6 @@ namespace MentorApp.Services
                 var projectPromotorProject =
                     await _projectPromotersRepository.GetAdditionalPromoters(newSupervisors.IdProject);
 
-                
-                Console.WriteLine(invitationsPromotorProject.Count);
-
-
 
                 for (int i = 0; i < uniqueNewSupervisor.Count(); i++)
                 {
@@ -139,67 +135,6 @@ namespace MentorApp.Services
             return projectPromoterUser;
         }
 
-        /*
-        public async Task<EditProjectPromotersDTO> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto)
-        {
-            
-            if (editProjectPromotersDto.IsRemovePromoter && editProjectPromotersDto.RemovedPromotersEmail.Count > 0)
-            {
-                foreach (var userEmail in editProjectPromotersDto.RemovedPromotersEmail)
-                {
-                    Console.WriteLine(userEmail);
-                    if (userEmail != "")
-                    {
-                        var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
-                        if (promoterUser == null)
-                        {
-                            throw new HttpResponseException(userEmail + " is not Found in database");
-                        }
-
-                        var projectPromoter =
-                            await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
-                                editProjectPromotersDto.IdProject, promoterUser.IdUser);
-                        await _projectPromotersRepository.DeleteProjectPromoter(projectPromoter.IdProjectPromoter);
-                    }
-                   
-                }
-            }
-
-            if (editProjectPromotersDto.SupervisorEmails.Count > 0)
-            {
-                Console.WriteLine(editProjectPromotersDto.SupervisorEmails.Count);
-                foreach (var userEmail in editProjectPromotersDto.SupervisorEmails)
-                {
-                    Console.WriteLine(userEmail);
-                    if (userEmail != "")
-                    {
-                        var promoterUser = await _projectPromotersRepository.GetProjectPromoterByEmail(userEmail);
-                        if (promoterUser == null)
-                        {
-                            throw new HttpResponseException(userEmail + "is not Found in database");
-                        }
-                        var projectPromoter =
-                            await _projectPromotersRepository.GetProjectPromoterByIdProjectAndIdUser(
-                                editProjectPromotersDto.IdProject, promoterUser.IdUser);
-                        if (projectPromoter == null)
-                        {
-                            var invitation = new Invitation
-                            {
-                                Project = editProjectPromotersDto.IdProject,
-                                For_Who = promoterUser.IdUser,
-                                IsMemberInvitation = false,
-                                IsActive = true
-                            };
-                            await _invitationRepository.CreateInvitation(invitation);
-                        }
-                    }
-                        
-                }
-            }
-            return editProjectPromotersDto;
-        }
-
-    */
         public async Task<Invitation> searchSupervisorUserAndCreateInvitation(
             String userEmail,
             int index,
@@ -222,7 +157,7 @@ namespace MentorApp.Services
             //if email found
 
             //if no project member or invitation yet
-            if (countProjectMember == 0 && countProjectMember == 0)
+            if (countProjectMember == 0 && countInvitation == 0)
             {
                 var invitation = new Invitation
                 {
@@ -237,7 +172,7 @@ namespace MentorApp.Services
             }
 
 
-            if (countProjectMember > 0 || countProjectMember > 0)
+            if (countProjectMember > 0 || countInvitation > 0)
             {
                 if (existingInvitationEmails.Contains(userEmail))
                 {
