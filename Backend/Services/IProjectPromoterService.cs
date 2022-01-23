@@ -20,8 +20,7 @@ namespace MentorApp.Services
 
         Task<List<string>> GetAdditionalPromoterEmails(int idProject);
 
-       // Task<EditProjectPromotersDTO> UpdateProjectPromoter(EditProjectPromotersDTO editProjectPromotersDto);
-       Task<ProjectPromoter> DeleteProjectPromoter(int idProject, string emailUser);
+        Task<ProjectPromoter> DeleteProjectPromoter(int idProject, string emailUser);
 
 
 

@@ -100,7 +100,7 @@ namespace MentorApp.Controllers
             var user = _context.User.SingleOrDefault(m => m.RefreshToken == refreshToken);
             if(user == null) return NotFound("Refresh token not found");
 
-            //TODO Here we should additionally check if the refresh token hasn't expired!
+           
             if(user.RefreshTokenExpDate < DateTime.Now) return NotFound("Refresh token expired");
 
             Claim[] userclaim = new Claim[1];
@@ -133,7 +133,7 @@ namespace MentorApp.Controllers
             user.RefreshTokenExpDate = DateTime.Now.AddDays(1);
             _context.User.Update(user);
             await _context.SaveChangesAsync();
-            Console.WriteLine(DateTime.Now + user.RefreshToken);
+           
 
             return Ok(new
             {
