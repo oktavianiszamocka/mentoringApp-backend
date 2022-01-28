@@ -44,6 +44,7 @@ namespace MentorApp.Repository
         public async Task<Note> UpdateMeetingNote(Note note)
         {
             var noteToUpdate = await _context.Note.FindAsync(note.IdNote);
+            noteToUpdate.Title = note.Title;
             noteToUpdate.Subject = note.Subject;
             noteToUpdate.Note1 = note.Note1;
             noteToUpdate.LastModified = note.LastModified;
